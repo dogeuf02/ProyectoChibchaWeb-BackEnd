@@ -68,9 +68,9 @@ public class TldService {
         return tldRepository.existsByTldIgnoreCase(tld);
     }
 
-    public ReferencedWarning getReferencedWarning(final String tldS) {
+    public ReferencedWarning getReferencedWarning(final String tldP) {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
-        final Tld tld = tldRepository.findById(tldS)
+        final Tld tld = tldRepository.findById(tldP)
                 .orElseThrow(NotFoundException::new);
         final Dominio tldDominio = dominioRepository.findFirstByTld(tld);
         if (tldDominio != null) {

@@ -2,6 +2,8 @@ package com.debloopers.chibchaweb.rest;
 
 import com.debloopers.chibchaweb.model.ClienteDirectoDTO;
 import com.debloopers.chibchaweb.service.ClienteDirectoService;
+import com.debloopers.chibchaweb.util.ReferencedException;
+import com.debloopers.chibchaweb.util.ReferencedWarning;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -59,6 +61,10 @@ public class ClienteDirectoResource {
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteClienteDirecto(
             @PathVariable(name = "idCliente") final String idCliente) {
+        final ReferencedWarning referencedWarning = clienteDirectoService.getReferencedWarning(idCliente);
+        if (referencedWarning != null) {
+            throw new ReferencedException(referencedWarning);
+        }
         clienteDirectoService.delete(idCliente);
         return ResponseEntity.noContent().build();
     }

@@ -1,9 +1,14 @@
 package com.debloopers.chibchaweb.service;
 
 import com.debloopers.chibchaweb.domain.Registrador;
+import com.debloopers.chibchaweb.domain.SolicitudDomCd;
+import com.debloopers.chibchaweb.domain.SolicitudDomDistribuidor;
 import com.debloopers.chibchaweb.model.RegistradorDTO;
 import com.debloopers.chibchaweb.repos.RegistradorRepository;
+import com.debloopers.chibchaweb.repos.SolicitudDomCdRepository;
+import com.debloopers.chibchaweb.repos.SolicitudDomDistribuidorRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
+import com.debloopers.chibchaweb.util.ReferencedWarning;
 import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -13,9 +18,15 @@ import org.springframework.stereotype.Service;
 public class RegistradorService {
 
     private final RegistradorRepository registradorRepository;
+    private final SolicitudDomCdRepository solicitudDomCdRepository;
+    private final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository;
 
-    public RegistradorService(final RegistradorRepository registradorRepository) {
+    public RegistradorService(final RegistradorRepository registradorRepository,
+            final SolicitudDomCdRepository solicitudDomCdRepository,
+            final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository) {
         this.registradorRepository = registradorRepository;
+        this.solicitudDomCdRepository = solicitudDomCdRepository;
+        this.solicitudDomDistribuidorRepository = solicitudDomDistribuidorRepository;
     }
 
     public List<RegistradorDTO> findAll() {
@@ -66,6 +77,25 @@ public class RegistradorService {
 
     public boolean idRegistradorExists(final String idRegistrador) {
         return registradorRepository.existsByIdRegistradorIgnoreCase(idRegistrador);
+    }
+
+    public ReferencedWarning getReferencedWarning(final String idRegistrador) {
+        final ReferencedWarning referencedWarning = new ReferencedWarning();
+        final Registrador registrador = registradorRepository.findById(idRegistrador)
+                .orElseThrow(NotFoundException::new);
+        final SolicitudDomCd registradorSolicitudDomCd = solicitudDomCdRepository.findFirstByRegistrador(registrador);
+        if (registradorSolicitudDomCd != null) {
+            referencedWarning.setKey("registrador.solicitudDomCd.registrador.referenced");
+            referencedWarning.addParam(registradorSolicitudDomCd.getTld());
+            return referencedWarning;
+        }
+        final SolicitudDomDistribuidor registradorSolicitudDomDistribuidor = solicitudDomDistribuidorRepository.findFirstByRegistrador(registrador);
+        if (registradorSolicitudDomDistribuidor != null) {
+            referencedWarning.setKey("registrador.solicitudDomDistribuidor.registrador.referenced");
+            referencedWarning.addParam(registradorSolicitudDomDistribuidor.getTld());
+            return referencedWarning;
+        }
+        return null;
     }
 
 }

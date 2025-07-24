@@ -2,6 +2,8 @@ package com.debloopers.chibchaweb.rest;
 
 import com.debloopers.chibchaweb.model.DominioDTO;
 import com.debloopers.chibchaweb.service.DominioService;
+import com.debloopers.chibchaweb.util.ReferencedException;
+import com.debloopers.chibchaweb.util.ReferencedWarning;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -58,6 +60,10 @@ public class DominioResource {
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteDominio(
             @PathVariable(name = "nombreDominio") final String nombreDominio) {
+        final ReferencedWarning referencedWarning = dominioService.getReferencedWarning(nombreDominio);
+        if (referencedWarning != null) {
+            throw new ReferencedException(referencedWarning);
+        }
         dominioService.delete(nombreDominio);
         return ResponseEntity.noContent().build();
     }

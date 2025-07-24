@@ -6,13 +6,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
-import lombok.Getter;
-import lombok.Setter;
 
 
 @Entity
-@Getter
-@Setter
 public class MetodoPago {
 
     @Id
@@ -49,5 +45,69 @@ public class MetodoPago {
 
     @Column(nullable = false, length = 2)
     private String anoExpiracion;
+
+    public Integer getIdMetodoPago() {
+        return idMetodoPago;
+    }
+
+    public void setIdMetodoPago(final Integer idMetodoPago) {
+        this.idMetodoPago = idMetodoPago;
+    }
+
+    public String getNombreTitular() {
+        return nombreTitular;
+    }
+
+    public void setNombreTitular(final String nombreTitular) {
+        this.nombreTitular = nombreTitular;
+    }
+
+    public String getMarcaTarjeta() {
+        return marcaTarjeta;
+    }
+
+    public void setMarcaTarjeta(final String marcaTarjeta) {
+        this.marcaTarjeta = marcaTarjeta;
+    }
+
+    public String getNumeroTarjeta() {
+        return numeroTarjeta;
+    }
+
+    public void setNumeroTarjeta(final String numeroTarjeta) {
+        this.numeroTarjeta = numeroTarjeta;
+    }
+
+    public String getTipoTarjeta() {
+        return tipoTarjeta;
+    }
+
+    public void setTipoTarjeta(final String tipoTarjeta) {
+        this.tipoTarjeta = tipoTarjeta;
+    }
+
+    public String getCvv() {
+        return cvv;
+    }
+
+    public void setCvv(final String cvv) {
+        this.cvv = cvv;
+    }
+
+    public String getMesExpiracion() {
+        return mesExpiracion;
+    }
+
+    public void setMesExpiracion(final String mesExpiracion) {
+        this.mesExpiracion = mesExpiracion;
+    }
+
+    public String getAnoExpiracion() {
+        return anoExpiracion;
+    }
+
+    public void setAnoExpiracion(final String anoExpiracion) {
+        this.anoExpiracion = anoExpiracion;
+    }
 
 }

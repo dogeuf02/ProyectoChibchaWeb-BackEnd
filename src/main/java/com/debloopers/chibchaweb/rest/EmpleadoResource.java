@@ -2,6 +2,8 @@ package com.debloopers.chibchaweb.rest;
 
 import com.debloopers.chibchaweb.model.EmpleadoDTO;
 import com.debloopers.chibchaweb.service.EmpleadoService;
+import com.debloopers.chibchaweb.util.ReferencedException;
+import com.debloopers.chibchaweb.util.ReferencedWarning;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -59,6 +61,10 @@ public class EmpleadoResource {
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteEmpleado(
             @PathVariable(name = "idEmpleado") final String idEmpleado) {
+        final ReferencedWarning referencedWarning = empleadoService.getReferencedWarning(idEmpleado);
+        if (referencedWarning != null) {
+            throw new ReferencedException(referencedWarning);
+        }
         empleadoService.delete(idEmpleado);
         return ResponseEntity.noContent().build();
     }

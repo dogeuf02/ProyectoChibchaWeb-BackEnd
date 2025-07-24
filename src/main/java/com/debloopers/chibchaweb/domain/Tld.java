@@ -6,13 +6,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.HashSet;
 import java.util.Set;
-import lombok.Getter;
-import lombok.Setter;
 
 
 @Entity
-@Getter
-@Setter
 public class Tld {
 
     @Id
@@ -21,5 +17,21 @@ public class Tld {
 
     @OneToMany(mappedBy = "tld")
     private Set<Dominio> tldDominios = new HashSet<>();
+
+    public String getTld() {
+        return tld;
+    }
+
+    public void setTld(final String tld) {
+        this.tld = tld;
+    }
+
+    public Set<Dominio> getTldDominios() {
+        return tldDominios;
+    }
+
+    public void setTldDominios(final Set<Dominio> tldDominios) {
+        this.tldDominios = tldDominios;
+    }
 
 }

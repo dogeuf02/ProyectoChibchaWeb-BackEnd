@@ -3,13 +3,9 @@ package com.debloopers.chibchaweb.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
 
 
 @Entity
-@Getter
-@Setter
 public class PlanCliente {
 
     @Id
@@ -18,5 +14,21 @@ public class PlanCliente {
 
     @Column(nullable = false, length = 100)
     private String nombrePlan;
+
+    public String getIdPc() {
+        return idPc;
+    }
+
+    public void setIdPc(final String idPc) {
+        this.idPc = idPc;
+    }
+
+    public String getNombrePlan() {
+        return nombrePlan;
+    }
+
+    public void setNombrePlan(final String nombrePlan) {
+        this.nombrePlan = nombrePlan;
+    }
 
 }

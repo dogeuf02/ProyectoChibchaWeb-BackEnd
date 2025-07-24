@@ -2,12 +2,8 @@ package com.debloopers.chibchaweb.util;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
-import lombok.Getter;
-import lombok.Setter;
 
 
-@Getter
-@Setter
 public class ReferencedWarning {
 
     private String key = null;
@@ -25,6 +21,22 @@ public class ReferencedWarning {
                     .collect(Collectors.joining(","));
         }
         return message;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(final String key) {
+        this.key = key;
+    }
+
+    public ArrayList<Object> getParams() {
+        return params;
+    }
+
+    public void setParams(final ArrayList<Object> params) {
+        this.params = params;
     }
 
 }

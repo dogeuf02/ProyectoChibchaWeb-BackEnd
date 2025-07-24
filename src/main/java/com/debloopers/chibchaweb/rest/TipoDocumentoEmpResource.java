@@ -35,37 +35,37 @@ public class TipoDocumentoEmpResource {
         return ResponseEntity.ok(tipoDocumentoEmpService.findAll());
     }
 
-    @GetMapping("/{idTipoDocumento}")
+    @GetMapping("/{nombreTipoDoc}")
     public ResponseEntity<TipoDocumentoEmpDTO> getTipoDocumentoEmp(
-            @PathVariable(name = "idTipoDocumento") final Integer idTipoDocumento) {
-        return ResponseEntity.ok(tipoDocumentoEmpService.get(idTipoDocumento));
+            @PathVariable(name = "nombreTipoDoc") final String nombreTipoDoc) {
+        return ResponseEntity.ok(tipoDocumentoEmpService.get(nombreTipoDoc));
     }
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Integer> createTipoDocumentoEmp(
+    public ResponseEntity<String> createTipoDocumentoEmp(
             @RequestBody @Valid final TipoDocumentoEmpDTO tipoDocumentoEmpDTO) {
-        final Integer createdIdTipoDocumento = tipoDocumentoEmpService.create(tipoDocumentoEmpDTO);
-        return new ResponseEntity<>(createdIdTipoDocumento, HttpStatus.CREATED);
+        final String createdNombreTipoDoc = tipoDocumentoEmpService.create(tipoDocumentoEmpDTO);
+        return new ResponseEntity<>('"' + createdNombreTipoDoc + '"', HttpStatus.CREATED);
     }
 
-    @PutMapping("/{idTipoDocumento}")
-    public ResponseEntity<Integer> updateTipoDocumentoEmp(
-            @PathVariable(name = "idTipoDocumento") final Integer idTipoDocumento,
+    @PutMapping("/{nombreTipoDoc}")
+    public ResponseEntity<String> updateTipoDocumentoEmp(
+            @PathVariable(name = "nombreTipoDoc") final String nombreTipoDoc,
             @RequestBody @Valid final TipoDocumentoEmpDTO tipoDocumentoEmpDTO) {
-        tipoDocumentoEmpService.update(idTipoDocumento, tipoDocumentoEmpDTO);
-        return ResponseEntity.ok(idTipoDocumento);
+        tipoDocumentoEmpService.update(nombreTipoDoc, tipoDocumentoEmpDTO);
+        return ResponseEntity.ok('"' + nombreTipoDoc + '"');
     }
 
-    @DeleteMapping("/{idTipoDocumento}")
+    @DeleteMapping("/{nombreTipoDoc}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteTipoDocumentoEmp(
-            @PathVariable(name = "idTipoDocumento") final Integer idTipoDocumento) {
-        final ReferencedWarning referencedWarning = tipoDocumentoEmpService.getReferencedWarning(idTipoDocumento);
+            @PathVariable(name = "nombreTipoDoc") final String nombreTipoDoc) {
+        final ReferencedWarning referencedWarning = tipoDocumentoEmpService.getReferencedWarning(nombreTipoDoc);
         if (referencedWarning != null) {
             throw new ReferencedException(referencedWarning);
         }
-        tipoDocumentoEmpService.delete(idTipoDocumento);
+        tipoDocumentoEmpService.delete(nombreTipoDoc);
         return ResponseEntity.noContent().build();
     }
 

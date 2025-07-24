@@ -5,8 +5,10 @@ import com.debloopers.chibchaweb.domain.TipoDocumentoEmp;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface DistribuidorRepository extends JpaRepository<Distribuidor, Integer> {
+public interface DistribuidorRepository extends JpaRepository<Distribuidor, String> {
 
-    Distribuidor findFirstByTipoDocumento(TipoDocumentoEmp tipoDocumentoEmp);
+    Distribuidor findFirstByNombreTipoDoc(TipoDocumentoEmp tipoDocumentoEmp);
+
+    boolean existsByNumeroDocEmpresaIgnoreCase(String numeroDocEmpresa);
 
 }

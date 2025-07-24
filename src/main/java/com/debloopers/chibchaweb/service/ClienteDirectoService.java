@@ -1,9 +1,16 @@
 package com.debloopers.chibchaweb.service;
 
 import com.debloopers.chibchaweb.domain.ClienteDirecto;
+import com.debloopers.chibchaweb.domain.Plan;
+import com.debloopers.chibchaweb.domain.SolicitudDomCd;
+import com.debloopers.chibchaweb.domain.Ticket;
 import com.debloopers.chibchaweb.model.ClienteDirectoDTO;
 import com.debloopers.chibchaweb.repos.ClienteDirectoRepository;
+import com.debloopers.chibchaweb.repos.PlanRepository;
+import com.debloopers.chibchaweb.repos.SolicitudDomCdRepository;
+import com.debloopers.chibchaweb.repos.TicketRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
+import com.debloopers.chibchaweb.util.ReferencedWarning;
 import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -13,9 +20,18 @@ import org.springframework.stereotype.Service;
 public class ClienteDirectoService {
 
     private final ClienteDirectoRepository clienteDirectoRepository;
+    private final PlanRepository planRepository;
+    private final SolicitudDomCdRepository solicitudDomCdRepository;
+    private final TicketRepository ticketRepository;
 
-    public ClienteDirectoService(final ClienteDirectoRepository clienteDirectoRepository) {
+    public ClienteDirectoService(final ClienteDirectoRepository clienteDirectoRepository,
+            final PlanRepository planRepository,
+            final SolicitudDomCdRepository solicitudDomCdRepository,
+            final TicketRepository ticketRepository) {
         this.clienteDirectoRepository = clienteDirectoRepository;
+        this.planRepository = planRepository;
+        this.solicitudDomCdRepository = solicitudDomCdRepository;
+        this.ticketRepository = ticketRepository;
     }
 
     public List<ClienteDirectoDTO> findAll() {
@@ -58,6 +74,7 @@ public class ClienteDirectoService {
         clienteDirectoDTO.setContrasenaCliente(clienteDirecto.getContrasenaCliente());
         clienteDirectoDTO.setTelefono(clienteDirecto.getTelefono());
         clienteDirectoDTO.setFechaNacimientoCliente(clienteDirecto.getFechaNacimientoCliente());
+        clienteDirectoDTO.setPlan(clienteDirecto.getPlan() == null ? null : clienteDirecto.getPlan().getIdPlan());
         return clienteDirectoDTO;
     }
 
@@ -69,11 +86,33 @@ public class ClienteDirectoService {
         clienteDirecto.setContrasenaCliente(clienteDirectoDTO.getContrasenaCliente());
         clienteDirecto.setTelefono(clienteDirectoDTO.getTelefono());
         clienteDirecto.setFechaNacimientoCliente(clienteDirectoDTO.getFechaNacimientoCliente());
+        final Plan plan = clienteDirectoDTO.getPlan() == null ? null : planRepository.findById(clienteDirectoDTO.getPlan())
+                .orElseThrow(() -> new NotFoundException("plan not found"));
+        clienteDirecto.setPlan(plan);
         return clienteDirecto;
     }
 
     public boolean idClienteExists(final String idCliente) {
         return clienteDirectoRepository.existsByIdClienteIgnoreCase(idCliente);
+    }
+
+    public ReferencedWarning getReferencedWarning(final String idCliente) {
+        final ReferencedWarning referencedWarning = new ReferencedWarning();
+        final ClienteDirecto clienteDirecto = clienteDirectoRepository.findById(idCliente)
+                .orElseThrow(NotFoundException::new);
+        final SolicitudDomCd clienteSolicitudDomCd = solicitudDomCdRepository.findFirstByCliente(clienteDirecto);
+        if (clienteSolicitudDomCd != null) {
+            referencedWarning.setKey("clienteDirecto.solicitudDomCd.cliente.referenced");
+            referencedWarning.addParam(clienteSolicitudDomCd.getTld());
+            return referencedWarning;
+        }
+        final Ticket clienteTicket = ticketRepository.findFirstByCliente(clienteDirecto);
+        if (clienteTicket != null) {
+            referencedWarning.setKey("clienteDirecto.ticket.cliente.referenced");
+            referencedWarning.addParam(clienteTicket.getIdTicket());
+            return referencedWarning;
+        }
+        return null;
     }
 
 }

@@ -4,22 +4,20 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 
-public class PlanClienteDTO {
+public class PlanDTO {
 
-    @Size(max = 10)
-    @PlanClienteIdPcValid
-    private String idPc;
+    private Integer idPlan;
 
     @NotNull
     @Size(max = 100)
     private String nombrePlan;
 
-    public String getIdPc() {
-        return idPc;
+    public Integer getIdPlan() {
+        return idPlan;
     }
 
-    public void setIdPc(final String idPc) {
-        this.idPc = idPc;
+    public void setIdPlan(final Integer idPlan) {
+        this.idPlan = idPlan;
     }
 
     public String getNombrePlan() {

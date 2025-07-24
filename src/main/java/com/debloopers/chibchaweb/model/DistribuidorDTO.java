@@ -2,19 +2,13 @@ package com.debloopers.chibchaweb.model;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
 
 
-@Getter
-@Setter
 public class DistribuidorDTO {
 
-    private Integer idDistribuidor;
-
-    @NotNull
     @Size(max = 20)
-    private String numeroDocumento;
+    @DistribuidorNumeroDocEmpresaValid
+    private String numeroDocEmpresa;
 
     @NotNull
     @Size(max = 255)
@@ -33,6 +27,55 @@ public class DistribuidorDTO {
     private String direccionEmpresa;
 
     @NotNull
-    private Integer tipoDocumento;
+    @Size(max = 20)
+    private String nombreTipoDoc;
+
+    public String getNumeroDocEmpresa() {
+        return numeroDocEmpresa;
+    }
+
+    public void setNumeroDocEmpresa(final String numeroDocEmpresa) {
+        this.numeroDocEmpresa = numeroDocEmpresa;
+    }
+
+    public String getNombreEmpresa() {
+        return nombreEmpresa;
+    }
+
+    public void setNombreEmpresa(final String nombreEmpresa) {
+        this.nombreEmpresa = nombreEmpresa;
+    }
+
+    public String getCorreoEmpresa() {
+        return correoEmpresa;
+    }
+
+    public void setCorreoEmpresa(final String correoEmpresa) {
+        this.correoEmpresa = correoEmpresa;
+    }
+
+    public String getContrasenaEmpresa() {
+        return contrasenaEmpresa;
+    }
+
+    public void setContrasenaEmpresa(final String contrasenaEmpresa) {
+        this.contrasenaEmpresa = contrasenaEmpresa;
+    }
+
+    public String getDireccionEmpresa() {
+        return direccionEmpresa;
+    }
+
+    public void setDireccionEmpresa(final String direccionEmpresa) {
+        this.direccionEmpresa = direccionEmpresa;
+    }
+
+    public String getNombreTipoDoc() {
+        return nombreTipoDoc;
+    }
+
+    public void setNombreTipoDoc(final String nombreTipoDoc) {
+        this.nombreTipoDoc = nombreTipoDoc;
+    }
 
 }

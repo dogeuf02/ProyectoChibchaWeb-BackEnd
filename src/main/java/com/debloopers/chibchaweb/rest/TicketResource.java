@@ -35,29 +35,29 @@ public class TicketResource {
 
     @GetMapping("/{idTicket}")
     public ResponseEntity<TicketDTO> getTicket(
-            @PathVariable(name = "idTicket") final Integer idTicket) {
+            @PathVariable(name = "idTicket") final String idTicket) {
         return ResponseEntity.ok(ticketService.get(idTicket));
     }
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Integer> createTicket(@RequestBody @Valid final TicketDTO ticketDTO) {
-        final Integer createdIdTicket = ticketService.create(ticketDTO);
-        return new ResponseEntity<>(createdIdTicket, HttpStatus.CREATED);
+    public ResponseEntity<String> createTicket(@RequestBody @Valid final TicketDTO ticketDTO) {
+        final String createdIdTicket = ticketService.create(ticketDTO);
+        return new ResponseEntity<>('"' + createdIdTicket + '"', HttpStatus.CREATED);
     }
 
     @PutMapping("/{idTicket}")
-    public ResponseEntity<Integer> updateTicket(
-            @PathVariable(name = "idTicket") final Integer idTicket,
+    public ResponseEntity<String> updateTicket(
+            @PathVariable(name = "idTicket") final String idTicket,
             @RequestBody @Valid final TicketDTO ticketDTO) {
         ticketService.update(idTicket, ticketDTO);
-        return ResponseEntity.ok(idTicket);
+        return ResponseEntity.ok('"' + idTicket + '"');
     }
 
     @DeleteMapping("/{idTicket}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteTicket(
-            @PathVariable(name = "idTicket") final Integer idTicket) {
+            @PathVariable(name = "idTicket") final String idTicket) {
         ticketService.delete(idTicket);
         return ResponseEntity.noContent().build();
     }

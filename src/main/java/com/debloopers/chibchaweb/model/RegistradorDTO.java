@@ -2,24 +2,44 @@ package com.debloopers.chibchaweb.model;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
 
 
-@Getter
-@Setter
 public class RegistradorDTO {
 
-    @Size(max = 20)
+    @Size(max = 10)
     @RegistradorIdRegistradorValid
     private String idRegistrador;
 
     @NotNull
-    @Size(max = 100)
+    @Size(max = 150)
     private String nombreRegistrador;
 
     @NotNull
-    @Size(max = 255)
+    @Size(max = 150)
     private String correoRegistrador;
+
+    public String getIdRegistrador() {
+        return idRegistrador;
+    }
+
+    public void setIdRegistrador(final String idRegistrador) {
+        this.idRegistrador = idRegistrador;
+    }
+
+    public String getNombreRegistrador() {
+        return nombreRegistrador;
+    }
+
+    public void setNombreRegistrador(final String nombreRegistrador) {
+        this.nombreRegistrador = nombreRegistrador;
+    }
+
+    public String getCorreoRegistrador() {
+        return correoRegistrador;
+    }
+
+    public void setCorreoRegistrador(final String correoRegistrador) {
+        this.correoRegistrador = correoRegistrador;
+    }
 
 }

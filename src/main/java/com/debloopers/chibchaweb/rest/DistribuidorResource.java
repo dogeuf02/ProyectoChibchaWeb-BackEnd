@@ -2,6 +2,8 @@ package com.debloopers.chibchaweb.rest;
 
 import com.debloopers.chibchaweb.model.DistribuidorDTO;
 import com.debloopers.chibchaweb.service.DistribuidorService;
+import com.debloopers.chibchaweb.util.ReferencedException;
+import com.debloopers.chibchaweb.util.ReferencedWarning;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -33,33 +35,37 @@ public class DistribuidorResource {
         return ResponseEntity.ok(distribuidorService.findAll());
     }
 
-    @GetMapping("/{idDistribuidor}")
+    @GetMapping("/{numeroDocEmpresa}")
     public ResponseEntity<DistribuidorDTO> getDistribuidor(
-            @PathVariable(name = "idDistribuidor") final Integer idDistribuidor) {
-        return ResponseEntity.ok(distribuidorService.get(idDistribuidor));
+            @PathVariable(name = "numeroDocEmpresa") final String numeroDocEmpresa) {
+        return ResponseEntity.ok(distribuidorService.get(numeroDocEmpresa));
     }
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Integer> createDistribuidor(
+    public ResponseEntity<String> createDistribuidor(
             @RequestBody @Valid final DistribuidorDTO distribuidorDTO) {
-        final Integer createdIdDistribuidor = distribuidorService.create(distribuidorDTO);
-        return new ResponseEntity<>(createdIdDistribuidor, HttpStatus.CREATED);
+        final String createdNumeroDocEmpresa = distribuidorService.create(distribuidorDTO);
+        return new ResponseEntity<>('"' + createdNumeroDocEmpresa + '"', HttpStatus.CREATED);
     }
 
-    @PutMapping("/{idDistribuidor}")
-    public ResponseEntity<Integer> updateDistribuidor(
-            @PathVariable(name = "idDistribuidor") final Integer idDistribuidor,
+    @PutMapping("/{numeroDocEmpresa}")
+    public ResponseEntity<String> updateDistribuidor(
+            @PathVariable(name = "numeroDocEmpresa") final String numeroDocEmpresa,
             @RequestBody @Valid final DistribuidorDTO distribuidorDTO) {
-        distribuidorService.update(idDistribuidor, distribuidorDTO);
-        return ResponseEntity.ok(idDistribuidor);
+        distribuidorService.update(numeroDocEmpresa, distribuidorDTO);
+        return ResponseEntity.ok('"' + numeroDocEmpresa + '"');
     }
 
-    @DeleteMapping("/{idDistribuidor}")
+    @DeleteMapping("/{numeroDocEmpresa}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteDistribuidor(
-            @PathVariable(name = "idDistribuidor") final Integer idDistribuidor) {
-        distribuidorService.delete(idDistribuidor);
+            @PathVariable(name = "numeroDocEmpresa") final String numeroDocEmpresa) {
+        final ReferencedWarning referencedWarning = distribuidorService.getReferencedWarning(numeroDocEmpresa);
+        if (referencedWarning != null) {
+            throw new ReferencedException(referencedWarning);
+        }
+        distribuidorService.delete(numeroDocEmpresa);
         return ResponseEntity.noContent().build();
     }
 

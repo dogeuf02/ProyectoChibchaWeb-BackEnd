@@ -2,6 +2,8 @@ package com.debloopers.chibchaweb.rest;
 
 import com.debloopers.chibchaweb.model.RegistradorDTO;
 import com.debloopers.chibchaweb.service.RegistradorService;
+import com.debloopers.chibchaweb.util.ReferencedException;
+import com.debloopers.chibchaweb.util.ReferencedWarning;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -59,6 +61,10 @@ public class RegistradorResource {
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteRegistrador(
             @PathVariable(name = "idRegistrador") final String idRegistrador) {
+        final ReferencedWarning referencedWarning = registradorService.getReferencedWarning(idRegistrador);
+        if (referencedWarning != null) {
+            throw new ReferencedException(referencedWarning);
+        }
         registradorService.delete(idRegistrador);
         return ResponseEntity.noContent().build();
     }

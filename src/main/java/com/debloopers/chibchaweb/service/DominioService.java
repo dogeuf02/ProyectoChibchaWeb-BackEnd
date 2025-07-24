@@ -1,11 +1,16 @@
 package com.debloopers.chibchaweb.service;
 
 import com.debloopers.chibchaweb.domain.Dominio;
+import com.debloopers.chibchaweb.domain.SolicitudDomCd;
+import com.debloopers.chibchaweb.domain.SolicitudDomDistribuidor;
 import com.debloopers.chibchaweb.domain.Tld;
 import com.debloopers.chibchaweb.model.DominioDTO;
 import com.debloopers.chibchaweb.repos.DominioRepository;
+import com.debloopers.chibchaweb.repos.SolicitudDomCdRepository;
+import com.debloopers.chibchaweb.repos.SolicitudDomDistribuidorRepository;
 import com.debloopers.chibchaweb.repos.TldRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
+import com.debloopers.chibchaweb.util.ReferencedWarning;
 import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -16,11 +21,17 @@ public class DominioService {
 
     private final DominioRepository dominioRepository;
     private final TldRepository tldRepository;
+    private final SolicitudDomCdRepository solicitudDomCdRepository;
+    private final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository;
 
     public DominioService(final DominioRepository dominioRepository,
-            final TldRepository tldRepository) {
+            final TldRepository tldRepository,
+            final SolicitudDomCdRepository solicitudDomCdRepository,
+            final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository) {
         this.dominioRepository = dominioRepository;
         this.tldRepository = tldRepository;
+        this.solicitudDomCdRepository = solicitudDomCdRepository;
+        this.solicitudDomDistribuidorRepository = solicitudDomDistribuidorRepository;
     }
 
     public List<DominioDTO> findAll() {
@@ -69,6 +80,25 @@ public class DominioService {
 
     public boolean nombreDominioExists(final String nombreDominio) {
         return dominioRepository.existsByNombreDominioIgnoreCase(nombreDominio);
+    }
+
+    public ReferencedWarning getReferencedWarning(final String nombreDominio) {
+        final ReferencedWarning referencedWarning = new ReferencedWarning();
+        final Dominio dominio = dominioRepository.findById(nombreDominio)
+                .orElseThrow(NotFoundException::new);
+        final SolicitudDomCd nombreDominioSolicitudDomCd = solicitudDomCdRepository.findFirstByNombreDominio(dominio);
+        if (nombreDominioSolicitudDomCd != null) {
+            referencedWarning.setKey("dominio.solicitudDomCd.nombreDominio.referenced");
+            referencedWarning.addParam(nombreDominioSolicitudDomCd.getTld());
+            return referencedWarning;
+        }
+        final SolicitudDomDistribuidor nombreDominioSolicitudDomDistribuidor = solicitudDomDistribuidorRepository.findFirstByNombreDominio(dominio);
+        if (nombreDominioSolicitudDomDistribuidor != null) {
+            referencedWarning.setKey("dominio.solicitudDomDistribuidor.nombreDominio.referenced");
+            referencedWarning.addParam(nombreDominioSolicitudDomDistribuidor.getTld());
+            return referencedWarning;
+        }
+        return null;
     }
 
 }

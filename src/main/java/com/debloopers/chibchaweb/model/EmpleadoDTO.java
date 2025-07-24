@@ -2,39 +2,80 @@ package com.debloopers.chibchaweb.model;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.time.LocalDate;
-import lombok.Getter;
-import lombok.Setter;
 
 
-@Getter
-@Setter
 public class EmpleadoDTO {
 
-    @Size(max = 20)
+    @Size(max = 10)
     @EmpleadoIdEmpleadoValid
     private String idEmpleado;
 
     @NotNull
-    @Size(max = 255)
-    private String correoEmpleado;
-
-    @NotNull
-    @Size(max = 150)
-    private String contrasenaEmpleado;
-
-    @NotNull
-    @Size(max = 100)
+    @Size(max = 50)
     private String nombreEmpleado;
 
     @NotNull
-    @Size(max = 100)
+    @Size(max = 50)
     private String apellidoEmpleado;
 
     @NotNull
-    @Size(max = 50)
+    @Size(max = 100)
     private String cargoEmpleado;
 
-    private LocalDate fechaNacimientoEmpleado;
+    @NotNull
+    @Size(max = 50)
+    private String usuarioEmpelado;
+
+    @NotNull
+    @Size(max = 50)
+    private String contrasenaEmpleado;
+
+    public String getIdEmpleado() {
+        return idEmpleado;
+    }
+
+    public void setIdEmpleado(final String idEmpleado) {
+        this.idEmpleado = idEmpleado;
+    }
+
+    public String getNombreEmpleado() {
+        return nombreEmpleado;
+    }
+
+    public void setNombreEmpleado(final String nombreEmpleado) {
+        this.nombreEmpleado = nombreEmpleado;
+    }
+
+    public String getApellidoEmpleado() {
+        return apellidoEmpleado;
+    }
+
+    public void setApellidoEmpleado(final String apellidoEmpleado) {
+        this.apellidoEmpleado = apellidoEmpleado;
+    }
+
+    public String getCargoEmpleado() {
+        return cargoEmpleado;
+    }
+
+    public void setCargoEmpleado(final String cargoEmpleado) {
+        this.cargoEmpleado = cargoEmpleado;
+    }
+
+    public String getUsuarioEmpelado() {
+        return usuarioEmpelado;
+    }
+
+    public void setUsuarioEmpelado(final String usuarioEmpelado) {
+        this.usuarioEmpelado = usuarioEmpelado;
+    }
+
+    public String getContrasenaEmpleado() {
+        return contrasenaEmpleado;
+    }
+
+    public void setContrasenaEmpleado(final String contrasenaEmpleado) {
+        this.contrasenaEmpleado = contrasenaEmpleado;
+    }
 
 }
