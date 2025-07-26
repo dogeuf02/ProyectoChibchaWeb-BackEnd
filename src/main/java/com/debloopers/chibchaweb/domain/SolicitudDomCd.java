@@ -19,7 +19,7 @@ public class SolicitudDomCd {
     @Column(nullable = false)
     private LocalDate fechaSolicitud;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false)
     private String estadoSolicitud;
 
     @Column

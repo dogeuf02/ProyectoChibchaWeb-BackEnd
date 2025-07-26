@@ -57,11 +57,13 @@ public class PlanService {
     private PlanDTO mapToDTO(final Plan plan, final PlanDTO planDTO) {
         planDTO.setIdPlan(plan.getIdPlan());
         planDTO.setNombrePlan(plan.getNombrePlan());
+        planDTO.setPrecio(plan.getPrecio());
         return planDTO;
     }
 
     private Plan mapToEntity(final PlanDTO planDTO, final Plan plan) {
         plan.setNombrePlan(planDTO.getNombrePlan());
+        plan.setPrecio(planDTO.getPrecio());
         return plan;
     }
 

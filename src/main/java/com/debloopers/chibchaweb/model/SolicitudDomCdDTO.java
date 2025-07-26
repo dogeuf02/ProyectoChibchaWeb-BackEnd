@@ -15,7 +15,7 @@ public class SolicitudDomCdDTO {
     private LocalDate fechaSolicitud;
 
     @NotNull
-    @Size(max = 50)
+    @Size(max = 255)
     private String estadoSolicitud;
 
     private LocalDate fechaRevision;

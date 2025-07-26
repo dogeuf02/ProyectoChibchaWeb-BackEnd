@@ -20,14 +20,6 @@ public class ClienteDirectoDTO {
     private String apellidoCliente;
 
     @NotNull
-    @Size(max = 150)
-    private String correoCliente;
-
-    @NotNull
-    @Size(max = 50)
-    private String contrasenaCliente;
-
-    @NotNull
     @Size(max = 20)
     private String telefono;
 
@@ -57,22 +49,6 @@ public class ClienteDirectoDTO {
 
     public void setApellidoCliente(final String apellidoCliente) {
         this.apellidoCliente = apellidoCliente;
-    }
-
-    public String getCorreoCliente() {
-        return correoCliente;
-    }
-
-    public void setCorreoCliente(final String correoCliente) {
-        this.correoCliente = correoCliente;
-    }
-
-    public String getContrasenaCliente() {
-        return contrasenaCliente;
-    }
-
-    public void setContrasenaCliente(final String contrasenaCliente) {
-        this.contrasenaCliente = contrasenaCliente;
     }
 
     public String getTelefono() {

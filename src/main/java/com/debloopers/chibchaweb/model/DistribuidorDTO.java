@@ -16,14 +16,6 @@ public class DistribuidorDTO {
 
     @NotNull
     @Size(max = 255)
-    private String correoEmpresa;
-
-    @NotNull
-    @Size(max = 150)
-    private String contrasenaEmpresa;
-
-    @NotNull
-    @Size(max = 255)
     private String direccionEmpresa;
 
     @NotNull
@@ -44,22 +36,6 @@ public class DistribuidorDTO {
 
     public void setNombreEmpresa(final String nombreEmpresa) {
         this.nombreEmpresa = nombreEmpresa;
-    }
-
-    public String getCorreoEmpresa() {
-        return correoEmpresa;
-    }
-
-    public void setCorreoEmpresa(final String correoEmpresa) {
-        this.correoEmpresa = correoEmpresa;
-    }
-
-    public String getContrasenaEmpresa() {
-        return contrasenaEmpresa;
-    }
-
-    public void setContrasenaEmpresa(final String contrasenaEmpresa) {
-        this.contrasenaEmpresa = contrasenaEmpresa;
     }
 
     public String getDireccionEmpresa() {

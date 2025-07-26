@@ -14,10 +14,6 @@ public class RegistradorDTO {
     @Size(max = 150)
     private String nombreRegistrador;
 
-    @NotNull
-    @Size(max = 150)
-    private String correoRegistrador;
-
     public String getIdRegistrador() {
         return idRegistrador;
     }
@@ -32,14 +28,6 @@ public class RegistradorDTO {
 
     public void setNombreRegistrador(final String nombreRegistrador) {
         this.nombreRegistrador = nombreRegistrador;
-    }
-
-    public String getCorreoRegistrador() {
-        return correoRegistrador;
-    }
-
-    public void setCorreoRegistrador(final String correoRegistrador) {
-        this.correoRegistrador = correoRegistrador;
     }
 
 }

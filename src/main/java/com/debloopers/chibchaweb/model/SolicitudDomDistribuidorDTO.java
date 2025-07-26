@@ -19,7 +19,7 @@ public class SolicitudDomDistribuidorDTO {
     private LocalDate fechaSolicitud;
 
     @NotNull
-    @Size(max = 30)
+    @Size(max = 255)
     private String estadoSolicitud;
 
     private LocalDate fechaRevision;

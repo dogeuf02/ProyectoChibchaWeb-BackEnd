@@ -3,10 +3,12 @@ package com.debloopers.chibchaweb.service;
 import com.debloopers.chibchaweb.domain.Registrador;
 import com.debloopers.chibchaweb.domain.SolicitudDomCd;
 import com.debloopers.chibchaweb.domain.SolicitudDomDistribuidor;
+import com.debloopers.chibchaweb.domain.Usuario;
 import com.debloopers.chibchaweb.model.RegistradorDTO;
 import com.debloopers.chibchaweb.repos.RegistradorRepository;
 import com.debloopers.chibchaweb.repos.SolicitudDomCdRepository;
 import com.debloopers.chibchaweb.repos.SolicitudDomDistribuidorRepository;
+import com.debloopers.chibchaweb.repos.UsuarioRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
 import java.util.List;
@@ -20,13 +22,16 @@ public class RegistradorService {
     private final RegistradorRepository registradorRepository;
     private final SolicitudDomCdRepository solicitudDomCdRepository;
     private final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository;
+    private final UsuarioRepository usuarioRepository;
 
     public RegistradorService(final RegistradorRepository registradorRepository,
             final SolicitudDomCdRepository solicitudDomCdRepository,
-            final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository) {
+            final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository,
+            final UsuarioRepository usuarioRepository) {
         this.registradorRepository = registradorRepository;
         this.solicitudDomCdRepository = solicitudDomCdRepository;
         this.solicitudDomDistribuidorRepository = solicitudDomDistribuidorRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     public List<RegistradorDTO> findAll() {
@@ -64,14 +69,12 @@ public class RegistradorService {
             final RegistradorDTO registradorDTO) {
         registradorDTO.setIdRegistrador(registrador.getIdRegistrador());
         registradorDTO.setNombreRegistrador(registrador.getNombreRegistrador());
-        registradorDTO.setCorreoRegistrador(registrador.getCorreoRegistrador());
         return registradorDTO;
     }
 
     private Registrador mapToEntity(final RegistradorDTO registradorDTO,
             final Registrador registrador) {
         registrador.setNombreRegistrador(registradorDTO.getNombreRegistrador());
-        registrador.setCorreoRegistrador(registradorDTO.getCorreoRegistrador());
         return registrador;
     }
 
@@ -93,6 +96,12 @@ public class RegistradorService {
         if (registradorSolicitudDomDistribuidor != null) {
             referencedWarning.setKey("registrador.solicitudDomDistribuidor.registrador.referenced");
             referencedWarning.addParam(registradorSolicitudDomDistribuidor.getTld());
+            return referencedWarning;
+        }
+        final Usuario registradorUsuario = usuarioRepository.findFirstByRegistrador(registrador);
+        if (registradorUsuario != null) {
+            referencedWarning.setKey("registrador.usuario.registrador.referenced");
+            referencedWarning.addParam(registradorUsuario.getIdUsuario());
             return referencedWarning;
         }
         return null;

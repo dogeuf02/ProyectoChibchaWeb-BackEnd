@@ -22,7 +22,7 @@ public class SolicitudDomDistribuidor {
     @Column(nullable = false)
     private LocalDate fechaSolicitud;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false)
     private String estadoSolicitud;
 
     @Column

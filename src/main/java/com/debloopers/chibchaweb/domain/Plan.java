@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,6 +32,9 @@ public class Plan {
     @Column(nullable = false, length = 100)
     private String nombrePlan;
 
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal precio;
+
     @OneToMany(mappedBy = "plan")
     private Set<ClienteDirecto> planClienteDirectoes = new HashSet<>();
 
@@ -48,6 +52,14 @@ public class Plan {
 
     public void setNombrePlan(final String nombrePlan) {
         this.nombrePlan = nombrePlan;
+    }
+
+    public BigDecimal getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(final BigDecimal precio) {
+        this.precio = precio;
     }
 
     public Set<ClienteDirecto> getPlanClienteDirectoes() {

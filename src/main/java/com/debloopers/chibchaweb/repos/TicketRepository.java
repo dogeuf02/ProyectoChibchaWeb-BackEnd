@@ -10,13 +10,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TicketRepository extends JpaRepository<Ticket, String> {
 
-    Ticket findFirstBySolucionEmpleadoes(Empleado empleado);
-
     Ticket findFirstByCliente(ClienteDirecto clienteDirecto);
 
     Ticket findFirstByNombreTipoDoc(Distribuidor distribuidor);
 
     Ticket findFirstByEmpleado(Empleado empleado);
+
+    Ticket findFirstBySolucionEmpleadoes(Empleado empleado);
 
     List<Ticket> findAllBySolucionEmpleadoes(Empleado empleado);
 

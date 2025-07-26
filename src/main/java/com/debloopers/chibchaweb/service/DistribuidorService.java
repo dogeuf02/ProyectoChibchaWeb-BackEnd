@@ -69,8 +69,6 @@ public class DistribuidorService {
             final DistribuidorDTO distribuidorDTO) {
         distribuidorDTO.setNumeroDocEmpresa(distribuidor.getNumeroDocEmpresa());
         distribuidorDTO.setNombreEmpresa(distribuidor.getNombreEmpresa());
-        distribuidorDTO.setCorreoEmpresa(distribuidor.getCorreoEmpresa());
-        distribuidorDTO.setContrasenaEmpresa(distribuidor.getContrasenaEmpresa());
         distribuidorDTO.setDireccionEmpresa(distribuidor.getDireccionEmpresa());
         distribuidorDTO.setNombreTipoDoc(distribuidor.getNombreTipoDoc() == null ? null : distribuidor.getNombreTipoDoc().getNombreTipoDoc());
         return distribuidorDTO;
@@ -79,8 +77,6 @@ public class DistribuidorService {
     private Distribuidor mapToEntity(final DistribuidorDTO distribuidorDTO,
             final Distribuidor distribuidor) {
         distribuidor.setNombreEmpresa(distribuidorDTO.getNombreEmpresa());
-        distribuidor.setCorreoEmpresa(distribuidorDTO.getCorreoEmpresa());
-        distribuidor.setContrasenaEmpresa(distribuidorDTO.getContrasenaEmpresa());
         distribuidor.setDireccionEmpresa(distribuidorDTO.getDireccionEmpresa());
         final TipoDocumentoEmp nombreTipoDoc = distribuidorDTO.getNombreTipoDoc() == null ? null : tipoDocumentoEmpRepository.findById(distribuidorDTO.getNombreTipoDoc())
                 .orElseThrow(() -> new NotFoundException("nombreTipoDoc not found"));

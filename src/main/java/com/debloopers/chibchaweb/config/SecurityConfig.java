@@ -16,7 +16,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // No
                                                                                                               // sesiones
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() //TODAS las rutas públicas
+                        .anyRequest().permitAll() // 👈 TODAS las rutas públicas
                 )
                 .build();
     }

@@ -20,14 +20,6 @@ public class AdministradorDTO {
     private String apellidoAdmin;
 
     @NotNull
-    @Size(max = 150)
-    private String correoAdmin;
-
-    @NotNull
-    @Size(max = 50)
-    private String contrasenaAdmin;
-
-    @NotNull
     private LocalDate fechaNacimientoAdmin;
 
     public String getIdAdmin() {
@@ -52,22 +44,6 @@ public class AdministradorDTO {
 
     public void setApellidoAdmin(final String apellidoAdmin) {
         this.apellidoAdmin = apellidoAdmin;
-    }
-
-    public String getCorreoAdmin() {
-        return correoAdmin;
-    }
-
-    public void setCorreoAdmin(final String correoAdmin) {
-        this.correoAdmin = correoAdmin;
-    }
-
-    public String getContrasenaAdmin() {
-        return contrasenaAdmin;
-    }
-
-    public void setContrasenaAdmin(final String contrasenaAdmin) {
-        this.contrasenaAdmin = contrasenaAdmin;
     }
 
     public LocalDate getFechaNacimientoAdmin() {
