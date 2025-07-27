@@ -1,0 +1,71 @@
+/*insertar planes*/
+INSERT INTO PLAN (NOMBRE_PLAN, PRECIO) VALUES
+('Chibcha-Plata', 9.99),
+('Chibcha-Oro', 19.99),
+('Chibcha-Platino', 39.99);
+
+/*Insertar documentos distribuidor*/
+INSERT INTO TIPO_DOCUMENTO_EMP (NOMBRE_TIPO_DOC) VALUES
+('NIT'),
+('RUC'),
+('CUIT'),
+('RIF'),
+('CPF_CNPJ'),
+('TIN'),
+('PASSPORT'),
+('BUSINESS_ID'),
+('OTHER');
+
+
+INSERT INTO TLD (TLD) VALUES
+('.com'),
+('.net'),
+('.org'),
+('.info'),
+('.biz'),
+('.co'),
+('.io'),
+('.app'),
+('.dev'),
+('.tech');
+
+/*Insert Registradores*/
+INSERT INTO REGISTRADOR (NOMBRE_REGISTRADOR) VALUES
+('GoDaddy'),
+('Hostinger'),
+('Namecheap');
+/*insert administradores*/
+INSERT INTO ADMINISTRADOR (NOMBRE_ADMIN, APELLIDO_ADMIN, FECHA_NACIMIENTO_ADMIN) VALUES
+('William', 'Forero', NULL),
+('Vivian', 'Gonzales', NULL),
+('David', 'Muñoz', NULL);
+/*Insert cliente directo*/
+INSERT INTO CLIENTE_DIRECTO (ID_PLAN, NOMBRE_CLIENTE, APELLIDO_CLIENTE, TELEFONO, FECHA_NACIMIENTO_CLIENTE) VALUES
+(1, 'Laura', 'García', '+573001112233', '1992-06-15'),
+(2, 'Carlos', 'Martínez', '+573002223344', '1985-11-22'),
+(3, 'Ana', 'Rojas', '+573003334455', '1998-03-10'),
+(1, 'Sofía', 'López', '+573004445566', '2000-12-01'),
+(2, 'Diego', 'Pérez', '+573005556677', '1990-09-05'),
+(3, 'Camila', 'Ramírez', '+573006667788', '1993-08-14'),
+(1, 'Mateo', 'Torres', '+573007778899', '1987-07-30'),
+(2, 'Valentina', 'Gómez', '+573008889900', '1995-04-18'),
+(3, 'Sebastián', 'Castaño', '+573009990011', '1991-01-09'),
+(1, 'Isabella', 'Mejía', '+573010101112', '1999-05-25');
+
+/*Insert Usuario*/
+INSERT INTO USUARIO (ID_CLIENTE, CORREO_USUARIO, CONTRASENA, ROL, ESTADO) VALUES
+(1, 'laura.garcia@correo.com', 'clave123', 'Cliente', 'ACTIVO'),
+(2, 'carlos.martinez@correo.com', 'clave123', 'Cliente', 'ACTIVO'),
+(3, 'ana.rojas@correo.com', 'clave123', 'Cliente', 'ACTIVO'),
+(4, 'sofia.lopez@correo.com', 'clave123', 'Cliente', 'ACTIVO'),
+(5, 'diego.perez@correo.com', 'clave123', 'Cliente', 'ACTIVO'),
+(6, 'camila.ramirez@correo.com', 'clave123', 'Cliente', 'ACTIVO'),
+(7, 'mateo.torres@correo.com', 'clave123', 'Cliente', 'ACTIVO'),
+(8, 'valentina.gomez@correo.com', 'clave123', 'Cliente', 'ACTIVO'),
+(9, 'sebastian.castano@correo.com', 'clave123', 'Cliente', 'ACTIVO'),
+(10, 'isabella.mejia@correo.com', 'clave123', 'Cliente', 'ACTIVO');
+
+INSERT INTO USUARIO (ID_ADMIN, CORREO_USUARIO, CONTRASENA, ROL, ESTADO) VALUES
+(1, 'william.forero@chibchaweb.fun', 'admin123', 'Administrador', 'ACTIVO'),
+(2, 'vivian.gonzales@chibchaweb.fun', 'admin123', 'Administrador', 'ACTIVO'),
+(3, 'david.munoz@chibchaweb.fun', 'admin123', 'Administrador', 'ACTIVO');
