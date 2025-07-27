@@ -1,15 +1,25 @@
 package com.debloopers.chibchaweb.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
-
 public class ClienteDirectoDTO {
 
-    @Size(max = 50)
-    @ClienteDirectoIdClienteValid
-    private String idCliente;
+     @Size(max = 50)
+     @ClienteDirectoIdClienteValid
+     private String idCliente;
+
+    @NotNull
+    @Email
+    @Size(max = 150)
+    private String correoCliente;
+
+    @NotNull
+    @Size(min = 6, max = 150)  // al menos 6 caracteres, como ejemplo
+    private String contrasenaCliente;
 
     @NotNull
     @Size(max = 50)
@@ -20,14 +30,6 @@ public class ClienteDirectoDTO {
     private String apellidoCliente;
 
     @NotNull
-    @Size(max = 150)
-    private String correoCliente;
-
-    @NotNull
-    @Size(max = 50)
-    private String contrasenaCliente;
-
-    @NotNull
     @Size(max = 20)
     private String telefono;
 
@@ -35,35 +37,13 @@ public class ClienteDirectoDTO {
 
     private Integer plan;
 
-    public String getIdCliente() {
-        return idCliente;
-    }
-
-    public void setIdCliente(final String idCliente) {
-        this.idCliente = idCliente;
-    }
-
-    public String getNombreCliente() {
-        return nombreCliente;
-    }
-
-    public void setNombreCliente(final String nombreCliente) {
-        this.nombreCliente = nombreCliente;
-    }
-
-    public String getApellidoCliente() {
-        return apellidoCliente;
-    }
-
-    public void setApellidoCliente(final String apellidoCliente) {
-        this.apellidoCliente = apellidoCliente;
-    }
+    // Getters & Setters
 
     public String getCorreoCliente() {
         return correoCliente;
     }
 
-    public void setCorreoCliente(final String correoCliente) {
+    public void setCorreoCliente(String correoCliente) {
         this.correoCliente = correoCliente;
     }
 
@@ -71,15 +51,31 @@ public class ClienteDirectoDTO {
         return contrasenaCliente;
     }
 
-    public void setContrasenaCliente(final String contrasenaCliente) {
+    public void setContrasenaCliente(String contrasenaCliente) {
         this.contrasenaCliente = contrasenaCliente;
+    }
+
+    public String getNombreCliente() {
+        return nombreCliente;
+    }
+
+    public void setNombreCliente(String nombreCliente) {
+        this.nombreCliente = nombreCliente;
+    }
+
+    public String getApellidoCliente() {
+        return apellidoCliente;
+    }
+
+    public void setApellidoCliente(String apellidoCliente) {
+        this.apellidoCliente = apellidoCliente;
     }
 
     public String getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(final String telefono) {
+    public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 
@@ -87,7 +83,7 @@ public class ClienteDirectoDTO {
         return fechaNacimientoCliente;
     }
 
-    public void setFechaNacimientoCliente(final LocalDate fechaNacimientoCliente) {
+    public void setFechaNacimientoCliente(LocalDate fechaNacimientoCliente) {
         this.fechaNacimientoCliente = fechaNacimientoCliente;
     }
 
@@ -95,8 +91,11 @@ public class ClienteDirectoDTO {
         return plan;
     }
 
-    public void setPlan(final Integer plan) {
+    public void setPlan(Integer plan) {
         this.plan = plan;
     }
 
+    public void setIdCliente(String idCliente) {
+        this.idCliente = idCliente;
+    }
 }

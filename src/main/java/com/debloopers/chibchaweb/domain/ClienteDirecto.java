@@ -25,27 +25,24 @@ public class ClienteDirecto {
     @Column(nullable = false, length = 50)
     private String apellidoCliente;
 
-    @Column(nullable = false, length = 150)
-    private String correoCliente;
-
-    @Column(nullable = false, length = 50)
-    private String contrasenaCliente;
-
     @Column(nullable = false, length = 20)
     private String telefono;
 
     @Column
     private LocalDate fechaNacimientoCliente;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "plan_id")
-    private Plan plan;
-
     @OneToMany(mappedBy = "cliente")
     private Set<SolicitudDomCd> clienteSolicitudDomCds = new HashSet<>();
 
     @OneToMany(mappedBy = "cliente")
     private Set<Ticket> clienteTickets = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "plan_id")
+    private Plan plan;
+
+    @OneToMany(mappedBy = "cliente")
+    private Set<Usuario> clienteUsuarios = new HashSet<>();
 
     public String getIdCliente() {
         return idCliente;
@@ -71,22 +68,6 @@ public class ClienteDirecto {
         this.apellidoCliente = apellidoCliente;
     }
 
-    public String getCorreoCliente() {
-        return correoCliente;
-    }
-
-    public void setCorreoCliente(final String correoCliente) {
-        this.correoCliente = correoCliente;
-    }
-
-    public String getContrasenaCliente() {
-        return contrasenaCliente;
-    }
-
-    public void setContrasenaCliente(final String contrasenaCliente) {
-        this.contrasenaCliente = contrasenaCliente;
-    }
-
     public String getTelefono() {
         return telefono;
     }
@@ -103,14 +84,6 @@ public class ClienteDirecto {
         this.fechaNacimientoCliente = fechaNacimientoCliente;
     }
 
-    public Plan getPlan() {
-        return plan;
-    }
-
-    public void setPlan(final Plan plan) {
-        this.plan = plan;
-    }
-
     public Set<SolicitudDomCd> getClienteSolicitudDomCds() {
         return clienteSolicitudDomCds;
     }
@@ -125,6 +98,22 @@ public class ClienteDirecto {
 
     public void setClienteTickets(final Set<Ticket> clienteTickets) {
         this.clienteTickets = clienteTickets;
+    }
+
+    public Plan getPlan() {
+        return plan;
+    }
+
+    public void setPlan(final Plan plan) {
+        this.plan = plan;
+    }
+
+    public Set<Usuario> getClienteUsuarios() {
+        return clienteUsuarios;
+    }
+
+    public void setClienteUsuarios(final Set<Usuario> clienteUsuarios) {
+        this.clienteUsuarios = clienteUsuarios;
     }
 
 }

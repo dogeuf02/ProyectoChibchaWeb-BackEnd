@@ -22,18 +22,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class TicketService {
 
     private final TicketRepository ticketRepository;
-    private final EmpleadoRepository empleadoRepository;
     private final ClienteDirectoRepository clienteDirectoRepository;
     private final DistribuidorRepository distribuidorRepository;
+    private final EmpleadoRepository empleadoRepository;
 
     public TicketService(final TicketRepository ticketRepository,
-            final EmpleadoRepository empleadoRepository,
             final ClienteDirectoRepository clienteDirectoRepository,
-            final DistribuidorRepository distribuidorRepository) {
+            final DistribuidorRepository distribuidorRepository,
+            final EmpleadoRepository empleadoRepository) {
         this.ticketRepository = ticketRepository;
-        this.empleadoRepository = empleadoRepository;
         this.clienteDirectoRepository = clienteDirectoRepository;
         this.distribuidorRepository = distribuidorRepository;
+        this.empleadoRepository = empleadoRepository;
     }
 
     public List<TicketDTO> findAll() {
@@ -74,12 +74,12 @@ public class TicketService {
         ticketDTO.setDescripcion(ticket.getDescripcion());
         ticketDTO.setPrioridad(ticket.getPrioridad());
         ticketDTO.setEstado(ticket.getEstado());
-        ticketDTO.setSolucionEmpleadoes(ticket.getSolucionEmpleadoes().stream()
-                .map(empleado -> empleado.getIdEmpleado())
-                .toList());
         ticketDTO.setCliente(ticket.getCliente() == null ? null : ticket.getCliente().getIdCliente());
         ticketDTO.setNombreTipoDoc(ticket.getNombreTipoDoc() == null ? null : ticket.getNombreTipoDoc().getNumeroDocEmpresa());
         ticketDTO.setEmpleado(ticket.getEmpleado() == null ? null : ticket.getEmpleado().getIdEmpleado());
+        ticketDTO.setSolucionEmpleadoes(ticket.getSolucionEmpleadoes().stream()
+                .map(empleado -> empleado.getIdEmpleado())
+                .toList());
         return ticketDTO;
     }
 
@@ -89,12 +89,6 @@ public class TicketService {
         ticket.setDescripcion(ticketDTO.getDescripcion());
         ticket.setPrioridad(ticketDTO.getPrioridad());
         ticket.setEstado(ticketDTO.getEstado());
-        final List<Empleado> solucionEmpleadoes = empleadoRepository.findAllById(
-                ticketDTO.getSolucionEmpleadoes() == null ? List.of() : ticketDTO.getSolucionEmpleadoes());
-        if (solucionEmpleadoes.size() != (ticketDTO.getSolucionEmpleadoes() == null ? 0 : ticketDTO.getSolucionEmpleadoes().size())) {
-            throw new NotFoundException("one of solucionEmpleadoes not found");
-        }
-        ticket.setSolucionEmpleadoes(new HashSet<>(solucionEmpleadoes));
         final ClienteDirecto cliente = ticketDTO.getCliente() == null ? null : clienteDirectoRepository.findById(ticketDTO.getCliente())
                 .orElseThrow(() -> new NotFoundException("cliente not found"));
         ticket.setCliente(cliente);
@@ -104,6 +98,12 @@ public class TicketService {
         final Empleado empleado = ticketDTO.getEmpleado() == null ? null : empleadoRepository.findById(ticketDTO.getEmpleado())
                 .orElseThrow(() -> new NotFoundException("empleado not found"));
         ticket.setEmpleado(empleado);
+        final List<Empleado> solucionEmpleadoes = empleadoRepository.findAllById(
+                ticketDTO.getSolucionEmpleadoes() == null ? List.of() : ticketDTO.getSolucionEmpleadoes());
+        if (solucionEmpleadoes.size() != (ticketDTO.getSolucionEmpleadoes() == null ? 0 : ticketDTO.getSolucionEmpleadoes().size())) {
+            throw new NotFoundException("one of solucionEmpleadoes not found");
+        }
+        ticket.setSolucionEmpleadoes(new HashSet<>(solucionEmpleadoes));
         return ticket;
     }
 

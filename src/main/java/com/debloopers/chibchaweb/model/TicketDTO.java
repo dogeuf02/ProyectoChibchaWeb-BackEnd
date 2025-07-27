@@ -20,14 +20,12 @@ public class TicketDTO {
 
     private String descripcion;
 
-    @Size(max = 30)
+    @Size(max = 255)
     private String prioridad;
 
     @NotNull
-    @Size(max = 30)
+    @Size(max = 255)
     private String estado;
-
-    private List<String> solucionEmpleadoes;
 
     @Size(max = 50)
     private String cliente;
@@ -37,6 +35,8 @@ public class TicketDTO {
 
     @Size(max = 10)
     private String empleado;
+
+    private List<String> solucionEmpleadoes;
 
     public String getIdTicket() {
         return idTicket;
@@ -86,14 +86,6 @@ public class TicketDTO {
         this.estado = estado;
     }
 
-    public List<String> getSolucionEmpleadoes() {
-        return solucionEmpleadoes;
-    }
-
-    public void setSolucionEmpleadoes(final List<String> solucionEmpleadoes) {
-        this.solucionEmpleadoes = solucionEmpleadoes;
-    }
-
     public String getCliente() {
         return cliente;
     }
@@ -116,6 +108,14 @@ public class TicketDTO {
 
     public void setEmpleado(final String empleado) {
         this.empleado = empleado;
+    }
+
+    public List<String> getSolucionEmpleadoes() {
+        return solucionEmpleadoes;
+    }
+
+    public void setSolucionEmpleadoes(final List<String> solucionEmpleadoes) {
+        this.solucionEmpleadoes = solucionEmpleadoes;
     }
 
 }

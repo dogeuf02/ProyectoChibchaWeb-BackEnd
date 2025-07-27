@@ -18,14 +18,14 @@ public class Registrador {
     @Column(nullable = false, length = 150)
     private String nombreRegistrador;
 
-    @Column(nullable = false, length = 150)
-    private String correoRegistrador;
-
     @OneToMany(mappedBy = "registrador")
     private Set<SolicitudDomCd> registradorSolicitudDomCds = new HashSet<>();
 
     @OneToMany(mappedBy = "registrador")
     private Set<SolicitudDomDistribuidor> registradorSolicitudDomDistribuidors = new HashSet<>();
+
+    @OneToMany(mappedBy = "registrador")
+    private Set<Usuario> registradorUsuarios = new HashSet<>();
 
     public String getIdRegistrador() {
         return idRegistrador;
@@ -41,14 +41,6 @@ public class Registrador {
 
     public void setNombreRegistrador(final String nombreRegistrador) {
         this.nombreRegistrador = nombreRegistrador;
-    }
-
-    public String getCorreoRegistrador() {
-        return correoRegistrador;
-    }
-
-    public void setCorreoRegistrador(final String correoRegistrador) {
-        this.correoRegistrador = correoRegistrador;
     }
 
     public Set<SolicitudDomCd> getRegistradorSolicitudDomCds() {
@@ -67,6 +59,14 @@ public class Registrador {
     public void setRegistradorSolicitudDomDistribuidors(
             final Set<SolicitudDomDistribuidor> registradorSolicitudDomDistribuidors) {
         this.registradorSolicitudDomDistribuidors = registradorSolicitudDomDistribuidors;
+    }
+
+    public Set<Usuario> getRegistradorUsuarios() {
+        return registradorUsuarios;
+    }
+
+    public void setRegistradorUsuarios(final Set<Usuario> registradorUsuarios) {
+        this.registradorUsuarios = registradorUsuarios;
     }
 
 }

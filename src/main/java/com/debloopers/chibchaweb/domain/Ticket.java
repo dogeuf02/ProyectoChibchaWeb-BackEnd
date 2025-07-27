@@ -28,19 +28,11 @@ public class Ticket {
     @Column(columnDefinition = "text")
     private String descripcion;
 
-    @Column(length = 30)
+    @Column
     private String prioridad;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false)
     private String estado;
-
-    @ManyToMany
-    @JoinTable(
-            name = "Solucion",
-            joinColumns = @JoinColumn(name = "idTicket"),
-            inverseJoinColumns = @JoinColumn(name = "idEmpleado")
-    )
-    private Set<Empleado> solucionEmpleadoes = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id")
@@ -53,6 +45,14 @@ public class Ticket {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "empleado_id")
     private Empleado empleado;
+
+    @ManyToMany
+    @JoinTable(
+            name = "Solucion",
+            joinColumns = @JoinColumn(name = "idTicket"),
+            inverseJoinColumns = @JoinColumn(name = "idEmpleado")
+    )
+    private Set<Empleado> solucionEmpleadoes = new HashSet<>();
 
     public String getIdTicket() {
         return idTicket;
@@ -102,14 +102,6 @@ public class Ticket {
         this.estado = estado;
     }
 
-    public Set<Empleado> getSolucionEmpleadoes() {
-        return solucionEmpleadoes;
-    }
-
-    public void setSolucionEmpleadoes(final Set<Empleado> solucionEmpleadoes) {
-        this.solucionEmpleadoes = solucionEmpleadoes;
-    }
-
     public ClienteDirecto getCliente() {
         return cliente;
     }
@@ -132,6 +124,14 @@ public class Ticket {
 
     public void setEmpleado(final Empleado empleado) {
         this.empleado = empleado;
+    }
+
+    public Set<Empleado> getSolucionEmpleadoes() {
+        return solucionEmpleadoes;
+    }
+
+    public void setSolucionEmpleadoes(final Set<Empleado> solucionEmpleadoes) {
+        this.solucionEmpleadoes = solucionEmpleadoes;
     }
 
 }

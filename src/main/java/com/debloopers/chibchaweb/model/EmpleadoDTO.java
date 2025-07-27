@@ -19,16 +19,8 @@ public class EmpleadoDTO {
     private String apellidoEmpleado;
 
     @NotNull
-    @Size(max = 100)
+    @Size(max = 255)
     private String cargoEmpleado;
-
-    @NotNull
-    @Size(max = 50)
-    private String usuarioEmpelado;
-
-    @NotNull
-    @Size(max = 50)
-    private String contrasenaEmpleado;
 
     public String getIdEmpleado() {
         return idEmpleado;
@@ -60,22 +52,6 @@ public class EmpleadoDTO {
 
     public void setCargoEmpleado(final String cargoEmpleado) {
         this.cargoEmpleado = cargoEmpleado;
-    }
-
-    public String getUsuarioEmpelado() {
-        return usuarioEmpelado;
-    }
-
-    public void setUsuarioEmpelado(final String usuarioEmpelado) {
-        this.usuarioEmpelado = usuarioEmpelado;
-    }
-
-    public String getContrasenaEmpleado() {
-        return contrasenaEmpleado;
-    }
-
-    public void setContrasenaEmpleado(final String contrasenaEmpleado) {
-        this.contrasenaEmpleado = contrasenaEmpleado;
     }
 
 }

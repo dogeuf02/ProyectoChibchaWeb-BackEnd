@@ -2,9 +2,11 @@ package com.debloopers.chibchaweb.service;
 
 import com.debloopers.chibchaweb.domain.Empleado;
 import com.debloopers.chibchaweb.domain.Ticket;
+import com.debloopers.chibchaweb.domain.Usuario;
 import com.debloopers.chibchaweb.model.EmpleadoDTO;
 import com.debloopers.chibchaweb.repos.EmpleadoRepository;
 import com.debloopers.chibchaweb.repos.TicketRepository;
+import com.debloopers.chibchaweb.repos.UsuarioRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
 import java.util.List;
@@ -19,11 +21,13 @@ public class EmpleadoService {
 
     private final EmpleadoRepository empleadoRepository;
     private final TicketRepository ticketRepository;
+    private final UsuarioRepository usuarioRepository;
 
     public EmpleadoService(final EmpleadoRepository empleadoRepository,
-            final TicketRepository ticketRepository) {
+            final TicketRepository ticketRepository, final UsuarioRepository usuarioRepository) {
         this.empleadoRepository = empleadoRepository;
         this.ticketRepository = ticketRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     public List<EmpleadoDTO> findAll() {
@@ -67,8 +71,6 @@ public class EmpleadoService {
         empleadoDTO.setNombreEmpleado(empleado.getNombreEmpleado());
         empleadoDTO.setApellidoEmpleado(empleado.getApellidoEmpleado());
         empleadoDTO.setCargoEmpleado(empleado.getCargoEmpleado());
-        empleadoDTO.setUsuarioEmpelado(empleado.getUsuarioEmpelado());
-        empleadoDTO.setContrasenaEmpleado(empleado.getContrasenaEmpleado());
         return empleadoDTO;
     }
 
@@ -76,8 +78,6 @@ public class EmpleadoService {
         empleado.setNombreEmpleado(empleadoDTO.getNombreEmpleado());
         empleado.setApellidoEmpleado(empleadoDTO.getApellidoEmpleado());
         empleado.setCargoEmpleado(empleadoDTO.getCargoEmpleado());
-        empleado.setUsuarioEmpelado(empleadoDTO.getUsuarioEmpelado());
-        empleado.setContrasenaEmpleado(empleadoDTO.getContrasenaEmpleado());
         return empleado;
     }
 
@@ -93,6 +93,12 @@ public class EmpleadoService {
         if (empleadoTicket != null) {
             referencedWarning.setKey("empleado.ticket.empleado.referenced");
             referencedWarning.addParam(empleadoTicket.getIdTicket());
+            return referencedWarning;
+        }
+        final Usuario empleadoUsuario = usuarioRepository.findFirstByEmpleado(empleado);
+        if (empleadoUsuario != null) {
+            referencedWarning.setKey("empleado.usuario.empleado.referenced");
+            referencedWarning.addParam(empleadoUsuario.getIdUsuario());
             return referencedWarning;
         }
         return null;

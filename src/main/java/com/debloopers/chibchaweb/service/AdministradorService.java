@@ -3,10 +3,12 @@ package com.debloopers.chibchaweb.service;
 import com.debloopers.chibchaweb.domain.Administrador;
 import com.debloopers.chibchaweb.domain.SolicitudDomCd;
 import com.debloopers.chibchaweb.domain.SolicitudDomDistribuidor;
+import com.debloopers.chibchaweb.domain.Usuario;
 import com.debloopers.chibchaweb.model.AdministradorDTO;
 import com.debloopers.chibchaweb.repos.AdministradorRepository;
 import com.debloopers.chibchaweb.repos.SolicitudDomCdRepository;
 import com.debloopers.chibchaweb.repos.SolicitudDomDistribuidorRepository;
+import com.debloopers.chibchaweb.repos.UsuarioRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
 import java.util.List;
@@ -20,13 +22,16 @@ public class AdministradorService {
     private final AdministradorRepository administradorRepository;
     private final SolicitudDomCdRepository solicitudDomCdRepository;
     private final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository;
+    private final UsuarioRepository usuarioRepository;
 
     public AdministradorService(final AdministradorRepository administradorRepository,
             final SolicitudDomCdRepository solicitudDomCdRepository,
-            final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository) {
+            final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository,
+            final UsuarioRepository usuarioRepository) {
         this.administradorRepository = administradorRepository;
         this.solicitudDomCdRepository = solicitudDomCdRepository;
         this.solicitudDomDistribuidorRepository = solicitudDomDistribuidorRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     public List<AdministradorDTO> findAll() {
@@ -65,8 +70,6 @@ public class AdministradorService {
         administradorDTO.setIdAdmin(administrador.getIdAdmin());
         administradorDTO.setNombreAdmin(administrador.getNombreAdmin());
         administradorDTO.setApellidoAdmin(administrador.getApellidoAdmin());
-        administradorDTO.setCorreoAdmin(administrador.getCorreoAdmin());
-        administradorDTO.setContrasenaAdmin(administrador.getContrasenaAdmin());
         administradorDTO.setFechaNacimientoAdmin(administrador.getFechaNacimientoAdmin());
         return administradorDTO;
     }
@@ -75,8 +78,6 @@ public class AdministradorService {
             final Administrador administrador) {
         administrador.setNombreAdmin(administradorDTO.getNombreAdmin());
         administrador.setApellidoAdmin(administradorDTO.getApellidoAdmin());
-        administrador.setCorreoAdmin(administradorDTO.getCorreoAdmin());
-        administrador.setContrasenaAdmin(administradorDTO.getContrasenaAdmin());
         administrador.setFechaNacimientoAdmin(administradorDTO.getFechaNacimientoAdmin());
         return administrador;
     }
@@ -99,6 +100,12 @@ public class AdministradorService {
         if (adminSolicitudDomDistribuidor != null) {
             referencedWarning.setKey("administrador.solicitudDomDistribuidor.admin.referenced");
             referencedWarning.addParam(adminSolicitudDomDistribuidor.getTld());
+            return referencedWarning;
+        }
+        final Usuario adminUsuario = usuarioRepository.findFirstByAdmin(administrador);
+        if (adminUsuario != null) {
+            referencedWarning.setKey("administrador.usuario.admin.referenced");
+            referencedWarning.addParam(adminUsuario.getIdUsuario());
             return referencedWarning;
         }
         return null;

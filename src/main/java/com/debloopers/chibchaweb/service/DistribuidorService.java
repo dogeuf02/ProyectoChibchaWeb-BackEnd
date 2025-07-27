@@ -1,19 +1,17 @@
 package com.debloopers.chibchaweb.service;
 
-import com.debloopers.chibchaweb.domain.Distribuidor;
-import com.debloopers.chibchaweb.domain.SolicitudDomDistribuidor;
-import com.debloopers.chibchaweb.domain.Ticket;
-import com.debloopers.chibchaweb.domain.TipoDocumentoEmp;
+import com.debloopers.chibchaweb.domain.*;
 import com.debloopers.chibchaweb.model.DistribuidorDTO;
-import com.debloopers.chibchaweb.repos.DistribuidorRepository;
-import com.debloopers.chibchaweb.repos.SolicitudDomDistribuidorRepository;
-import com.debloopers.chibchaweb.repos.TicketRepository;
-import com.debloopers.chibchaweb.repos.TipoDocumentoEmpRepository;
+import com.debloopers.chibchaweb.repos.*;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -23,6 +21,12 @@ public class DistribuidorService {
     private final TipoDocumentoEmpRepository tipoDocumentoEmpRepository;
     private final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository;
     private final TicketRepository ticketRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public DistribuidorService(final DistribuidorRepository distribuidorRepository,
             final TipoDocumentoEmpRepository tipoDocumentoEmpRepository,
@@ -47,11 +51,39 @@ public class DistribuidorService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    @Transactional
     public String create(final DistribuidorDTO distribuidorDTO) {
-        final Distribuidor distribuidor = new Distribuidor();
-        mapToEntity(distribuidorDTO, distribuidor);
-        distribuidor.setNumeroDocEmpresa(distribuidorDTO.getNumeroDocEmpresa());
-        return distribuidorRepository.save(distribuidor).getNumeroDocEmpresa();
+        try {
+
+            if (usuarioRepository.findByCorreoUsuario(distribuidorDTO.getCorreoDistribuidor()) != null) {
+                return "error: correo ya registrado";
+            }
+
+            TipoDocumentoEmp tipoDocumento = tipoDocumentoEmpRepository.findById(distribuidorDTO.getNombreTipoDoc())
+                    .orElseThrow(() -> new NotFoundException("Tipo de documento no encontrado"));
+
+            Distribuidor distribuidor = new Distribuidor();
+            distribuidor.setNumeroDocEmpresa(distribuidorDTO.getNumeroDocEmpresa());
+            distribuidor.setNombreEmpresa(distribuidorDTO.getNombreEmpresa());
+            distribuidor.setDireccionEmpresa(distribuidorDTO.getDireccionEmpresa());
+            distribuidor.setNombreTipoDoc(tipoDocumento);
+
+            distribuidorRepository.save(distribuidor);
+
+            Usuario usuario = new Usuario();
+            usuario.setCorreoUsuario(distribuidorDTO.getCorreoDistribuidor());
+            usuario.setContrasena(passwordEncoder.encode(distribuidorDTO.getContrasenaDistribuidor()));
+            usuario.setRolUsuario("Distribuidor");
+
+            //La lógica actual maneja una relación de usuario con registrador y no distribuidor!
+            //usuario.setDistribuidor(distribuidor);
+
+            usuarioRepository.save(usuario);
+
+            return "ok";
+        } catch (Exception e) {
+            return "error";
+        }
     }
 
     public void update(final String numeroDocEmpresa, final DistribuidorDTO distribuidorDTO) {
@@ -69,8 +101,6 @@ public class DistribuidorService {
             final DistribuidorDTO distribuidorDTO) {
         distribuidorDTO.setNumeroDocEmpresa(distribuidor.getNumeroDocEmpresa());
         distribuidorDTO.setNombreEmpresa(distribuidor.getNombreEmpresa());
-        distribuidorDTO.setCorreoEmpresa(distribuidor.getCorreoEmpresa());
-        distribuidorDTO.setContrasenaEmpresa(distribuidor.getContrasenaEmpresa());
         distribuidorDTO.setDireccionEmpresa(distribuidor.getDireccionEmpresa());
         distribuidorDTO.setNombreTipoDoc(distribuidor.getNombreTipoDoc() == null ? null : distribuidor.getNombreTipoDoc().getNombreTipoDoc());
         return distribuidorDTO;
@@ -79,8 +109,6 @@ public class DistribuidorService {
     private Distribuidor mapToEntity(final DistribuidorDTO distribuidorDTO,
             final Distribuidor distribuidor) {
         distribuidor.setNombreEmpresa(distribuidorDTO.getNombreEmpresa());
-        distribuidor.setCorreoEmpresa(distribuidorDTO.getCorreoEmpresa());
-        distribuidor.setContrasenaEmpresa(distribuidorDTO.getContrasenaEmpresa());
         distribuidor.setDireccionEmpresa(distribuidorDTO.getDireccionEmpresa());
         final TipoDocumentoEmp nombreTipoDoc = distribuidorDTO.getNombreTipoDoc() == null ? null : tipoDocumentoEmpRepository.findById(distribuidorDTO.getNombreTipoDoc())
                 .orElseThrow(() -> new NotFoundException("nombreTipoDoc not found"));

@@ -22,20 +22,17 @@ public class Empleado {
     @Column(nullable = false, length = 50)
     private String apellidoEmpleado;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
     private String cargoEmpleado;
 
-    @Column(nullable = false, length = 50)
-    private String usuarioEmpelado;
-
-    @Column(nullable = false, length = 50)
-    private String contrasenaEmpleado;
+    @OneToMany(mappedBy = "empleado")
+    private Set<Ticket> empleadoTickets = new HashSet<>();
 
     @ManyToMany(mappedBy = "solucionEmpleadoes")
     private Set<Ticket> solucionTickets = new HashSet<>();
 
     @OneToMany(mappedBy = "empleado")
-    private Set<Ticket> empleadoTickets = new HashSet<>();
+    private Set<Usuario> empleadoUsuarios = new HashSet<>();
 
     public String getIdEmpleado() {
         return idEmpleado;
@@ -69,20 +66,12 @@ public class Empleado {
         this.cargoEmpleado = cargoEmpleado;
     }
 
-    public String getUsuarioEmpelado() {
-        return usuarioEmpelado;
+    public Set<Ticket> getEmpleadoTickets() {
+        return empleadoTickets;
     }
 
-    public void setUsuarioEmpelado(final String usuarioEmpelado) {
-        this.usuarioEmpelado = usuarioEmpelado;
-    }
-
-    public String getContrasenaEmpleado() {
-        return contrasenaEmpleado;
-    }
-
-    public void setContrasenaEmpleado(final String contrasenaEmpleado) {
-        this.contrasenaEmpleado = contrasenaEmpleado;
+    public void setEmpleadoTickets(final Set<Ticket> empleadoTickets) {
+        this.empleadoTickets = empleadoTickets;
     }
 
     public Set<Ticket> getSolucionTickets() {
@@ -93,12 +82,12 @@ public class Empleado {
         this.solucionTickets = solucionTickets;
     }
 
-    public Set<Ticket> getEmpleadoTickets() {
-        return empleadoTickets;
+    public Set<Usuario> getEmpleadoUsuarios() {
+        return empleadoUsuarios;
     }
 
-    public void setEmpleadoTickets(final Set<Ticket> empleadoTickets) {
-        this.empleadoTickets = empleadoTickets;
+    public void setEmpleadoUsuarios(final Set<Usuario> empleadoUsuarios) {
+        this.empleadoUsuarios = empleadoUsuarios;
     }
 
 }

@@ -22,12 +22,6 @@ public class Administrador {
     @Column(nullable = false, length = 50)
     private String apellidoAdmin;
 
-    @Column(nullable = false, length = 150)
-    private String correoAdmin;
-
-    @Column(nullable = false, length = 50)
-    private String contrasenaAdmin;
-
     @Column(nullable = false)
     private LocalDate fechaNacimientoAdmin;
 
@@ -36,6 +30,9 @@ public class Administrador {
 
     @OneToMany(mappedBy = "admin")
     private Set<SolicitudDomDistribuidor> adminSolicitudDomDistribuidors = new HashSet<>();
+
+    @OneToMany(mappedBy = "admin")
+    private Set<Usuario> adminUsuarios = new HashSet<>();
 
     public String getIdAdmin() {
         return idAdmin;
@@ -61,22 +58,6 @@ public class Administrador {
         this.apellidoAdmin = apellidoAdmin;
     }
 
-    public String getCorreoAdmin() {
-        return correoAdmin;
-    }
-
-    public void setCorreoAdmin(final String correoAdmin) {
-        this.correoAdmin = correoAdmin;
-    }
-
-    public String getContrasenaAdmin() {
-        return contrasenaAdmin;
-    }
-
-    public void setContrasenaAdmin(final String contrasenaAdmin) {
-        this.contrasenaAdmin = contrasenaAdmin;
-    }
-
     public LocalDate getFechaNacimientoAdmin() {
         return fechaNacimientoAdmin;
     }
@@ -100,6 +81,14 @@ public class Administrador {
     public void setAdminSolicitudDomDistribuidors(
             final Set<SolicitudDomDistribuidor> adminSolicitudDomDistribuidors) {
         this.adminSolicitudDomDistribuidors = adminSolicitudDomDistribuidors;
+    }
+
+    public Set<Usuario> getAdminUsuarios() {
+        return adminUsuarios;
+    }
+
+    public void setAdminUsuarios(final Set<Usuario> adminUsuarios) {
+        this.adminUsuarios = adminUsuarios;
     }
 
 }
