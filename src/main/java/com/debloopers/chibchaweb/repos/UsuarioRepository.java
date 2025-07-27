@@ -18,4 +18,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     Usuario findFirstByDistribuidor(Distribuidor distribuidor);
 
+    Usuario findByCorreoUsuario(String correoUsuario);
 }

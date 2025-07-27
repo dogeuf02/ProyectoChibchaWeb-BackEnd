@@ -6,6 +6,7 @@ import com.debloopers.chibchaweb.domain.SolicitudDomCliente;
 import com.debloopers.chibchaweb.domain.Ticket;
 import com.debloopers.chibchaweb.domain.Usuario;
 import com.debloopers.chibchaweb.model.ClienteDirectoDTO;
+import com.debloopers.chibchaweb.model.ClienteDirectoRegistroDTO;
 import com.debloopers.chibchaweb.repos.ClienteDirectoRepository;
 import com.debloopers.chibchaweb.repos.PlanRepository;
 import com.debloopers.chibchaweb.repos.SolicitudDomClienteRepository;
@@ -14,8 +15,12 @@ import com.debloopers.chibchaweb.repos.UsuarioRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -26,6 +31,9 @@ public class ClienteDirectoService {
     private final UsuarioRepository usuarioRepository;
     private final SolicitudDomClienteRepository solicitudDomClienteRepository;
     private final TicketRepository ticketRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public ClienteDirectoService(final ClienteDirectoRepository clienteDirectoRepository,
             final PlanRepository planRepository, final UsuarioRepository usuarioRepository,
@@ -51,10 +59,35 @@ public class ClienteDirectoService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public Integer create(final ClienteDirectoDTO clienteDirectoDTO) {
-        final ClienteDirecto clienteDirecto = new ClienteDirecto();
-        mapToEntity(clienteDirectoDTO, clienteDirecto);
-        return clienteDirectoRepository.save(clienteDirecto).getIdCliente();
+    @Transactional
+    public boolean create(ClienteDirectoRegistroDTO dto) {
+        try {
+            // Verificar si el correo ya existe
+            if (usuarioRepository.findByCorreoUsuario(dto.getCorreoCliente()) != null) {
+                return false;
+            }
+
+            ClienteDirecto cliente = new ClienteDirecto();
+            cliente.setNombreCliente(dto.getNombreCliente());
+            cliente.setApellidoCliente(dto.getApellidoCliente());
+            cliente.setTelefono(dto.getTelefono());
+            cliente.setFechaNacimientoCliente(dto.getFechaNacimientoCliente());
+            // cliente.setIdPlan(dto.getIdPlan());
+            clienteDirectoRepository.save(cliente);
+
+            Usuario usuario = new Usuario();
+            usuario.setCorreoUsuario(dto.getCorreoCliente());
+            usuario.setContrasena(passwordEncoder.encode(dto.getContrasenaCliente()));
+            usuario.setRol("Cliente");
+            usuario.setEstado("ACTIVO");
+            usuario.setCliente(cliente);
+
+            usuarioRepository.save(usuario);
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void update(final Integer idCliente, final ClienteDirectoDTO clienteDirectoDTO) {
