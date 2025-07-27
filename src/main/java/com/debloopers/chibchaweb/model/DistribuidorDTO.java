@@ -22,6 +22,14 @@ public class DistribuidorDTO {
     @Size(max = 20)
     private String nombreTipoDoc;
 
+    @NotNull
+    @Size(max = 150)
+    private String correoDistribuidor;
+
+    @NotNull
+    @Size(max = 150)
+    private String contrasenaDistribuidor;
+
     public String getNumeroDocEmpresa() {
         return numeroDocEmpresa;
     }
@@ -54,4 +62,19 @@ public class DistribuidorDTO {
         this.nombreTipoDoc = nombreTipoDoc;
     }
 
+    public String getCorreoDistribuidor() {
+        return correoDistribuidor;
+    }
+
+    public void setCorreoDistribuidor(String correoDistribuidor) {
+        this.correoDistribuidor = correoDistribuidor;
+    }
+
+    public String getContrasenaDistribuidor() {
+        return contrasenaDistribuidor;
+    }
+
+    public void setContrasenaDistribuidor(String contrasenaDistribuidor) {
+        this.contrasenaDistribuidor = contrasenaDistribuidor;
+    }
 }

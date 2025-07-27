@@ -7,6 +7,8 @@ import com.debloopers.chibchaweb.util.ReferencedWarning;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api/distribuidors", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DistribuidorResource {
 
+    @Autowired
     private final DistribuidorService distribuidorService;
 
     public DistribuidorResource(final DistribuidorService distribuidorService) {

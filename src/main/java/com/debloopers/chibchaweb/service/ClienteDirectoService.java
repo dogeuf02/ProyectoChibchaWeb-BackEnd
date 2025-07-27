@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -57,8 +58,14 @@ public class ClienteDirectoService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    @Transactional
     public boolean create(ClienteDirectoDTO dto) {
         try {
+            // Verificar si el correo ya existe
+            if (usuarioRepository.findByCorreoUsuario(dto.getCorreoCliente()) != null) {
+                return false; // Correo ya registrado, no continuar
+            }
+
             Usuario usuario = new Usuario();
             usuario.setCorreoUsuario(dto.getCorreoCliente());
             usuario.setContrasena(passwordEncoder.encode(dto.getContrasenaCliente()));
@@ -71,9 +78,9 @@ public class ClienteDirectoService {
             cliente.setApellidoCliente(dto.getApellidoCliente());
             cliente.setTelefono(dto.getTelefono());
             cliente.setFechaNacimientoCliente(dto.getFechaNacimientoCliente());
-            //cliente.setIdPlan(dto.getIdPlan());
-
+            // cliente.setIdPlan(dto.getIdPlan());
             clienteDirectoRepository.save(cliente);
+
             return true;
         } catch (Exception e) {
             return false;
