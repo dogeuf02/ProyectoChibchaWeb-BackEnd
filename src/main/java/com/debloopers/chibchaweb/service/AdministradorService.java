@@ -5,6 +5,8 @@ import com.debloopers.chibchaweb.domain.SolicitudDomCliente;
 import com.debloopers.chibchaweb.domain.SolicitudDomDistribuidor;
 import com.debloopers.chibchaweb.domain.Usuario;
 import com.debloopers.chibchaweb.model.AdministradorDTO;
+import com.debloopers.chibchaweb.model.AdministradorRegistroRequestDTO;
+import com.debloopers.chibchaweb.model.AdministradorRegistroResponseDTO;
 import com.debloopers.chibchaweb.repos.AdministradorRepository;
 import com.debloopers.chibchaweb.repos.SolicitudDomClienteRepository;
 import com.debloopers.chibchaweb.repos.SolicitudDomDistribuidorRepository;
@@ -12,8 +14,12 @@ import com.debloopers.chibchaweb.repos.UsuarioRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -23,6 +29,9 @@ public class AdministradorService {
     private final UsuarioRepository usuarioRepository;
     private final SolicitudDomClienteRepository solicitudDomClienteRepository;
     private final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public AdministradorService(final AdministradorRepository administradorRepository,
             final UsuarioRepository usuarioRepository,
@@ -47,10 +56,31 @@ public class AdministradorService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public Integer create(final AdministradorDTO administradorDTO) {
-        final Administrador administrador = new Administrador();
-        mapToEntity(administradorDTO, administrador);
-        return administradorRepository.save(administrador).getIdAdmin();
+    @Transactional
+    public AdministradorRegistroResponseDTO create(AdministradorRegistroRequestDTO dto) {
+        try {
+            if (usuarioRepository.findByCorreoUsuario(dto.getCorreoAdmin()) != null) {
+                return new AdministradorRegistroResponseDTO(false, "El correo ya está registrado.");
+            }
+
+            Administrador administrador = new Administrador();
+            administrador.setNombreAdmin(dto.getNombreAdmin());
+            administrador.setApellidoAdmin(dto.getApellidoAdmin());
+            administrador.setFechaNacimientoAdmin(dto.getFechaNacimientoAdmin());
+            administradorRepository.save(administrador);
+
+            Usuario usuario = new Usuario();
+            usuario.setCorreoUsuario(dto.getCorreoAdmin());
+            usuario.setContrasena(passwordEncoder.encode(dto.getContrasenaAdmin()));
+            usuario.setRol("Administrador");
+            usuario.setEstado("ACTIVO");
+            usuario.setAdmin(administrador);
+            usuarioRepository.save(usuario);
+
+            return new AdministradorRegistroResponseDTO(true, "Administrador creado exitosamente.");
+        } catch (Exception e) {
+            return new AdministradorRegistroResponseDTO(false, "Error interno al crear el administrador.");
+        }
     }
 
     public void update(final Integer idAdmin, final AdministradorDTO administradorDTO) {

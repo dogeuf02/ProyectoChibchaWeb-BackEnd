@@ -1,9 +1,12 @@
 package com.debloopers.chibchaweb.rest;
 
 import com.debloopers.chibchaweb.model.AdministradorDTO;
+import com.debloopers.chibchaweb.model.AdministradorRegistroRequestDTO;
+import com.debloopers.chibchaweb.model.AdministradorRegistroResponseDTO;
 import com.debloopers.chibchaweb.service.AdministradorService;
 import com.debloopers.chibchaweb.util.ReferencedException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -41,13 +44,21 @@ public class AdministradorResource {
         return ResponseEntity.ok(administradorService.get(idAdmin));
     }
 
-    @PostMapping
+    @Operation(summary = "Registrar un administrador")
+    @PostMapping("/registroAdministrador")
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Integer> createAdministrador(
-            @RequestBody @Valid final AdministradorDTO administradorDTO) {
-        final Integer createdIdAdmin = administradorService.create(administradorDTO);
-        return new ResponseEntity<>(createdIdAdmin, HttpStatus.CREATED);
+    public ResponseEntity<AdministradorRegistroResponseDTO> createAdministrador(
+            @RequestBody @Valid final AdministradorRegistroRequestDTO administradorDTO) {
+
+        AdministradorRegistroResponseDTO respuesta = administradorService.create(administradorDTO);
+
+        if (respuesta.isCreado()) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respuesta);
+        }
     }
+
 
     @PutMapping("/{idAdmin}")
     public ResponseEntity<Integer> updateAdministrador(

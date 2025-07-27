@@ -45,6 +45,7 @@ public class ClienteDirectoResource {
         return ResponseEntity.ok(clienteDirectoService.get(idCliente));
     }
 
+    @Operation(summary = "Registrar un cliente")
     @PostMapping("/registroCliente")
     @ApiResponse(responseCode = "201")
     public ResponseEntity<ClienteDirectoRegistroResponseDTO> create(@RequestBody @Valid ClienteDirectoRegistroRequestDTO clienteDirectoDTO) {

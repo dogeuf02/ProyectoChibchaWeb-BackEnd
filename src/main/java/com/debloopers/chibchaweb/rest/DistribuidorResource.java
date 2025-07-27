@@ -45,6 +45,8 @@ public class DistribuidorResource {
         return ResponseEntity.ok(distribuidorService.get(idDistribuidor));
     }
 
+
+    @Operation(summary = "Registrar un distribuidor")
     @PostMapping("/registroDistribuidor")
     @ApiResponse(responseCode = "201")
     public ResponseEntity<DistribuidorRegistroResponseDTO> createDistribuidor(
