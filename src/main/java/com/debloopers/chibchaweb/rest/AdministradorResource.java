@@ -37,30 +37,30 @@ public class AdministradorResource {
 
     @GetMapping("/{idAdmin}")
     public ResponseEntity<AdministradorDTO> getAdministrador(
-            @PathVariable(name = "idAdmin") final String idAdmin) {
+            @PathVariable(name = "idAdmin") final Integer idAdmin) {
         return ResponseEntity.ok(administradorService.get(idAdmin));
     }
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<String> createAdministrador(
+    public ResponseEntity<Integer> createAdministrador(
             @RequestBody @Valid final AdministradorDTO administradorDTO) {
-        final String createdIdAdmin = administradorService.create(administradorDTO);
-        return new ResponseEntity<>('"' + createdIdAdmin + '"', HttpStatus.CREATED);
+        final Integer createdIdAdmin = administradorService.create(administradorDTO);
+        return new ResponseEntity<>(createdIdAdmin, HttpStatus.CREATED);
     }
 
     @PutMapping("/{idAdmin}")
-    public ResponseEntity<String> updateAdministrador(
-            @PathVariable(name = "idAdmin") final String idAdmin,
+    public ResponseEntity<Integer> updateAdministrador(
+            @PathVariable(name = "idAdmin") final Integer idAdmin,
             @RequestBody @Valid final AdministradorDTO administradorDTO) {
         administradorService.update(idAdmin, administradorDTO);
-        return ResponseEntity.ok('"' + idAdmin + '"');
+        return ResponseEntity.ok(idAdmin);
     }
 
     @DeleteMapping("/{idAdmin}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteAdministrador(
-            @PathVariable(name = "idAdmin") final String idAdmin) {
+            @PathVariable(name = "idAdmin") final Integer idAdmin) {
         final ReferencedWarning referencedWarning = administradorService.getReferencedWarning(idAdmin);
         if (referencedWarning != null) {
             throw new ReferencedException(referencedWarning);

@@ -6,8 +6,12 @@ import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
+import lombok.Getter;
+import lombok.Setter;
 
 
+@Getter
+@Setter
 public class PlanDTO {
 
     private Integer idPlan;
@@ -21,29 +25,5 @@ public class PlanDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @Schema(type = "string", example = "90.08")
     private BigDecimal precio;
-
-    public Integer getIdPlan() {
-        return idPlan;
-    }
-
-    public void setIdPlan(final Integer idPlan) {
-        this.idPlan = idPlan;
-    }
-
-    public String getNombrePlan() {
-        return nombrePlan;
-    }
-
-    public void setNombrePlan(final String nombrePlan) {
-        this.nombrePlan = nombrePlan;
-    }
-
-    public BigDecimal getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(final BigDecimal precio) {
-        this.precio = precio;
-    }
 
 }

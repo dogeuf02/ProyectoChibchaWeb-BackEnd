@@ -9,10 +9,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SolicitudDomDistribuidorDTO {
+public class SolicitudDomClienteDTO {
 
     @Size(max = 63)
-    @SolicitudDomDistribuidorTldValid
+    @SolicitudDomClienteTldValid
     private String tld;
 
     @NotNull
@@ -27,7 +27,7 @@ public class SolicitudDomDistribuidorDTO {
     private LocalDate fechaEnvio;
 
     @NotNull
-    private Integer distribuidor;
+    private Integer cliente;
 
     @NotNull
     @Size(max = 253)

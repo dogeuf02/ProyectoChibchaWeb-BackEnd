@@ -37,30 +37,30 @@ public class RegistradorResource {
 
     @GetMapping("/{idRegistrador}")
     public ResponseEntity<RegistradorDTO> getRegistrador(
-            @PathVariable(name = "idRegistrador") final String idRegistrador) {
+            @PathVariable(name = "idRegistrador") final Integer idRegistrador) {
         return ResponseEntity.ok(registradorService.get(idRegistrador));
     }
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<String> createRegistrador(
+    public ResponseEntity<Integer> createRegistrador(
             @RequestBody @Valid final RegistradorDTO registradorDTO) {
-        final String createdIdRegistrador = registradorService.create(registradorDTO);
-        return new ResponseEntity<>('"' + createdIdRegistrador + '"', HttpStatus.CREATED);
+        final Integer createdIdRegistrador = registradorService.create(registradorDTO);
+        return new ResponseEntity<>(createdIdRegistrador, HttpStatus.CREATED);
     }
 
     @PutMapping("/{idRegistrador}")
-    public ResponseEntity<String> updateRegistrador(
-            @PathVariable(name = "idRegistrador") final String idRegistrador,
+    public ResponseEntity<Integer> updateRegistrador(
+            @PathVariable(name = "idRegistrador") final Integer idRegistrador,
             @RequestBody @Valid final RegistradorDTO registradorDTO) {
         registradorService.update(idRegistrador, registradorDTO);
-        return ResponseEntity.ok('"' + idRegistrador + '"');
+        return ResponseEntity.ok(idRegistrador);
     }
 
     @DeleteMapping("/{idRegistrador}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteRegistrador(
-            @PathVariable(name = "idRegistrador") final String idRegistrador) {
+            @PathVariable(name = "idRegistrador") final Integer idRegistrador) {
         final ReferencedWarning referencedWarning = registradorService.getReferencedWarning(idRegistrador);
         if (referencedWarning != null) {
             throw new ReferencedException(referencedWarning);

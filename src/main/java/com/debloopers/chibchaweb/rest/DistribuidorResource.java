@@ -7,8 +7,6 @@ import com.debloopers.chibchaweb.util.ReferencedWarning;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api/distribuidors", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DistribuidorResource {
 
-    @Autowired
     private final DistribuidorService distribuidorService;
 
     public DistribuidorResource(final DistribuidorService distribuidorService) {
@@ -38,37 +35,37 @@ public class DistribuidorResource {
         return ResponseEntity.ok(distribuidorService.findAll());
     }
 
-    @GetMapping("/{numeroDocEmpresa}")
+    @GetMapping("/{idDistribuidor}")
     public ResponseEntity<DistribuidorDTO> getDistribuidor(
-            @PathVariable(name = "numeroDocEmpresa") final String numeroDocEmpresa) {
-        return ResponseEntity.ok(distribuidorService.get(numeroDocEmpresa));
+            @PathVariable(name = "idDistribuidor") final Integer idDistribuidor) {
+        return ResponseEntity.ok(distribuidorService.get(idDistribuidor));
     }
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<String> createDistribuidor(
+    public ResponseEntity<Integer> createDistribuidor(
             @RequestBody @Valid final DistribuidorDTO distribuidorDTO) {
-        final String createdNumeroDocEmpresa = distribuidorService.create(distribuidorDTO);
-        return new ResponseEntity<>('"' + createdNumeroDocEmpresa + '"', HttpStatus.CREATED);
+        final Integer createdIdDistribuidor = distribuidorService.create(distribuidorDTO);
+        return new ResponseEntity<>(createdIdDistribuidor, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{numeroDocEmpresa}")
-    public ResponseEntity<String> updateDistribuidor(
-            @PathVariable(name = "numeroDocEmpresa") final String numeroDocEmpresa,
+    @PutMapping("/{idDistribuidor}")
+    public ResponseEntity<Integer> updateDistribuidor(
+            @PathVariable(name = "idDistribuidor") final Integer idDistribuidor,
             @RequestBody @Valid final DistribuidorDTO distribuidorDTO) {
-        distribuidorService.update(numeroDocEmpresa, distribuidorDTO);
-        return ResponseEntity.ok('"' + numeroDocEmpresa + '"');
+        distribuidorService.update(idDistribuidor, distribuidorDTO);
+        return ResponseEntity.ok(idDistribuidor);
     }
 
-    @DeleteMapping("/{numeroDocEmpresa}")
+    @DeleteMapping("/{idDistribuidor}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteDistribuidor(
-            @PathVariable(name = "numeroDocEmpresa") final String numeroDocEmpresa) {
-        final ReferencedWarning referencedWarning = distribuidorService.getReferencedWarning(numeroDocEmpresa);
+            @PathVariable(name = "idDistribuidor") final Integer idDistribuidor) {
+        final ReferencedWarning referencedWarning = distribuidorService.getReferencedWarning(idDistribuidor);
         if (referencedWarning != null) {
             throw new ReferencedException(referencedWarning);
         }
-        distribuidorService.delete(numeroDocEmpresa);
+        distribuidorService.delete(idDistribuidor);
         return ResponseEntity.noContent().build();
     }
 

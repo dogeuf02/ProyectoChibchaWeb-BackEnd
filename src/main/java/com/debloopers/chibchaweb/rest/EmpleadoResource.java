@@ -37,30 +37,30 @@ public class EmpleadoResource {
 
     @GetMapping("/{idEmpleado}")
     public ResponseEntity<EmpleadoDTO> getEmpleado(
-            @PathVariable(name = "idEmpleado") final String idEmpleado) {
+            @PathVariable(name = "idEmpleado") final Integer idEmpleado) {
         return ResponseEntity.ok(empleadoService.get(idEmpleado));
     }
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<String> createEmpleado(
+    public ResponseEntity<Integer> createEmpleado(
             @RequestBody @Valid final EmpleadoDTO empleadoDTO) {
-        final String createdIdEmpleado = empleadoService.create(empleadoDTO);
-        return new ResponseEntity<>('"' + createdIdEmpleado + '"', HttpStatus.CREATED);
+        final Integer createdIdEmpleado = empleadoService.create(empleadoDTO);
+        return new ResponseEntity<>(createdIdEmpleado, HttpStatus.CREATED);
     }
 
     @PutMapping("/{idEmpleado}")
-    public ResponseEntity<String> updateEmpleado(
-            @PathVariable(name = "idEmpleado") final String idEmpleado,
+    public ResponseEntity<Integer> updateEmpleado(
+            @PathVariable(name = "idEmpleado") final Integer idEmpleado,
             @RequestBody @Valid final EmpleadoDTO empleadoDTO) {
         empleadoService.update(idEmpleado, empleadoDTO);
-        return ResponseEntity.ok('"' + idEmpleado + '"');
+        return ResponseEntity.ok(idEmpleado);
     }
 
     @DeleteMapping("/{idEmpleado}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteEmpleado(
-            @PathVariable(name = "idEmpleado") final String idEmpleado) {
+            @PathVariable(name = "idEmpleado") final Integer idEmpleado) {
         final ReferencedWarning referencedWarning = empleadoService.getReferencedWarning(idEmpleado);
         if (referencedWarning != null) {
             throw new ReferencedException(referencedWarning);

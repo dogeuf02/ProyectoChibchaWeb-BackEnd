@@ -21,22 +21,22 @@ import org.springframework.stereotype.Service;
 public class SolicitudDomDistribuidorService {
 
     private final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository;
-    private final RegistradorRepository registradorRepository;
     private final DistribuidorRepository distribuidorRepository;
     private final DominioRepository dominioRepository;
     private final AdministradorRepository administradorRepository;
+    private final RegistradorRepository registradorRepository;
 
     public SolicitudDomDistribuidorService(
             final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository,
-            final RegistradorRepository registradorRepository,
             final DistribuidorRepository distribuidorRepository,
             final DominioRepository dominioRepository,
-            final AdministradorRepository administradorRepository) {
+            final AdministradorRepository administradorRepository,
+            final RegistradorRepository registradorRepository) {
         this.solicitudDomDistribuidorRepository = solicitudDomDistribuidorRepository;
-        this.registradorRepository = registradorRepository;
         this.distribuidorRepository = distribuidorRepository;
         this.dominioRepository = dominioRepository;
         this.administradorRepository = administradorRepository;
+        this.registradorRepository = registradorRepository;
     }
 
     public List<SolicitudDomDistribuidorDTO> findAll() {
@@ -75,38 +75,36 @@ public class SolicitudDomDistribuidorService {
             final SolicitudDomDistribuidor solicitudDomDistribuidor,
             final SolicitudDomDistribuidorDTO solicitudDomDistribuidorDTO) {
         solicitudDomDistribuidorDTO.setTld(solicitudDomDistribuidor.getTld());
-        solicitudDomDistribuidorDTO.setNumeroDocEmpresa(solicitudDomDistribuidor.getNumeroDocEmpresa());
         solicitudDomDistribuidorDTO.setFechaSolicitud(solicitudDomDistribuidor.getFechaSolicitud());
         solicitudDomDistribuidorDTO.setEstadoSolicitud(solicitudDomDistribuidor.getEstadoSolicitud());
         solicitudDomDistribuidorDTO.setFechaRevision(solicitudDomDistribuidor.getFechaRevision());
-        solicitudDomDistribuidorDTO.setFehcaEnvio(solicitudDomDistribuidor.getFehcaEnvio());
-        solicitudDomDistribuidorDTO.setRegistrador(solicitudDomDistribuidor.getRegistrador() == null ? null : solicitudDomDistribuidor.getRegistrador().getIdRegistrador());
-        solicitudDomDistribuidorDTO.setNombreTipoDoc(solicitudDomDistribuidor.getNombreTipoDoc() == null ? null : solicitudDomDistribuidor.getNombreTipoDoc().getNumeroDocEmpresa());
+        solicitudDomDistribuidorDTO.setFechaEnvio(solicitudDomDistribuidor.getFechaEnvio());
+        solicitudDomDistribuidorDTO.setDistribuidor(solicitudDomDistribuidor.getDistribuidor() == null ? null : solicitudDomDistribuidor.getDistribuidor().getIdDistribuidor());
         solicitudDomDistribuidorDTO.setNombreDominio(solicitudDomDistribuidor.getNombreDominio() == null ? null : solicitudDomDistribuidor.getNombreDominio().getNombreDominio());
         solicitudDomDistribuidorDTO.setAdmin(solicitudDomDistribuidor.getAdmin() == null ? null : solicitudDomDistribuidor.getAdmin().getIdAdmin());
+        solicitudDomDistribuidorDTO.setRegistrador(solicitudDomDistribuidor.getRegistrador() == null ? null : solicitudDomDistribuidor.getRegistrador().getIdRegistrador());
         return solicitudDomDistribuidorDTO;
     }
 
     private SolicitudDomDistribuidor mapToEntity(
             final SolicitudDomDistribuidorDTO solicitudDomDistribuidorDTO,
             final SolicitudDomDistribuidor solicitudDomDistribuidor) {
-        solicitudDomDistribuidor.setNumeroDocEmpresa(solicitudDomDistribuidorDTO.getNumeroDocEmpresa());
         solicitudDomDistribuidor.setFechaSolicitud(solicitudDomDistribuidorDTO.getFechaSolicitud());
         solicitudDomDistribuidor.setEstadoSolicitud(solicitudDomDistribuidorDTO.getEstadoSolicitud());
         solicitudDomDistribuidor.setFechaRevision(solicitudDomDistribuidorDTO.getFechaRevision());
-        solicitudDomDistribuidor.setFehcaEnvio(solicitudDomDistribuidorDTO.getFehcaEnvio());
-        final Registrador registrador = solicitudDomDistribuidorDTO.getRegistrador() == null ? null : registradorRepository.findById(solicitudDomDistribuidorDTO.getRegistrador())
-                .orElseThrow(() -> new NotFoundException("registrador not found"));
-        solicitudDomDistribuidor.setRegistrador(registrador);
-        final Distribuidor nombreTipoDoc = solicitudDomDistribuidorDTO.getNombreTipoDoc() == null ? null : distribuidorRepository.findById(solicitudDomDistribuidorDTO.getNombreTipoDoc())
-                .orElseThrow(() -> new NotFoundException("nombreTipoDoc not found"));
-        solicitudDomDistribuidor.setNombreTipoDoc(nombreTipoDoc);
+        solicitudDomDistribuidor.setFechaEnvio(solicitudDomDistribuidorDTO.getFechaEnvio());
+        final Distribuidor distribuidor = solicitudDomDistribuidorDTO.getDistribuidor() == null ? null : distribuidorRepository.findById(solicitudDomDistribuidorDTO.getDistribuidor())
+                .orElseThrow(() -> new NotFoundException("distribuidor not found"));
+        solicitudDomDistribuidor.setDistribuidor(distribuidor);
         final Dominio nombreDominio = solicitudDomDistribuidorDTO.getNombreDominio() == null ? null : dominioRepository.findById(solicitudDomDistribuidorDTO.getNombreDominio())
                 .orElseThrow(() -> new NotFoundException("nombreDominio not found"));
         solicitudDomDistribuidor.setNombreDominio(nombreDominio);
         final Administrador admin = solicitudDomDistribuidorDTO.getAdmin() == null ? null : administradorRepository.findById(solicitudDomDistribuidorDTO.getAdmin())
                 .orElseThrow(() -> new NotFoundException("admin not found"));
         solicitudDomDistribuidor.setAdmin(admin);
+        final Registrador registrador = solicitudDomDistribuidorDTO.getRegistrador() == null ? null : registradorRepository.findById(solicitudDomDistribuidorDTO.getRegistrador())
+                .orElseThrow(() -> new NotFoundException("registrador not found"));
+        solicitudDomDistribuidor.setRegistrador(registrador);
         return solicitudDomDistribuidor;
     }
 

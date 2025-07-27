@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping(value = "/api/cliente", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/clienteDirectos", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ClienteDirectoResource {
 
     private final ClienteDirectoService clienteDirectoService;
@@ -37,29 +37,30 @@ public class ClienteDirectoResource {
 
     @GetMapping("/{idCliente}")
     public ResponseEntity<ClienteDirectoDTO> getClienteDirecto(
-            @PathVariable(name = "idCliente") final String idCliente) {
+            @PathVariable(name = "idCliente") final Integer idCliente) {
         return ResponseEntity.ok(clienteDirectoService.get(idCliente));
     }
 
-    @PostMapping("/registroCliente")
+    @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Boolean> create(@RequestBody ClienteDirectoDTO clienteDirectoDTO) {
-        boolean creado = clienteDirectoService.create(clienteDirectoDTO);
-        return ResponseEntity.ok(creado);
+    public ResponseEntity<Integer> createClienteDirecto(
+            @RequestBody @Valid final ClienteDirectoDTO clienteDirectoDTO) {
+        final Integer createdIdCliente = clienteDirectoService.create(clienteDirectoDTO);
+        return new ResponseEntity<>(createdIdCliente, HttpStatus.CREATED);
     }
 
     @PutMapping("/{idCliente}")
-    public ResponseEntity<String> updateClienteDirecto(
-            @PathVariable(name = "idCliente") final String idCliente,
+    public ResponseEntity<Integer> updateClienteDirecto(
+            @PathVariable(name = "idCliente") final Integer idCliente,
             @RequestBody @Valid final ClienteDirectoDTO clienteDirectoDTO) {
         clienteDirectoService.update(idCliente, clienteDirectoDTO);
-        return ResponseEntity.ok('"' + idCliente + '"');
+        return ResponseEntity.ok(idCliente);
     }
 
     @DeleteMapping("/{idCliente}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteClienteDirecto(
-            @PathVariable(name = "idCliente") final String idCliente) {
+            @PathVariable(name = "idCliente") final Integer idCliente) {
         final ReferencedWarning referencedWarning = clienteDirectoService.getReferencedWarning(idCliente);
         if (referencedWarning != null) {
             throw new ReferencedException(referencedWarning);

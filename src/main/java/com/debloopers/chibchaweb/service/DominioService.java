@@ -1,12 +1,12 @@
 package com.debloopers.chibchaweb.service;
 
 import com.debloopers.chibchaweb.domain.Dominio;
-import com.debloopers.chibchaweb.domain.SolicitudDomCd;
+import com.debloopers.chibchaweb.domain.SolicitudDomCliente;
 import com.debloopers.chibchaweb.domain.SolicitudDomDistribuidor;
 import com.debloopers.chibchaweb.domain.Tld;
 import com.debloopers.chibchaweb.model.DominioDTO;
 import com.debloopers.chibchaweb.repos.DominioRepository;
-import com.debloopers.chibchaweb.repos.SolicitudDomCdRepository;
+import com.debloopers.chibchaweb.repos.SolicitudDomClienteRepository;
 import com.debloopers.chibchaweb.repos.SolicitudDomDistribuidorRepository;
 import com.debloopers.chibchaweb.repos.TldRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
@@ -21,16 +21,16 @@ public class DominioService {
 
     private final DominioRepository dominioRepository;
     private final TldRepository tldRepository;
-    private final SolicitudDomCdRepository solicitudDomCdRepository;
+    private final SolicitudDomClienteRepository solicitudDomClienteRepository;
     private final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository;
 
     public DominioService(final DominioRepository dominioRepository,
             final TldRepository tldRepository,
-            final SolicitudDomCdRepository solicitudDomCdRepository,
+            final SolicitudDomClienteRepository solicitudDomClienteRepository,
             final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository) {
         this.dominioRepository = dominioRepository;
         this.tldRepository = tldRepository;
-        this.solicitudDomCdRepository = solicitudDomCdRepository;
+        this.solicitudDomClienteRepository = solicitudDomClienteRepository;
         this.solicitudDomDistribuidorRepository = solicitudDomDistribuidorRepository;
     }
 
@@ -67,11 +67,13 @@ public class DominioService {
 
     private DominioDTO mapToDTO(final Dominio dominio, final DominioDTO dominioDTO) {
         dominioDTO.setNombreDominio(dominio.getNombreDominio());
+        dominioDTO.setEstadoDominio(dominio.getEstadoDominio());
         dominioDTO.setTld(dominio.getTld() == null ? null : dominio.getTld().getTld());
         return dominioDTO;
     }
 
     private Dominio mapToEntity(final DominioDTO dominioDTO, final Dominio dominio) {
+        dominio.setEstadoDominio(dominioDTO.getEstadoDominio());
         final Tld tld = dominioDTO.getTld() == null ? null : tldRepository.findById(dominioDTO.getTld())
                 .orElseThrow(() -> new NotFoundException("tld not found"));
         dominio.setTld(tld);
@@ -86,10 +88,10 @@ public class DominioService {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final Dominio dominio = dominioRepository.findById(nombreDominio)
                 .orElseThrow(NotFoundException::new);
-        final SolicitudDomCd nombreDominioSolicitudDomCd = solicitudDomCdRepository.findFirstByNombreDominio(dominio);
-        if (nombreDominioSolicitudDomCd != null) {
-            referencedWarning.setKey("dominio.solicitudDomCd.nombreDominio.referenced");
-            referencedWarning.addParam(nombreDominioSolicitudDomCd.getTld());
+        final SolicitudDomCliente nombreDominioSolicitudDomCliente = solicitudDomClienteRepository.findFirstByNombreDominio(dominio);
+        if (nombreDominioSolicitudDomCliente != null) {
+            referencedWarning.setKey("dominio.solicitudDomCliente.nombreDominio.referenced");
+            referencedWarning.addParam(nombreDominioSolicitudDomCliente.getTld());
             return referencedWarning;
         }
         final SolicitudDomDistribuidor nombreDominioSolicitudDomDistribuidor = solicitudDomDistribuidorRepository.findFirstByNombreDominio(dominio);

@@ -77,7 +77,7 @@ public class TipoDocumentoEmpService {
         final Distribuidor nombreTipoDocDistribuidor = distribuidorRepository.findFirstByNombreTipoDoc(tipoDocumentoEmp);
         if (nombreTipoDocDistribuidor != null) {
             referencedWarning.setKey("tipoDocumentoEmp.distribuidor.nombreTipoDoc.referenced");
-            referencedWarning.addParam(nombreTipoDocDistribuidor.getNumeroDocEmpresa());
+            referencedWarning.addParam(nombreTipoDocDistribuidor.getIdDistribuidor());
             return referencedWarning;
         }
         return null;

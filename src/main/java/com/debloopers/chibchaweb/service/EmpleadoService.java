@@ -37,32 +37,31 @@ public class EmpleadoService {
                 .toList();
     }
 
-    public EmpleadoDTO get(final String idEmpleado) {
+    public EmpleadoDTO get(final Integer idEmpleado) {
         return empleadoRepository.findById(idEmpleado)
                 .map(empleado -> mapToDTO(empleado, new EmpleadoDTO()))
                 .orElseThrow(NotFoundException::new);
     }
 
-    public String create(final EmpleadoDTO empleadoDTO) {
+    public Integer create(final EmpleadoDTO empleadoDTO) {
         final Empleado empleado = new Empleado();
         mapToEntity(empleadoDTO, empleado);
-        empleado.setIdEmpleado(empleadoDTO.getIdEmpleado());
         return empleadoRepository.save(empleado).getIdEmpleado();
     }
 
-    public void update(final String idEmpleado, final EmpleadoDTO empleadoDTO) {
+    public void update(final Integer idEmpleado, final EmpleadoDTO empleadoDTO) {
         final Empleado empleado = empleadoRepository.findById(idEmpleado)
                 .orElseThrow(NotFoundException::new);
         mapToEntity(empleadoDTO, empleado);
         empleadoRepository.save(empleado);
     }
 
-    public void delete(final String idEmpleado) {
+    public void delete(final Integer idEmpleado) {
         final Empleado empleado = empleadoRepository.findById(idEmpleado)
                 .orElseThrow(NotFoundException::new);
         // remove many-to-many relations at owning side
-        ticketRepository.findAllBySolucionEmpleadoes(empleado)
-                .forEach(ticket -> ticket.getSolucionEmpleadoes().remove(empleado));
+        ticketRepository.findAllByHistorialTicketUsuarioEmpleadoes(empleado)
+                .forEach(ticket -> ticket.getHistorialTicketUsuarioEmpleadoes().remove(empleado));
         empleadoRepository.delete(empleado);
     }
 
@@ -81,24 +80,20 @@ public class EmpleadoService {
         return empleado;
     }
 
-    public boolean idEmpleadoExists(final String idEmpleado) {
-        return empleadoRepository.existsByIdEmpleadoIgnoreCase(idEmpleado);
-    }
-
-    public ReferencedWarning getReferencedWarning(final String idEmpleado) {
+    public ReferencedWarning getReferencedWarning(final Integer idEmpleado) {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final Empleado empleado = empleadoRepository.findById(idEmpleado)
                 .orElseThrow(NotFoundException::new);
-        final Ticket empleadoTicket = ticketRepository.findFirstByEmpleado(empleado);
-        if (empleadoTicket != null) {
-            referencedWarning.setKey("empleado.ticket.empleado.referenced");
-            referencedWarning.addParam(empleadoTicket.getIdTicket());
-            return referencedWarning;
-        }
         final Usuario empleadoUsuario = usuarioRepository.findFirstByEmpleado(empleado);
         if (empleadoUsuario != null) {
             referencedWarning.setKey("empleado.usuario.empleado.referenced");
             referencedWarning.addParam(empleadoUsuario.getIdUsuario());
+            return referencedWarning;
+        }
+        final Ticket empleadoTicket = ticketRepository.findFirstByEmpleado(empleado);
+        if (empleadoTicket != null) {
+            referencedWarning.setKey("empleado.ticket.empleado.referenced");
+            referencedWarning.addParam(empleadoTicket.getIdTicket());
             return referencedWarning;
         }
         return null;

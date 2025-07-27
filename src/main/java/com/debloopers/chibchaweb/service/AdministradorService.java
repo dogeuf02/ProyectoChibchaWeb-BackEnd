@@ -1,12 +1,12 @@
 package com.debloopers.chibchaweb.service;
 
 import com.debloopers.chibchaweb.domain.Administrador;
-import com.debloopers.chibchaweb.domain.SolicitudDomCd;
+import com.debloopers.chibchaweb.domain.SolicitudDomCliente;
 import com.debloopers.chibchaweb.domain.SolicitudDomDistribuidor;
 import com.debloopers.chibchaweb.domain.Usuario;
 import com.debloopers.chibchaweb.model.AdministradorDTO;
 import com.debloopers.chibchaweb.repos.AdministradorRepository;
-import com.debloopers.chibchaweb.repos.SolicitudDomCdRepository;
+import com.debloopers.chibchaweb.repos.SolicitudDomClienteRepository;
 import com.debloopers.chibchaweb.repos.SolicitudDomDistribuidorRepository;
 import com.debloopers.chibchaweb.repos.UsuarioRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
@@ -20,18 +20,18 @@ import org.springframework.stereotype.Service;
 public class AdministradorService {
 
     private final AdministradorRepository administradorRepository;
-    private final SolicitudDomCdRepository solicitudDomCdRepository;
-    private final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository;
     private final UsuarioRepository usuarioRepository;
+    private final SolicitudDomClienteRepository solicitudDomClienteRepository;
+    private final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository;
 
     public AdministradorService(final AdministradorRepository administradorRepository,
-            final SolicitudDomCdRepository solicitudDomCdRepository,
-            final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository,
-            final UsuarioRepository usuarioRepository) {
+            final UsuarioRepository usuarioRepository,
+            final SolicitudDomClienteRepository solicitudDomClienteRepository,
+            final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository) {
         this.administradorRepository = administradorRepository;
-        this.solicitudDomCdRepository = solicitudDomCdRepository;
-        this.solicitudDomDistribuidorRepository = solicitudDomDistribuidorRepository;
         this.usuarioRepository = usuarioRepository;
+        this.solicitudDomClienteRepository = solicitudDomClienteRepository;
+        this.solicitudDomDistribuidorRepository = solicitudDomDistribuidorRepository;
     }
 
     public List<AdministradorDTO> findAll() {
@@ -41,27 +41,26 @@ public class AdministradorService {
                 .toList();
     }
 
-    public AdministradorDTO get(final String idAdmin) {
+    public AdministradorDTO get(final Integer idAdmin) {
         return administradorRepository.findById(idAdmin)
                 .map(administrador -> mapToDTO(administrador, new AdministradorDTO()))
                 .orElseThrow(NotFoundException::new);
     }
 
-    public String create(final AdministradorDTO administradorDTO) {
+    public Integer create(final AdministradorDTO administradorDTO) {
         final Administrador administrador = new Administrador();
         mapToEntity(administradorDTO, administrador);
-        administrador.setIdAdmin(administradorDTO.getIdAdmin());
         return administradorRepository.save(administrador).getIdAdmin();
     }
 
-    public void update(final String idAdmin, final AdministradorDTO administradorDTO) {
+    public void update(final Integer idAdmin, final AdministradorDTO administradorDTO) {
         final Administrador administrador = administradorRepository.findById(idAdmin)
                 .orElseThrow(NotFoundException::new);
         mapToEntity(administradorDTO, administrador);
         administradorRepository.save(administrador);
     }
 
-    public void delete(final String idAdmin) {
+    public void delete(final Integer idAdmin) {
         administradorRepository.deleteById(idAdmin);
     }
 
@@ -82,30 +81,26 @@ public class AdministradorService {
         return administrador;
     }
 
-    public boolean idAdminExists(final String idAdmin) {
-        return administradorRepository.existsByIdAdminIgnoreCase(idAdmin);
-    }
-
-    public ReferencedWarning getReferencedWarning(final String idAdmin) {
+    public ReferencedWarning getReferencedWarning(final Integer idAdmin) {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final Administrador administrador = administradorRepository.findById(idAdmin)
                 .orElseThrow(NotFoundException::new);
-        final SolicitudDomCd adminSolicitudDomCd = solicitudDomCdRepository.findFirstByAdmin(administrador);
-        if (adminSolicitudDomCd != null) {
-            referencedWarning.setKey("administrador.solicitudDomCd.admin.referenced");
-            referencedWarning.addParam(adminSolicitudDomCd.getTld());
+        final Usuario adminUsuario = usuarioRepository.findFirstByAdmin(administrador);
+        if (adminUsuario != null) {
+            referencedWarning.setKey("administrador.usuario.admin.referenced");
+            referencedWarning.addParam(adminUsuario.getIdUsuario());
+            return referencedWarning;
+        }
+        final SolicitudDomCliente adminSolicitudDomCliente = solicitudDomClienteRepository.findFirstByAdmin(administrador);
+        if (adminSolicitudDomCliente != null) {
+            referencedWarning.setKey("administrador.solicitudDomCliente.admin.referenced");
+            referencedWarning.addParam(adminSolicitudDomCliente.getTld());
             return referencedWarning;
         }
         final SolicitudDomDistribuidor adminSolicitudDomDistribuidor = solicitudDomDistribuidorRepository.findFirstByAdmin(administrador);
         if (adminSolicitudDomDistribuidor != null) {
             referencedWarning.setKey("administrador.solicitudDomDistribuidor.admin.referenced");
             referencedWarning.addParam(adminSolicitudDomDistribuidor.getTld());
-            return referencedWarning;
-        }
-        final Usuario adminUsuario = usuarioRepository.findFirstByAdmin(administrador);
-        if (adminUsuario != null) {
-            referencedWarning.setKey("administrador.usuario.admin.referenced");
-            referencedWarning.addParam(adminUsuario.getIdUsuario());
             return referencedWarning;
         }
         return null;

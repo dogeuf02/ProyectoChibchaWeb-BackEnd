@@ -2,12 +2,18 @@ package com.debloopers.chibchaweb.model;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
 
+@Getter
+@Setter
 public class DistribuidorDTO {
 
+    private Integer idDistribuidor;
+
+    @NotNull
     @Size(max = 20)
-    @DistribuidorNumeroDocEmpresaValid
     private String numeroDocEmpresa;
 
     @NotNull
@@ -22,59 +28,4 @@ public class DistribuidorDTO {
     @Size(max = 20)
     private String nombreTipoDoc;
 
-    @NotNull
-    @Size(max = 150)
-    private String correoDistribuidor;
-
-    @NotNull
-    @Size(max = 150)
-    private String contrasenaDistribuidor;
-
-    public String getNumeroDocEmpresa() {
-        return numeroDocEmpresa;
-    }
-
-    public void setNumeroDocEmpresa(final String numeroDocEmpresa) {
-        this.numeroDocEmpresa = numeroDocEmpresa;
-    }
-
-    public String getNombreEmpresa() {
-        return nombreEmpresa;
-    }
-
-    public void setNombreEmpresa(final String nombreEmpresa) {
-        this.nombreEmpresa = nombreEmpresa;
-    }
-
-    public String getDireccionEmpresa() {
-        return direccionEmpresa;
-    }
-
-    public void setDireccionEmpresa(final String direccionEmpresa) {
-        this.direccionEmpresa = direccionEmpresa;
-    }
-
-    public String getNombreTipoDoc() {
-        return nombreTipoDoc;
-    }
-
-    public void setNombreTipoDoc(final String nombreTipoDoc) {
-        this.nombreTipoDoc = nombreTipoDoc;
-    }
-
-    public String getCorreoDistribuidor() {
-        return correoDistribuidor;
-    }
-
-    public void setCorreoDistribuidor(String correoDistribuidor) {
-        this.correoDistribuidor = correoDistribuidor;
-    }
-
-    public String getContrasenaDistribuidor() {
-        return contrasenaDistribuidor;
-    }
-
-    public void setContrasenaDistribuidor(String contrasenaDistribuidor) {
-        this.contrasenaDistribuidor = contrasenaDistribuidor;
-    }
 }

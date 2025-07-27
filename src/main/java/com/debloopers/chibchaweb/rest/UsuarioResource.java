@@ -2,35 +2,64 @@ package com.debloopers.chibchaweb.rest;
 
 import com.debloopers.chibchaweb.model.UsuarioDTO;
 import com.debloopers.chibchaweb.service.UsuarioService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 
 @RestController
-@RequestMapping("/api/usuarios")
+@RequestMapping(value = "/api/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UsuarioResource {
 
-    @Autowired
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> getById(@PathVariable Integer id) {
-        UsuarioDTO dto = usuarioService.findById(id);
-        return dto != null
-                ? ResponseEntity.ok(dto)
-                : ResponseEntity.notFound().build();
+    public UsuarioResource(final UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
     }
 
     @GetMapping
-    public ResponseEntity<List<UsuarioDTO>> getAll() {
+    public ResponseEntity<List<UsuarioDTO>> getAllUsuarios() {
         return ResponseEntity.ok(usuarioService.findAll());
     }
 
-    @PutMapping("/actualizar/{correo}")
-    public ResponseEntity<Boolean> updateByCorreo(@PathVariable String correo, @RequestBody UsuarioDTO usuarioDTO) {
-        boolean actualizado = usuarioService.updateByCorreo(correo, usuarioDTO);
-        return ResponseEntity.ok(actualizado);
+    @GetMapping("/{idUsuario}")
+    public ResponseEntity<UsuarioDTO> getUsuario(
+            @PathVariable(name = "idUsuario") final Integer idUsuario) {
+        return ResponseEntity.ok(usuarioService.get(idUsuario));
     }
+
+    @PostMapping
+    @ApiResponse(responseCode = "201")
+    public ResponseEntity<Integer> createUsuario(@RequestBody @Valid final UsuarioDTO usuarioDTO) {
+        final Integer createdIdUsuario = usuarioService.create(usuarioDTO);
+        return new ResponseEntity<>(createdIdUsuario, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{idUsuario}")
+    public ResponseEntity<Integer> updateUsuario(
+            @PathVariable(name = "idUsuario") final Integer idUsuario,
+            @RequestBody @Valid final UsuarioDTO usuarioDTO) {
+        usuarioService.update(idUsuario, usuarioDTO);
+        return ResponseEntity.ok(idUsuario);
+    }
+
+    @DeleteMapping("/{idUsuario}")
+    @ApiResponse(responseCode = "204")
+    public ResponseEntity<Void> deleteUsuario(
+            @PathVariable(name = "idUsuario") final Integer idUsuario) {
+        usuarioService.delete(idUsuario);
+        return ResponseEntity.noContent().build();
+    }
+
 }
