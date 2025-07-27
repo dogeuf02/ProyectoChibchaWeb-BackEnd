@@ -1,7 +1,8 @@
 package com.debloopers.chibchaweb.rest;
 
 import com.debloopers.chibchaweb.model.ClienteDirectoDTO;
-import com.debloopers.chibchaweb.model.ClienteDirectoRegistroDTO;
+import com.debloopers.chibchaweb.model.ClienteDirectoRegistroRequestDTO;
+import com.debloopers.chibchaweb.model.ClienteDirectoRegistroResponseDTO;
 import com.debloopers.chibchaweb.service.ClienteDirectoService;
 import com.debloopers.chibchaweb.util.ReferencedException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
@@ -44,10 +45,16 @@ public class ClienteDirectoResource {
 
     @PostMapping("/registroCliente")
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Boolean> create(@RequestBody ClienteDirectoRegistroDTO clienteDirectoDTO) {
-        boolean creado = clienteDirectoService.create(clienteDirectoDTO);
-        return ResponseEntity.ok(creado);
+    public ResponseEntity<ClienteDirectoRegistroResponseDTO> create(@RequestBody @Valid ClienteDirectoRegistroRequestDTO clienteDirectoDTO) {
+        ClienteDirectoRegistroResponseDTO response = clienteDirectoService.create(clienteDirectoDTO);
+
+        if (response.isExito()) {
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
     }
+
 
     @PutMapping("/{idCliente}")
     public ResponseEntity<Integer> updateClienteDirecto(

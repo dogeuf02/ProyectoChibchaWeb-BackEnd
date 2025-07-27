@@ -6,6 +6,8 @@ import com.debloopers.chibchaweb.domain.Ticket;
 import com.debloopers.chibchaweb.domain.TipoDocumentoEmp;
 import com.debloopers.chibchaweb.domain.Usuario;
 import com.debloopers.chibchaweb.model.DistribuidorDTO;
+import com.debloopers.chibchaweb.model.DistribuidorRegistroRequestDTO;
+import com.debloopers.chibchaweb.model.DistribuidorRegistroResponseDTO;
 import com.debloopers.chibchaweb.repos.DistribuidorRepository;
 import com.debloopers.chibchaweb.repos.SolicitudDomDistribuidorRepository;
 import com.debloopers.chibchaweb.repos.TicketRepository;
@@ -14,8 +16,12 @@ import com.debloopers.chibchaweb.repos.UsuarioRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -26,6 +32,9 @@ public class DistribuidorService {
     private final UsuarioRepository usuarioRepository;
     private final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository;
     private final TicketRepository ticketRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public DistribuidorService(final DistribuidorRepository distribuidorRepository,
             final TipoDocumentoEmpRepository tipoDocumentoEmpRepository,
@@ -52,11 +61,39 @@ public class DistribuidorService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public Integer create(final DistribuidorDTO distribuidorDTO) {
-        final Distribuidor distribuidor = new Distribuidor();
-        mapToEntity(distribuidorDTO, distribuidor);
-        return distribuidorRepository.save(distribuidor).getIdDistribuidor();
+    @Transactional
+    public DistribuidorRegistroResponseDTO create(DistribuidorRegistroRequestDTO dto) {
+        try {
+            if (usuarioRepository.findByCorreoUsuario(dto.getCorreoDistrbuidor()) != null) {
+                return new DistribuidorRegistroResponseDTO(false, "El correo ya está registrado.");
+            }
+
+            TipoDocumentoEmp tipoDoc = tipoDocumentoEmpRepository.findByNombreTipoDoc(dto.getNombreTipoDoc());
+            if (tipoDoc == null) {
+                return new DistribuidorRegistroResponseDTO(false, "El tipo de documento no existe.");
+            }
+
+            Distribuidor distribuidor = new Distribuidor();
+            distribuidor.setNumeroDocEmpresa(dto.getNumeroDocEmpresa());
+            distribuidor.setNombreEmpresa(dto.getNombreEmpresa());
+            distribuidor.setDireccionEmpresa(dto.getDireccionEmpresa());
+            distribuidor.setNombreTipoDoc(tipoDoc);
+            distribuidorRepository.save(distribuidor);
+
+            Usuario usuario = new Usuario();
+            usuario.setCorreoUsuario(dto.getCorreoDistrbuidor());
+            usuario.setContrasena(passwordEncoder.encode(dto.getContrasenaDistribuidor()));
+            usuario.setRol("Distribuidor");
+            usuario.setEstado("PENDIENTE");
+            usuario.setDistribuidor(distribuidor);
+            usuarioRepository.save(usuario);
+
+            return new DistribuidorRegistroResponseDTO(true, "Distribuidor creado exitosamente.");
+        } catch (Exception e) {
+            return new DistribuidorRegistroResponseDTO(false, "Error interno al crear el distribuidor.");
+        }
     }
+
 
     public void update(final Integer idDistribuidor, final DistribuidorDTO distribuidorDTO) {
         final Distribuidor distribuidor = distribuidorRepository.findById(idDistribuidor)

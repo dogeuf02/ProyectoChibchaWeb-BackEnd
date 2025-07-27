@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class ClienteDirectoRegistroDTO {
+public class ClienteDirectoRegistroRequestDTO {
 
     @NotNull
     @Email
@@ -19,7 +19,7 @@ public class ClienteDirectoRegistroDTO {
     private String correoCliente;
 
     @NotNull
-    @Size(min = 6, max = 150)  // al menos 6 caracteres, como ejemplo
+    @Size(min = 6, max = 150)
     private String contrasenaCliente;
 
     @NotNull

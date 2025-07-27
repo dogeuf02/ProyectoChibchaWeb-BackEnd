@@ -1,6 +1,8 @@
 package com.debloopers.chibchaweb.rest;
 
 import com.debloopers.chibchaweb.model.DistribuidorDTO;
+import com.debloopers.chibchaweb.model.DistribuidorRegistroRequestDTO;
+import com.debloopers.chibchaweb.model.DistribuidorRegistroResponseDTO;
 import com.debloopers.chibchaweb.service.DistribuidorService;
 import com.debloopers.chibchaweb.util.ReferencedException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
@@ -41,12 +43,18 @@ public class DistribuidorResource {
         return ResponseEntity.ok(distribuidorService.get(idDistribuidor));
     }
 
-    @PostMapping
+    @PostMapping("/registroDistribuidor")
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Integer> createDistribuidor(
-            @RequestBody @Valid final DistribuidorDTO distribuidorDTO) {
-        final Integer createdIdDistribuidor = distribuidorService.create(distribuidorDTO);
-        return new ResponseEntity<>(createdIdDistribuidor, HttpStatus.CREATED);
+    public ResponseEntity<DistribuidorRegistroResponseDTO> createDistribuidor(
+            @RequestBody @Valid final DistribuidorRegistroRequestDTO distribuidorDTO) {
+
+        DistribuidorRegistroResponseDTO response = distribuidorService.create(distribuidorDTO);
+
+        if (response.isExito()) {
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/{idDistribuidor}")

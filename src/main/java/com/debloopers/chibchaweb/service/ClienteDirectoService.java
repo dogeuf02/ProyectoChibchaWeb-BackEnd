@@ -6,7 +6,8 @@ import com.debloopers.chibchaweb.domain.SolicitudDomCliente;
 import com.debloopers.chibchaweb.domain.Ticket;
 import com.debloopers.chibchaweb.domain.Usuario;
 import com.debloopers.chibchaweb.model.ClienteDirectoDTO;
-import com.debloopers.chibchaweb.model.ClienteDirectoRegistroDTO;
+import com.debloopers.chibchaweb.model.ClienteDirectoRegistroRequestDTO;
+import com.debloopers.chibchaweb.model.ClienteDirectoRegistroResponseDTO;
 import com.debloopers.chibchaweb.repos.ClienteDirectoRepository;
 import com.debloopers.chibchaweb.repos.PlanRepository;
 import com.debloopers.chibchaweb.repos.SolicitudDomClienteRepository;
@@ -60,10 +61,10 @@ public class ClienteDirectoService {
     }
 
     @Transactional
-    public boolean create(ClienteDirectoRegistroDTO dto) {
+    public ClienteDirectoRegistroResponseDTO create(ClienteDirectoRegistroRequestDTO dto) {
         try {
             if (usuarioRepository.findByCorreoUsuario(dto.getCorreoCliente()) != null) {
-                return false;
+                return new ClienteDirectoRegistroResponseDTO(false, "El correo ya está registrado.");
             }
 
             ClienteDirecto cliente = new ClienteDirecto();
@@ -79,14 +80,14 @@ public class ClienteDirectoService {
             usuario.setRol("Cliente");
             usuario.setEstado("ACTIVO");
             usuario.setCliente(cliente);
-
             usuarioRepository.save(usuario);
 
-            return true;
+            return new ClienteDirectoRegistroResponseDTO(true, "Cliente creado exitosamente.");
         } catch (Exception e) {
-            return false;
+            return new ClienteDirectoRegistroResponseDTO(false, "Error interno al crear el cliente.");
         }
     }
+
 
     public void update(final Integer idCliente, final ClienteDirectoDTO clienteDirectoDTO) {
         final ClienteDirecto clienteDirecto = clienteDirectoRepository.findById(idCliente)
