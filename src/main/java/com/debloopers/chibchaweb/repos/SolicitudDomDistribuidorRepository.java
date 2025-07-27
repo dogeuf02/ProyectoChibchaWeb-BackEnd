@@ -10,13 +10,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SolicitudDomDistribuidorRepository extends JpaRepository<SolicitudDomDistribuidor, String> {
 
-    SolicitudDomDistribuidor findFirstByRegistrador(Registrador registrador);
-
-    SolicitudDomDistribuidor findFirstByNombreTipoDoc(Distribuidor distribuidor);
+    SolicitudDomDistribuidor findFirstByDistribuidor(Distribuidor distribuidor);
 
     SolicitudDomDistribuidor findFirstByNombreDominio(Dominio dominio);
 
     SolicitudDomDistribuidor findFirstByAdmin(Administrador administrador);
+
+    SolicitudDomDistribuidor findFirstByRegistrador(Registrador registrador);
 
     boolean existsByTldIgnoreCase(String tld);
 

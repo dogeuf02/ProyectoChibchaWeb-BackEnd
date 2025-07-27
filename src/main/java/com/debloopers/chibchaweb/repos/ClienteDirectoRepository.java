@@ -5,10 +5,8 @@ import com.debloopers.chibchaweb.domain.Plan;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface ClienteDirectoRepository extends JpaRepository<ClienteDirecto, String> {
+public interface ClienteDirectoRepository extends JpaRepository<ClienteDirecto, Integer> {
 
     ClienteDirecto findFirstByPlan(Plan plan);
-
-    boolean existsByIdClienteIgnoreCase(String idCliente);
 
 }

@@ -10,15 +10,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TicketRepository extends JpaRepository<Ticket, String> {
 
-    Ticket findFirstByCliente(ClienteDirecto clienteDirecto);
+    Ticket findFirstByDistribuidor(Distribuidor distribuidor);
 
-    Ticket findFirstByNombreTipoDoc(Distribuidor distribuidor);
+    Ticket findFirstByCliente(ClienteDirecto clienteDirecto);
 
     Ticket findFirstByEmpleado(Empleado empleado);
 
-    Ticket findFirstBySolucionEmpleadoes(Empleado empleado);
+    Ticket findFirstByHistorialTicketUsuarioEmpleadoes(Empleado empleado);
 
-    List<Ticket> findAllBySolucionEmpleadoes(Empleado empleado);
+    List<Ticket> findAllByHistorialTicketUsuarioEmpleadoes(Empleado empleado);
 
     boolean existsByIdTicketIgnoreCase(String idTicket);
 
