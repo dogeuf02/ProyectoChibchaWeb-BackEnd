@@ -6,6 +6,7 @@ import com.debloopers.chibchaweb.model.DistribuidorRegistroResponseDTO;
 import com.debloopers.chibchaweb.service.DistribuidorService;
 import com.debloopers.chibchaweb.util.ReferencedException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -57,12 +58,13 @@ public class DistribuidorResource {
         }
     }
 
+    @Operation(summary = "Actualizar campos excepto el id")
     @PutMapping("/{idDistribuidor}")
-    public ResponseEntity<Integer> updateDistribuidor(
+    public ResponseEntity<String> updateDistribuidor(
             @PathVariable(name = "idDistribuidor") final Integer idDistribuidor,
             @RequestBody @Valid final DistribuidorDTO distribuidorDTO) {
         distribuidorService.update(idDistribuidor, distribuidorDTO);
-        return ResponseEntity.ok(idDistribuidor);
+        return ResponseEntity.ok("Distribuidor actualizado correctamente con ID: " + idDistribuidor);
     }
 
     @DeleteMapping("/{idDistribuidor}")

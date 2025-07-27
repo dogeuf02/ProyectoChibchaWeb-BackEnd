@@ -98,9 +98,33 @@ public class DistribuidorService {
     public void update(final Integer idDistribuidor, final DistribuidorDTO distribuidorDTO) {
         final Distribuidor distribuidor = distribuidorRepository.findById(idDistribuidor)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(distribuidorDTO, distribuidor);
+
+        if (distribuidorDTO.getNumeroDocEmpresa() != null && !distribuidorDTO.getNumeroDocEmpresa().isBlank()) {
+            distribuidor.setNumeroDocEmpresa(distribuidorDTO.getNumeroDocEmpresa());
+        }
+
+        if (distribuidorDTO.getNombreEmpresa() != null && !distribuidorDTO.getNombreEmpresa().isBlank()) {
+            distribuidor.setNombreEmpresa(distribuidorDTO.getNombreEmpresa());
+        }
+
+        if (distribuidorDTO.getDireccionEmpresa() != null && !distribuidorDTO.getDireccionEmpresa().isBlank()) {
+            distribuidor.setDireccionEmpresa(distribuidorDTO.getDireccionEmpresa());
+        }
+
+        if (distribuidorDTO.getNombreTipoDoc() != null && !distribuidorDTO.getNombreTipoDoc().isBlank()) {
+            TipoDocumentoEmp tipoDocumento = tipoDocumentoEmpRepository
+                    .findByNombreTipoDoc(distribuidorDTO.getNombreTipoDoc());
+
+            if (tipoDocumento == null) {
+                throw new IllegalArgumentException("Tipo de documento no encontrado: " + distribuidorDTO.getNombreTipoDoc());
+            }
+
+            distribuidor.setNombreTipoDoc(tipoDocumento);
+        }
+
         distribuidorRepository.save(distribuidor);
     }
+
 
     public void delete(final Integer idDistribuidor) {
         distribuidorRepository.deleteById(idDistribuidor);

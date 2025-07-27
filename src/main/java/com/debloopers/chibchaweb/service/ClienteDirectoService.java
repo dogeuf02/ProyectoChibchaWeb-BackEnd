@@ -88,12 +88,29 @@ public class ClienteDirectoService {
         }
     }
 
-
     public void update(final Integer idCliente, final ClienteDirectoDTO clienteDirectoDTO) {
-        final ClienteDirecto clienteDirecto = clienteDirectoRepository.findById(idCliente)
+        final ClienteDirecto cliente = clienteDirectoRepository.findById(idCliente)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(clienteDirectoDTO, clienteDirecto);
-        clienteDirectoRepository.save(clienteDirecto);
+
+        if (clienteDirectoDTO.getNombreCliente() != null && !clienteDirectoDTO.getNombreCliente().isBlank()) {
+            cliente.setNombreCliente(clienteDirectoDTO.getNombreCliente());
+        }
+        if (clienteDirectoDTO.getApellidoCliente() != null && !clienteDirectoDTO.getApellidoCliente().isBlank()) {
+            cliente.setApellidoCliente(clienteDirectoDTO.getApellidoCliente());
+        }
+        if (clienteDirectoDTO.getTelefono() != null && !clienteDirectoDTO.getTelefono().isBlank()) {
+            cliente.setTelefono(clienteDirectoDTO.getTelefono());
+        }
+        if (clienteDirectoDTO.getFechaNacimientoCliente() != null) {
+            cliente.setFechaNacimientoCliente(clienteDirectoDTO.getFechaNacimientoCliente());
+        }
+        if (clienteDirectoDTO.getPlan() != null) {
+            Plan plan = planRepository.findById(clienteDirectoDTO.getPlan())
+                    .orElseThrow(() -> new NotFoundException("Plan no encontrado"));
+            cliente.setPlan(plan);
+        }
+
+        clienteDirectoRepository.save(cliente);
     }
 
     public void delete(final Integer idCliente) {

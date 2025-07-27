@@ -6,6 +6,7 @@ import com.debloopers.chibchaweb.model.ClienteDirectoRegistroResponseDTO;
 import com.debloopers.chibchaweb.service.ClienteDirectoService;
 import com.debloopers.chibchaweb.util.ReferencedException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -56,12 +57,13 @@ public class ClienteDirectoResource {
     }
 
 
+    @Operation(summary = "Actualizar campos excepto el id")
     @PutMapping("/{idCliente}")
-    public ResponseEntity<Integer> updateClienteDirecto(
+    public ResponseEntity<String> updateClienteDirecto(
             @PathVariable(name = "idCliente") final Integer idCliente,
             @RequestBody @Valid final ClienteDirectoDTO clienteDirectoDTO) {
         clienteDirectoService.update(idCliente, clienteDirectoDTO);
-        return ResponseEntity.ok(idCliente);
+        return ResponseEntity.ok("Cliente actualizado correctamente con ID: " + idCliente);
     }
 
     @DeleteMapping("/{idCliente}")
