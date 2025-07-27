@@ -20,14 +20,12 @@ public class AuthService {
     public LoginResponseDTO login(LoginRequestDTO dto) {
         Usuario usuario = usuarioRepository.findByCorreoUsuario(dto.getCorreo());
         if (usuario == null) {
-            return new LoginResponseDTO(false, "Correo no registrado", null);
+            return new LoginResponseDTO(false, "Correo no registrado", null, null);
         }
-
         boolean coincide = passwordEncoder.matches(dto.getContrasena(), usuario.getContrasena());
         if (!coincide) {
-            return new LoginResponseDTO(false, "Contraseña incorrecta", null);
+            return new LoginResponseDTO(false, "Contraseña incorrecta", null, null);
         }
-
-        return new LoginResponseDTO(true, "Inicio de sesión exitoso", usuario.getRol());
+        return new LoginResponseDTO(true, "Inicio de sesión exitoso", usuario.getRol(), usuario.getIdUsuario());
     }
 }
