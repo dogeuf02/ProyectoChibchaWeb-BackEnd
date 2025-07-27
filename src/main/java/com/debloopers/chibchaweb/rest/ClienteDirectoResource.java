@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping(value = "/api/clienteDirectos", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/cliente", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ClienteDirectoResource {
 
     private final ClienteDirectoService clienteDirectoService;
@@ -41,12 +41,11 @@ public class ClienteDirectoResource {
         return ResponseEntity.ok(clienteDirectoService.get(idCliente));
     }
 
-    @PostMapping
+    @PostMapping("/registroCliente")
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<String> createClienteDirecto(
-            @RequestBody @Valid final ClienteDirectoDTO clienteDirectoDTO) {
-        final String createdIdCliente = clienteDirectoService.create(clienteDirectoDTO);
-        return new ResponseEntity<>('"' + createdIdCliente + '"', HttpStatus.CREATED);
+    public ResponseEntity<Boolean> create(@RequestBody ClienteDirectoDTO clienteDirectoDTO) {
+        boolean creado = clienteDirectoService.create(clienteDirectoDTO);
+        return ResponseEntity.ok(creado);
     }
 
     @PutMapping("/{idCliente}")

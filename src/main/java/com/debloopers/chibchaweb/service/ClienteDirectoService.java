@@ -14,7 +14,12 @@ import com.debloopers.chibchaweb.repos.UsuarioRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -26,6 +31,9 @@ public class ClienteDirectoService {
     private final SolicitudDomCdRepository solicitudDomCdRepository;
     private final TicketRepository ticketRepository;
     private final UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public ClienteDirectoService(final ClienteDirectoRepository clienteDirectoRepository,
             final PlanRepository planRepository,
@@ -51,11 +59,27 @@ public class ClienteDirectoService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public String create(final ClienteDirectoDTO clienteDirectoDTO) {
-        final ClienteDirecto clienteDirecto = new ClienteDirecto();
-        mapToEntity(clienteDirectoDTO, clienteDirecto);
-        clienteDirecto.setIdCliente(clienteDirectoDTO.getIdCliente());
-        return clienteDirectoRepository.save(clienteDirecto).getIdCliente();
+    public boolean create(ClienteDirectoDTO dto) {
+        try {
+            Usuario usuario = new Usuario();
+            usuario.setCorreoUsuario(dto.getCorreoCliente());
+            usuario.setContrasena(passwordEncoder.encode(dto.getContrasenaCliente()));
+            usuario.setRolUsuario("Cliente");
+            usuario = usuarioRepository.save(usuario);
+
+            ClienteDirecto cliente = new ClienteDirecto();
+            cliente.setIdCliente(usuario.getIdUsuario().toString());
+            cliente.setNombreCliente(dto.getNombreCliente());
+            cliente.setApellidoCliente(dto.getApellidoCliente());
+            cliente.setTelefono(dto.getTelefono());
+            cliente.setFechaNacimientoCliente(dto.getFechaNacimientoCliente());
+            //cliente.setIdPlan(dto.getIdPlan());
+
+            clienteDirectoRepository.save(cliente);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void update(final String idCliente, final ClienteDirectoDTO clienteDirectoDTO) {
