@@ -5,6 +5,7 @@ import com.debloopers.chibchaweb.domain.Plan;
 import com.debloopers.chibchaweb.domain.SolicitudDomCliente;
 import com.debloopers.chibchaweb.domain.Ticket;
 import com.debloopers.chibchaweb.domain.Usuario;
+import com.debloopers.chibchaweb.model.ClienteDirectoActualizarDTO;
 import com.debloopers.chibchaweb.model.ClienteDirectoDTO;
 import com.debloopers.chibchaweb.model.ClienteDirectoRegistroRequestDTO;
 import com.debloopers.chibchaweb.model.ClienteDirectoRegistroResponseDTO;
@@ -88,7 +89,7 @@ public class ClienteDirectoService {
         }
     }
 
-    public void update(final Integer idCliente, final ClienteDirectoDTO clienteDirectoDTO) {
+    public void update(final Integer idCliente, final ClienteDirectoActualizarDTO clienteDirectoDTO) {
         final ClienteDirecto cliente = clienteDirectoRepository.findById(idCliente)
                 .orElseThrow(NotFoundException::new);
 

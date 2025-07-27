@@ -1,5 +1,6 @@
 package com.debloopers.chibchaweb.rest;
 
+import com.debloopers.chibchaweb.model.DistribuidorActualizarDTO;
 import com.debloopers.chibchaweb.model.DistribuidorDTO;
 import com.debloopers.chibchaweb.model.DistribuidorRegistroRequestDTO;
 import com.debloopers.chibchaweb.model.DistribuidorRegistroResponseDTO;
@@ -62,7 +63,7 @@ public class DistribuidorResource {
     @PutMapping("/{idDistribuidor}")
     public ResponseEntity<String> updateDistribuidor(
             @PathVariable(name = "idDistribuidor") final Integer idDistribuidor,
-            @RequestBody @Valid final DistribuidorDTO distribuidorDTO) {
+            @RequestBody @Valid final DistribuidorActualizarDTO distribuidorDTO) {
         distribuidorService.update(idDistribuidor, distribuidorDTO);
         return ResponseEntity.ok("Distribuidor actualizado correctamente con ID: " + idDistribuidor);
     }

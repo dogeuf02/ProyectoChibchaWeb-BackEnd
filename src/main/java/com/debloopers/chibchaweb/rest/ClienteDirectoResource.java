@@ -1,5 +1,6 @@
 package com.debloopers.chibchaweb.rest;
 
+import com.debloopers.chibchaweb.model.ClienteDirectoActualizarDTO;
 import com.debloopers.chibchaweb.model.ClienteDirectoDTO;
 import com.debloopers.chibchaweb.model.ClienteDirectoRegistroRequestDTO;
 import com.debloopers.chibchaweb.model.ClienteDirectoRegistroResponseDTO;
@@ -61,7 +62,7 @@ public class ClienteDirectoResource {
     @PutMapping("/{idCliente}")
     public ResponseEntity<String> updateClienteDirecto(
             @PathVariable(name = "idCliente") final Integer idCliente,
-            @RequestBody @Valid final ClienteDirectoDTO clienteDirectoDTO) {
+            @RequestBody @Valid final ClienteDirectoActualizarDTO clienteDirectoDTO) {
         clienteDirectoService.update(idCliente, clienteDirectoDTO);
         return ResponseEntity.ok("Cliente actualizado correctamente con ID: " + idCliente);
     }

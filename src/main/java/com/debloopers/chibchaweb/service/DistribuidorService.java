@@ -5,6 +5,7 @@ import com.debloopers.chibchaweb.domain.SolicitudDomDistribuidor;
 import com.debloopers.chibchaweb.domain.Ticket;
 import com.debloopers.chibchaweb.domain.TipoDocumentoEmp;
 import com.debloopers.chibchaweb.domain.Usuario;
+import com.debloopers.chibchaweb.model.DistribuidorActualizarDTO;
 import com.debloopers.chibchaweb.model.DistribuidorDTO;
 import com.debloopers.chibchaweb.model.DistribuidorRegistroRequestDTO;
 import com.debloopers.chibchaweb.model.DistribuidorRegistroResponseDTO;
@@ -95,7 +96,7 @@ public class DistribuidorService {
     }
 
 
-    public void update(final Integer idDistribuidor, final DistribuidorDTO distribuidorDTO) {
+    public void update(final Integer idDistribuidor, final DistribuidorActualizarDTO distribuidorDTO) {
         final Distribuidor distribuidor = distribuidorRepository.findById(idDistribuidor)
                 .orElseThrow(NotFoundException::new);
 
