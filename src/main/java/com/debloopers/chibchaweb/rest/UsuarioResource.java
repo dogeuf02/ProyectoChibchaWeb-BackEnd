@@ -1,7 +1,9 @@
 package com.debloopers.chibchaweb.rest;
 
+import com.debloopers.chibchaweb.model.UsuarioActualizarDTO;
 import com.debloopers.chibchaweb.model.UsuarioDTO;
 import com.debloopers.chibchaweb.service.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -46,10 +48,11 @@ public class UsuarioResource {
         return new ResponseEntity<>(createdIdUsuario, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Actualizar contraseña y estado de un usuario")
     @PutMapping("/{idUsuario}")
     public ResponseEntity<Integer> updateUsuario(
             @PathVariable(name = "idUsuario") final Integer idUsuario,
-            @RequestBody @Valid final UsuarioDTO usuarioDTO) {
+            @RequestBody @Valid final UsuarioActualizarDTO usuarioDTO) {
         usuarioService.update(idUsuario, usuarioDTO);
         return ResponseEntity.ok(idUsuario);
     }

@@ -62,7 +62,6 @@ public class ClienteDirectoService {
     @Transactional
     public boolean create(ClienteDirectoRegistroDTO dto) {
         try {
-            // Verificar si el correo ya existe
             if (usuarioRepository.findByCorreoUsuario(dto.getCorreoCliente()) != null) {
                 return false;
             }
@@ -72,7 +71,6 @@ public class ClienteDirectoService {
             cliente.setApellidoCliente(dto.getApellidoCliente());
             cliente.setTelefono(dto.getTelefono());
             cliente.setFechaNacimientoCliente(dto.getFechaNacimientoCliente());
-            // cliente.setIdPlan(dto.getIdPlan());
             clienteDirectoRepository.save(cliente);
 
             Usuario usuario = new Usuario();

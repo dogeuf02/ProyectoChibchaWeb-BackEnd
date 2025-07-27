@@ -5,6 +5,7 @@ import com.debloopers.chibchaweb.domain.ClienteDirecto;
 import com.debloopers.chibchaweb.domain.Distribuidor;
 import com.debloopers.chibchaweb.domain.Empleado;
 import com.debloopers.chibchaweb.domain.Usuario;
+import com.debloopers.chibchaweb.model.UsuarioActualizarDTO;
 import com.debloopers.chibchaweb.model.UsuarioDTO;
 import com.debloopers.chibchaweb.repos.AdministradorRepository;
 import com.debloopers.chibchaweb.repos.ClienteDirectoRepository;
@@ -13,7 +14,10 @@ import com.debloopers.chibchaweb.repos.EmpleadoRepository;
 import com.debloopers.chibchaweb.repos.UsuarioRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -25,6 +29,9 @@ public class UsuarioService {
     private final AdministradorRepository administradorRepository;
     private final EmpleadoRepository empleadoRepository;
     private final DistribuidorRepository distribuidorRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public UsuarioService(final UsuarioRepository usuarioRepository,
             final ClienteDirectoRepository clienteDirectoRepository,
@@ -57,12 +64,25 @@ public class UsuarioService {
         return usuarioRepository.save(usuario).getIdUsuario();
     }
 
-    public void update(final Integer idUsuario, final UsuarioDTO usuarioDTO) {
+    public void update(final Integer idUsuario, final UsuarioActualizarDTO usuarioDTO) {
         final Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(usuarioDTO, usuario);
+
+        if (usuarioDTO.getContrasena() != null) {
+            usuario.setContrasena(passwordEncoder.encode(usuarioDTO.getContrasena()));
+        }
+
+        if (usuarioDTO.getEstado() != null) {
+            List<String> estadosValidos = List.of("ACTIVO", "INACTIVO", "PENDIENTE");
+            if (estadosValidos.contains(usuarioDTO.getEstado().toUpperCase())) {
+                usuario.setEstado(usuarioDTO.getEstado().toUpperCase());
+            } else {
+                throw new IllegalArgumentException("Estado no válido: " + usuarioDTO.getEstado());
+            }
+        }
         usuarioRepository.save(usuario);
     }
+
 
     public void delete(final Integer idUsuario) {
         usuarioRepository.deleteById(idUsuario);
