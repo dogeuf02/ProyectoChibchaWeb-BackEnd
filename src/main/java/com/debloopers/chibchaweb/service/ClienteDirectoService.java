@@ -16,9 +16,7 @@ import com.debloopers.chibchaweb.util.ReferencedWarning;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -105,16 +103,27 @@ public class ClienteDirectoService {
     }
 
     private ClienteDirecto mapToEntity(final ClienteDirectoDTO clienteDirectoDTO,
-            final ClienteDirecto clienteDirecto) {
-        clienteDirecto.setNombreCliente(clienteDirectoDTO.getNombreCliente());
-        clienteDirecto.setApellidoCliente(clienteDirectoDTO.getApellidoCliente());
-        clienteDirecto.setTelefono(clienteDirectoDTO.getTelefono());
-        clienteDirecto.setFechaNacimientoCliente(clienteDirectoDTO.getFechaNacimientoCliente());
-        final Plan plan = clienteDirectoDTO.getPlan() == null ? null : planRepository.findById(clienteDirectoDTO.getPlan())
-                .orElseThrow(() -> new NotFoundException("plan not found"));
-        clienteDirecto.setPlan(plan);
+                                       final ClienteDirecto clienteDirecto) {
+        if (clienteDirectoDTO.getNombreCliente() != null) {
+            clienteDirecto.setNombreCliente(clienteDirectoDTO.getNombreCliente());
+        }
+        if (clienteDirectoDTO.getApellidoCliente() != null) {
+            clienteDirecto.setApellidoCliente(clienteDirectoDTO.getApellidoCliente());
+        }
+        if (clienteDirectoDTO.getTelefono() != null) {
+            clienteDirecto.setTelefono(clienteDirectoDTO.getTelefono());
+        }
+        if (clienteDirectoDTO.getFechaNacimientoCliente() != null) {
+            clienteDirecto.setFechaNacimientoCliente(clienteDirectoDTO.getFechaNacimientoCliente());
+        }
+        if (clienteDirectoDTO.getPlan() != null) {
+            final Plan plan = planRepository.findById(clienteDirectoDTO.getPlan())
+                    .orElseThrow(() -> new NotFoundException("plan not found"));
+            clienteDirecto.setPlan(plan);
+        }
         return clienteDirecto;
     }
+
 
     public boolean idClienteExists(final String idCliente) {
         return clienteDirectoRepository.existsByIdClienteIgnoreCase(idCliente);
