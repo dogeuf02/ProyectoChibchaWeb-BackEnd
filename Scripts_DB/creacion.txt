@@ -25,6 +25,8 @@ DROP TYPE IF EXISTS estado_dominio_enum CASCADE;
 
 
 
+
+
 /* --- 1. Creación de ENUMS --- */
 CREATE TYPE estado_usuario AS ENUM ('ACTIVO','INACTIVO','PENDIENTE');
 CREATE TYPE prioridad_enum AS ENUM ('Baja', 'Media', 'Alta');
@@ -161,3 +163,7 @@ CREATE TABLE SOLICITUD_DOMINIO (
        (ID_CLIENTE IS NULL AND ID_DISTRIBUIDOR IS NOT NULL)
    )
 );
+
+create table metodo_pago()
+
+     
