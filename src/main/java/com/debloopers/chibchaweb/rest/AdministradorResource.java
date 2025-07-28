@@ -1,5 +1,6 @@
 package com.debloopers.chibchaweb.rest;
 
+import com.debloopers.chibchaweb.model.AdministradorActualizarDTO;
 import com.debloopers.chibchaweb.model.AdministradorDTO;
 import com.debloopers.chibchaweb.model.AdministradorRegistroRequestDTO;
 import com.debloopers.chibchaweb.model.AdministradorRegistroResponseDTO;
@@ -63,7 +64,7 @@ public class AdministradorResource {
     @PutMapping("/{idAdmin}")
     public ResponseEntity<Integer> updateAdministrador(
             @PathVariable(name = "idAdmin") final Integer idAdmin,
-            @RequestBody @Valid final AdministradorDTO administradorDTO) {
+            @RequestBody @Valid final AdministradorActualizarDTO administradorDTO) {
         administradorService.update(idAdmin, administradorDTO);
         return ResponseEntity.ok(idAdmin);
     }

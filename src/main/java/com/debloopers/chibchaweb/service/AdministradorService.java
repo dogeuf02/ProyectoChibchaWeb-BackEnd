@@ -4,6 +4,7 @@ import com.debloopers.chibchaweb.domain.Administrador;
 import com.debloopers.chibchaweb.domain.SolicitudDomCliente;
 import com.debloopers.chibchaweb.domain.SolicitudDomDistribuidor;
 import com.debloopers.chibchaweb.domain.Usuario;
+import com.debloopers.chibchaweb.model.AdministradorActualizarDTO;
 import com.debloopers.chibchaweb.model.AdministradorDTO;
 import com.debloopers.chibchaweb.model.AdministradorRegistroRequestDTO;
 import com.debloopers.chibchaweb.model.AdministradorRegistroResponseDTO;
@@ -83,10 +84,22 @@ public class AdministradorService {
         }
     }
 
-    public void update(final Integer idAdmin, final AdministradorDTO administradorDTO) {
+    public void update(final Integer idAdmin, final AdministradorActualizarDTO administradorDTO) {
         final Administrador administrador = administradorRepository.findById(idAdmin)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(administradorDTO, administrador);
+
+        if (administradorDTO.getNombreAdmin() != null && !administradorDTO.getNombreAdmin().isBlank()) {
+            administrador.setNombreAdmin(administradorDTO.getNombreAdmin());
+        }
+
+        if (administradorDTO.getApellidoAdmin() != null && !administradorDTO.getApellidoAdmin().isBlank()) {
+            administrador.setApellidoAdmin(administradorDTO.getApellidoAdmin());
+        }
+
+        if (administradorDTO.getFechaNacimientoAdmin() != null) {
+            administrador.setFechaNacimientoAdmin(administradorDTO.getFechaNacimientoAdmin());
+        }
+
         administradorRepository.save(administrador);
     }
 
