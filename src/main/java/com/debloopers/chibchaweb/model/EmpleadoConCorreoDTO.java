@@ -12,4 +12,5 @@ public class EmpleadoConCorreoDTO {
     private String apellidoEmpleado;
     private String cargoEmpleado;
     private String correo;
+    private String estado;
 }

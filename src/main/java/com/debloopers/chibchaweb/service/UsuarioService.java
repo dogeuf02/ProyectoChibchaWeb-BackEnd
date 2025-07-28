@@ -64,24 +64,30 @@ public class UsuarioService {
         return usuarioRepository.save(usuario).getIdUsuario();
     }
 
-    public void update(final Integer idUsuario, final UsuarioActualizarDTO usuarioDTO) {
-        final Usuario usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(NotFoundException::new);
+    public void update(final String correoUsuario, final UsuarioActualizarDTO usuarioDTO) {
+        final Usuario usuario = usuarioRepository.findByCorreoUsuario(correoUsuario);
+
+        if (usuario == null) {
+            throw new NotFoundException("User with email address not found: " + correoUsuario);
+        }
 
         if (usuarioDTO.getContrasena() != null && !usuarioDTO.getContrasena().isBlank()) {
-            usuario.setContrasena(passwordEncoder.encode(usuarioDTO.getContrasena()));
+            usuario.setContrasena(passwordEncoder.encode(usuarioDTO.getContrasena().trim()));
         }
 
         if (usuarioDTO.getEstado() != null && !usuarioDTO.getEstado().isBlank()) {
             List<String> estadosValidos = List.of("ACTIVO", "INACTIVO", "PENDIENTE");
-            if (estadosValidos.contains(usuarioDTO.getEstado().toUpperCase())) {
-                usuario.setEstado(usuarioDTO.getEstado().toUpperCase());
+            String estadoNormalizado = usuarioDTO.getEstado().trim().toUpperCase();
+            if (estadosValidos.contains(estadoNormalizado)) {
+                usuario.setEstado(estadoNormalizado);
             } else {
                 throw new IllegalArgumentException("Invalid status: " + usuarioDTO.getEstado());
             }
         }
+
         usuarioRepository.save(usuario);
     }
+
 
 
     public void delete(final Integer idUsuario) {

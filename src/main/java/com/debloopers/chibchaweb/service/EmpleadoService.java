@@ -111,6 +111,7 @@ public class EmpleadoService {
             dto.setApellidoEmpleado(empleado.getApellidoEmpleado());
             dto.setCargoEmpleado(empleado.getCargoEmpleado());
             dto.setCorreo(usuario != null ? usuario.getCorreoUsuario() : null);
+            dto.setEstado(usuario != null ? usuario.getEstado() : null);
 
             return dto;
         }).toList();
