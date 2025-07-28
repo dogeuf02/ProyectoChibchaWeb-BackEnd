@@ -58,6 +58,16 @@ public class UsuarioResource {
         return ResponseEntity.ok(correoUsuario);
     }
 
+    @Operation(summary = "Actualizar contraseña y estado de un usuario por ID")
+    @PutMapping("/{idUsuario}")
+    public ResponseEntity<Integer> updateUsuarioPorId(
+            @PathVariable(name = "idUsuario") final Integer idUsuario,
+            @RequestBody @Valid final UsuarioActualizarDTO usuarioDTO) {
+
+        usuarioService.updateById(idUsuario, usuarioDTO);
+        return ResponseEntity.ok(idUsuario);
+    }
+
     @DeleteMapping("/{idUsuario}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteUsuario(

@@ -88,7 +88,26 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
+    public void updateById(final Integer idUsuario, final UsuarioActualizarDTO usuarioDTO) {
+        final Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new NotFoundException("Usuario con ID no encontrado: " + idUsuario));
 
+        if (usuarioDTO.getContrasena() != null && !usuarioDTO.getContrasena().isBlank()) {
+            usuario.setContrasena(passwordEncoder.encode(usuarioDTO.getContrasena().trim()));
+        }
+
+        if (usuarioDTO.getEstado() != null && !usuarioDTO.getEstado().isBlank()) {
+            List<String> estadosValidos = List.of("ACTIVO", "INACTIVO", "PENDIENTE");
+            String estadoNormalizado = usuarioDTO.getEstado().trim().toUpperCase();
+            if (estadosValidos.contains(estadoNormalizado)) {
+                usuario.setEstado(estadoNormalizado);
+            } else {
+                throw new IllegalArgumentException("Estado inválido: " + usuarioDTO.getEstado());
+            }
+        }
+
+        usuarioRepository.save(usuario);
+    }
 
     public void delete(final Integer idUsuario) {
         usuarioRepository.deleteById(idUsuario);
