@@ -60,7 +60,7 @@ public class AdministradorResource {
         }
     }
 
-
+    @Operation(summary = "Actualizar un administrador")
     @PutMapping("/{idAdmin}")
     public ResponseEntity<Integer> updateAdministrador(
             @PathVariable(name = "idAdmin") final Integer idAdmin,
@@ -80,5 +80,4 @@ public class AdministradorResource {
         administradorService.delete(idAdmin);
         return ResponseEntity.noContent().build();
     }
-
 }
