@@ -48,13 +48,14 @@ public class UsuarioResource {
         return new ResponseEntity<>(createdIdUsuario, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Actualizar contraseña y estado de un usuario")
-    @PutMapping("/{idUsuario}")
-    public ResponseEntity<Integer> updateUsuario(
-            @PathVariable(name = "idUsuario") final Integer idUsuario,
+    @Operation(summary = "Actualizar contraseña y estado de un usuario por correo")
+    @PutMapping("/correo/{correoUsuario}")
+    public ResponseEntity<String> updateUsuarioPorCorreo(
+            @PathVariable(name = "correoUsuario") final String correoUsuario,
             @RequestBody @Valid final UsuarioActualizarDTO usuarioDTO) {
-        usuarioService.update(idUsuario, usuarioDTO);
-        return ResponseEntity.ok(idUsuario);
+
+        usuarioService.update(correoUsuario, usuarioDTO);
+        return ResponseEntity.ok(correoUsuario);
     }
 
     @DeleteMapping("/{idUsuario}")
