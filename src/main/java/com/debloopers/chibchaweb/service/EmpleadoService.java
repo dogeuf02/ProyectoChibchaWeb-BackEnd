@@ -99,6 +99,23 @@ public class EmpleadoService {
         empleadoRepository.save(empleado);
     }
 
+    public List<EmpleadoConCorreoDTO> findAllWithCorreo() {
+        List<Empleado> empleados = empleadoRepository.findAll(Sort.by("idEmpleado"));
+
+        return empleados.stream().map(empleado -> {
+            Usuario usuario = usuarioRepository.findFirstByEmpleado(empleado);
+
+            EmpleadoConCorreoDTO dto = new EmpleadoConCorreoDTO();
+            dto.setIdEmpleado(empleado.getIdEmpleado());
+            dto.setNombreEmpleado(empleado.getNombreEmpleado());
+            dto.setApellidoEmpleado(empleado.getApellidoEmpleado());
+            dto.setCargoEmpleado(empleado.getCargoEmpleado());
+            dto.setCorreo(usuario != null ? usuario.getCorreoUsuario() : null);
+
+            return dto;
+        }).toList();
+    }
+
     public void delete(final Integer idEmpleado) {
         final Empleado empleado = empleadoRepository.findById(idEmpleado)
                 .orElseThrow(NotFoundException::new);

@@ -1,9 +1,6 @@
 package com.debloopers.chibchaweb.rest;
 
-import com.debloopers.chibchaweb.model.EmpleadoActualizarDTO;
-import com.debloopers.chibchaweb.model.EmpleadoDTO;
-import com.debloopers.chibchaweb.model.EmpleadoRegistroRequestDTO;
-import com.debloopers.chibchaweb.model.EmpleadoRegistroResponseDTO;
+import com.debloopers.chibchaweb.model.*;
 import com.debloopers.chibchaweb.service.EmpleadoService;
 import com.debloopers.chibchaweb.util.ReferencedException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
@@ -43,6 +40,13 @@ public class EmpleadoResource {
     public ResponseEntity<EmpleadoDTO> getEmpleado(
             @PathVariable(name = "idEmpleado") final Integer idEmpleado) {
         return ResponseEntity.ok(empleadoService.get(idEmpleado));
+    }
+
+    @GetMapping("/obtenerEmpleados")
+    @Operation(summary = "Obtener empleados junto con su correo eletronico")
+    public ResponseEntity<List<EmpleadoConCorreoDTO>> getEmpleadosConCorreo() {
+        List<EmpleadoConCorreoDTO> empleados = empleadoService.findAllWithCorreo();
+        return ResponseEntity.ok(empleados);
     }
 
     @PostMapping("/registroEmpleado")
