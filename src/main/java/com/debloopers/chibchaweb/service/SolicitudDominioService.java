@@ -3,6 +3,7 @@ package com.debloopers.chibchaweb.service;
 import java.util.List;
 
 import com.debloopers.chibchaweb.domain.*;
+import com.debloopers.chibchaweb.model.SolicitudDominioActualizarDTO;
 import com.debloopers.chibchaweb.model.SolicitudDominioDTO;
 import com.debloopers.chibchaweb.model.SolicitudDominioRegistroRequestDTO;
 import com.debloopers.chibchaweb.model.SolicitudDominioRegistroResponseDTO;
@@ -86,10 +87,26 @@ public class SolicitudDominioService {
         }
     }
 
-    public void update(final Integer idSolicitud, final SolicitudDominioDTO solicitudDominioDTO) {
+    public void update(final Integer idSolicitud, final SolicitudDominioActualizarDTO solicitudDominioDTO) {
         final SolicitudDominio solicitudDominio = solicitudDominioRepository.findById(idSolicitud)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(solicitudDominioDTO, solicitudDominio);
+
+        if (solicitudDominioDTO.getEstadoDominio() != null && !solicitudDominioDTO.getEstadoDominio().isBlank()) {
+            solicitudDominio.setEstadoDominio(solicitudDominioDTO.getEstadoDominio().trim());
+        }
+
+        if (solicitudDominioDTO.getEstadoSolicitud() != null && !solicitudDominioDTO.getEstadoSolicitud().isBlank()) {
+            solicitudDominio.setEstadoSolicitud(solicitudDominioDTO.getEstadoSolicitud().trim());
+        }
+
+        if (solicitudDominioDTO.getFechaSolicitud() != null) {
+            solicitudDominio.setFechaSolicitud(solicitudDominioDTO.getFechaSolicitud());
+        }
+
+        if (solicitudDominioDTO.getFechaAprobacion() != null) {
+            solicitudDominio.setFechaAprobacion(solicitudDominioDTO.getFechaAprobacion());
+        }
+        // No se actualiza cliente,distribuidor,admin,nombre de dominio,Tld
         solicitudDominioRepository.save(solicitudDominio);
     }
 

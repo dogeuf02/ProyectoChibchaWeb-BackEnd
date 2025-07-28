@@ -1,5 +1,6 @@
 package com.debloopers.chibchaweb.rest;
 
+import com.debloopers.chibchaweb.model.SolicitudDominioActualizarDTO;
 import com.debloopers.chibchaweb.model.SolicitudDominioDTO;
 import com.debloopers.chibchaweb.model.SolicitudDominioRegistroRequestDTO;
 import com.debloopers.chibchaweb.model.SolicitudDominioRegistroResponseDTO;
@@ -59,7 +60,7 @@ public class SolicitudDominioResource {
     @PutMapping("/{idSolicitud}")
     public ResponseEntity<Integer> updateSolicitudDominio(
             @PathVariable(name = "idSolicitud") final Integer idSolicitud,
-            @RequestBody @Valid final SolicitudDominioDTO solicitudDominioDTO) {
+            @RequestBody @Valid final SolicitudDominioActualizarDTO solicitudDominioDTO) {
         solicitudDominioService.update(idSolicitud, solicitudDominioDTO);
         return ResponseEntity.ok(idSolicitud);
     }
