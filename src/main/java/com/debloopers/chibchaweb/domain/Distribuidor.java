@@ -52,7 +52,7 @@ public class Distribuidor {
     private Set<Usuario> distribuidorUsuarios = new HashSet<>();
 
     @OneToMany(mappedBy = "distribuidor")
-    private Set<SolicitudDomDistribuidor> distribuidorSolicitudDomDistribuidors = new HashSet<>();
+    private Set<SolicitudDominio> distribuidorSolicitudDominios = new HashSet<>();
 
     @OneToMany(mappedBy = "distribuidor")
     private Set<Ticket> distribuidorTickets = new HashSet<>();

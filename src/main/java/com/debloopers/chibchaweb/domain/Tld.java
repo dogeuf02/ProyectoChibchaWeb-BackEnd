@@ -20,6 +20,5 @@ public class Tld {
     private String tld;
 
     @OneToMany(mappedBy = "tld")
-    private Set<Dominio> tldDominios = new HashSet<>();
-
+    private Set<SolicitudDominio> tldSolicitudDominios = new HashSet<>();
 }

@@ -61,10 +61,6 @@ public class RegistradorResource {
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteRegistrador(
             @PathVariable(name = "idRegistrador") final Integer idRegistrador) {
-        final ReferencedWarning referencedWarning = registradorService.getReferencedWarning(idRegistrador);
-        if (referencedWarning != null) {
-            throw new ReferencedException(referencedWarning);
-        }
         registradorService.delete(idRegistrador);
         return ResponseEntity.noContent().build();
     }

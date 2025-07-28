@@ -56,7 +56,7 @@ public class ClienteDirecto {
     private Set<Usuario> clienteUsuarios = new HashSet<>();
 
     @OneToMany(mappedBy = "cliente")
-    private Set<SolicitudDomCliente> clienteSolicitudDomClientes = new HashSet<>();
+    private Set<SolicitudDominio> clienteSolicitudDominios = new HashSet<>();
 
     @OneToMany(mappedBy = "cliente")
     private Set<Ticket> clienteTickets = new HashSet<>();

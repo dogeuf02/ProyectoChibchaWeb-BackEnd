@@ -1,19 +1,11 @@
 package com.debloopers.chibchaweb.service;
 
-import com.debloopers.chibchaweb.domain.ClienteDirecto;
-import com.debloopers.chibchaweb.domain.Plan;
-import com.debloopers.chibchaweb.domain.SolicitudDomCliente;
-import com.debloopers.chibchaweb.domain.Ticket;
-import com.debloopers.chibchaweb.domain.Usuario;
+import com.debloopers.chibchaweb.domain.*;
 import com.debloopers.chibchaweb.model.ClienteDirectoActualizarDTO;
 import com.debloopers.chibchaweb.model.ClienteDirectoDTO;
 import com.debloopers.chibchaweb.model.ClienteDirectoRegistroRequestDTO;
 import com.debloopers.chibchaweb.model.ClienteDirectoRegistroResponseDTO;
-import com.debloopers.chibchaweb.repos.ClienteDirectoRepository;
-import com.debloopers.chibchaweb.repos.PlanRepository;
-import com.debloopers.chibchaweb.repos.SolicitudDomClienteRepository;
-import com.debloopers.chibchaweb.repos.TicketRepository;
-import com.debloopers.chibchaweb.repos.UsuarioRepository;
+import com.debloopers.chibchaweb.repos.*;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
 import java.util.List;
@@ -31,21 +23,21 @@ public class ClienteDirectoService {
     private final ClienteDirectoRepository clienteDirectoRepository;
     private final PlanRepository planRepository;
     private final UsuarioRepository usuarioRepository;
-    private final SolicitudDomClienteRepository solicitudDomClienteRepository;
     private final TicketRepository ticketRepository;
+    private final SolicitudDominioRepository solicitudDominioRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     public ClienteDirectoService(final ClienteDirectoRepository clienteDirectoRepository,
-            final PlanRepository planRepository, final UsuarioRepository usuarioRepository,
-            final SolicitudDomClienteRepository solicitudDomClienteRepository,
-            final TicketRepository ticketRepository) {
+                                 final PlanRepository planRepository, final UsuarioRepository usuarioRepository,
+                                 final TicketRepository ticketRepository,
+                                 final SolicitudDominioRepository solicitudDominioRepository) {
         this.clienteDirectoRepository = clienteDirectoRepository;
         this.planRepository = planRepository;
         this.usuarioRepository = usuarioRepository;
-        this.solicitudDomClienteRepository = solicitudDomClienteRepository;
         this.ticketRepository = ticketRepository;
+        this.solicitudDominioRepository = solicitudDominioRepository;
     }
 
     public List<ClienteDirectoDTO> findAll() {
@@ -151,16 +143,16 @@ public class ClienteDirectoService {
             referencedWarning.addParam(clienteUsuario.getIdUsuario());
             return referencedWarning;
         }
-        final SolicitudDomCliente clienteSolicitudDomCliente = solicitudDomClienteRepository.findFirstByCliente(clienteDirecto);
-        if (clienteSolicitudDomCliente != null) {
-            referencedWarning.setKey("clienteDirecto.solicitudDomCliente.cliente.referenced");
-            referencedWarning.addParam(clienteSolicitudDomCliente.getTld());
-            return referencedWarning;
-        }
         final Ticket clienteTicket = ticketRepository.findFirstByCliente(clienteDirecto);
         if (clienteTicket != null) {
             referencedWarning.setKey("clienteDirecto.ticket.cliente.referenced");
             referencedWarning.addParam(clienteTicket.getIdTicket());
+            return referencedWarning;
+        }
+        final SolicitudDominio clienteSolicitudDominio = solicitudDominioRepository.findFirstByCliente(clienteDirecto);
+        if (clienteSolicitudDominio != null) {
+            referencedWarning.setKey("clienteDirecto.solicitudDominio.cliente.referenced");
+            referencedWarning.addParam(clienteSolicitudDominio.getIdSolicitud());
             return referencedWarning;
         }
         return null;

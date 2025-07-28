@@ -1,19 +1,11 @@
 package com.debloopers.chibchaweb.service;
 
-import com.debloopers.chibchaweb.domain.Distribuidor;
-import com.debloopers.chibchaweb.domain.SolicitudDomDistribuidor;
-import com.debloopers.chibchaweb.domain.Ticket;
-import com.debloopers.chibchaweb.domain.TipoDocumentoEmp;
-import com.debloopers.chibchaweb.domain.Usuario;
+import com.debloopers.chibchaweb.domain.*;
 import com.debloopers.chibchaweb.model.DistribuidorActualizarDTO;
 import com.debloopers.chibchaweb.model.DistribuidorDTO;
 import com.debloopers.chibchaweb.model.DistribuidorRegistroRequestDTO;
 import com.debloopers.chibchaweb.model.DistribuidorRegistroResponseDTO;
-import com.debloopers.chibchaweb.repos.DistribuidorRepository;
-import com.debloopers.chibchaweb.repos.SolicitudDomDistribuidorRepository;
-import com.debloopers.chibchaweb.repos.TicketRepository;
-import com.debloopers.chibchaweb.repos.TipoDocumentoEmpRepository;
-import com.debloopers.chibchaweb.repos.UsuarioRepository;
+import com.debloopers.chibchaweb.repos.*;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
 import java.util.List;
@@ -31,22 +23,21 @@ public class DistribuidorService {
     private final DistribuidorRepository distribuidorRepository;
     private final TipoDocumentoEmpRepository tipoDocumentoEmpRepository;
     private final UsuarioRepository usuarioRepository;
-    private final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository;
+    private final SolicitudDominioRepository solicitudDominioRepository;
     private final TicketRepository ticketRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     public DistribuidorService(final DistribuidorRepository distribuidorRepository,
-            final TipoDocumentoEmpRepository tipoDocumentoEmpRepository,
-            final UsuarioRepository usuarioRepository,
-            final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository,
-            final TicketRepository ticketRepository) {
+                               final TipoDocumentoEmpRepository tipoDocumentoEmpRepository,
+                               final UsuarioRepository usuarioRepository, final TicketRepository ticketRepository,
+                               final SolicitudDominioRepository solicitudDominioRepository) {
         this.distribuidorRepository = distribuidorRepository;
         this.tipoDocumentoEmpRepository = tipoDocumentoEmpRepository;
         this.usuarioRepository = usuarioRepository;
-        this.solicitudDomDistribuidorRepository = solicitudDomDistribuidorRepository;
         this.ticketRepository = ticketRepository;
+        this.solicitudDominioRepository = solicitudDominioRepository;
     }
 
     public List<DistribuidorDTO> findAll() {
@@ -162,19 +153,18 @@ public class DistribuidorService {
             referencedWarning.addParam(distribuidorUsuario.getIdUsuario());
             return referencedWarning;
         }
-        final SolicitudDomDistribuidor distribuidorSolicitudDomDistribuidor = solicitudDomDistribuidorRepository.findFirstByDistribuidor(distribuidor);
-        if (distribuidorSolicitudDomDistribuidor != null) {
-            referencedWarning.setKey("distribuidor.solicitudDomDistribuidor.distribuidor.referenced");
-            referencedWarning.addParam(distribuidorSolicitudDomDistribuidor.getTld());
-            return referencedWarning;
-        }
         final Ticket distribuidorTicket = ticketRepository.findFirstByDistribuidor(distribuidor);
         if (distribuidorTicket != null) {
             referencedWarning.setKey("distribuidor.ticket.distribuidor.referenced");
             referencedWarning.addParam(distribuidorTicket.getIdTicket());
             return referencedWarning;
         }
+        final SolicitudDominio distribuidorSolicitudDominio = solicitudDominioRepository.findFirstByDistribuidor(distribuidor);
+        if (distribuidorSolicitudDominio != null) {
+            referencedWarning.setKey("distribuidor.solicitudDominio.distribuidor.referenced");
+            referencedWarning.addParam(distribuidorSolicitudDominio.getIdSolicitud());
+            return referencedWarning;
+        }
         return null;
     }
-
 }

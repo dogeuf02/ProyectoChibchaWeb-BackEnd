@@ -1,16 +1,14 @@
 package com.debloopers.chibchaweb.service;
 
 import com.debloopers.chibchaweb.domain.Administrador;
-import com.debloopers.chibchaweb.domain.SolicitudDomCliente;
-import com.debloopers.chibchaweb.domain.SolicitudDomDistribuidor;
+import com.debloopers.chibchaweb.domain.SolicitudDominio;
 import com.debloopers.chibchaweb.domain.Usuario;
 import com.debloopers.chibchaweb.model.AdministradorActualizarDTO;
 import com.debloopers.chibchaweb.model.AdministradorDTO;
 import com.debloopers.chibchaweb.model.AdministradorRegistroRequestDTO;
 import com.debloopers.chibchaweb.model.AdministradorRegistroResponseDTO;
 import com.debloopers.chibchaweb.repos.AdministradorRepository;
-import com.debloopers.chibchaweb.repos.SolicitudDomClienteRepository;
-import com.debloopers.chibchaweb.repos.SolicitudDomDistribuidorRepository;
+import com.debloopers.chibchaweb.repos.SolicitudDominioRepository;
 import com.debloopers.chibchaweb.repos.UsuarioRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
@@ -28,20 +26,17 @@ public class AdministradorService {
 
     private final AdministradorRepository administradorRepository;
     private final UsuarioRepository usuarioRepository;
-    private final SolicitudDomClienteRepository solicitudDomClienteRepository;
-    private final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository;
+    private final SolicitudDominioRepository solicitudDominioRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     public AdministradorService(final AdministradorRepository administradorRepository,
-            final UsuarioRepository usuarioRepository,
-            final SolicitudDomClienteRepository solicitudDomClienteRepository,
-            final SolicitudDomDistribuidorRepository solicitudDomDistribuidorRepository) {
+                                final UsuarioRepository usuarioRepository,
+                                final SolicitudDominioRepository solicitudDominioRepository) {
         this.administradorRepository = administradorRepository;
         this.usuarioRepository = usuarioRepository;
-        this.solicitudDomClienteRepository = solicitudDomClienteRepository;
-        this.solicitudDomDistribuidorRepository = solicitudDomDistribuidorRepository;
+        this.solicitudDominioRepository = solicitudDominioRepository;
     }
 
     public List<AdministradorDTO> findAll() {
@@ -134,19 +129,12 @@ public class AdministradorService {
             referencedWarning.addParam(adminUsuario.getIdUsuario());
             return referencedWarning;
         }
-        final SolicitudDomCliente adminSolicitudDomCliente = solicitudDomClienteRepository.findFirstByAdmin(administrador);
-        if (adminSolicitudDomCliente != null) {
-            referencedWarning.setKey("administrador.solicitudDomCliente.admin.referenced");
-            referencedWarning.addParam(adminSolicitudDomCliente.getTld());
-            return referencedWarning;
-        }
-        final SolicitudDomDistribuidor adminSolicitudDomDistribuidor = solicitudDomDistribuidorRepository.findFirstByAdmin(administrador);
-        if (adminSolicitudDomDistribuidor != null) {
-            referencedWarning.setKey("administrador.solicitudDomDistribuidor.admin.referenced");
-            referencedWarning.addParam(adminSolicitudDomDistribuidor.getTld());
+        final SolicitudDominio adminSolicitudDominio = solicitudDominioRepository.findFirstByAdmin(administrador);
+        if (adminSolicitudDominio != null) {
+            referencedWarning.setKey("administrador.solicitudDominio.admin.referenced");
+            referencedWarning.addParam(adminSolicitudDominio.getIdSolicitud());
             return referencedWarning;
         }
         return null;
     }
-
 }

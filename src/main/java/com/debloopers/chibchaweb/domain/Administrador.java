@@ -10,13 +10,9 @@ import jakarta.persistence.SequenceGenerator;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-import lombok.Getter;
-import lombok.Setter;
 
 
 @Entity
-@Getter
-@Setter
 public class Administrador {
 
     @Id
@@ -46,9 +42,54 @@ public class Administrador {
     private Set<Usuario> adminUsuarios = new HashSet<>();
 
     @OneToMany(mappedBy = "admin")
-    private Set<SolicitudDomCliente> adminSolicitudDomClientes = new HashSet<>();
+    private Set<SolicitudDominio> adminSolicitudDominios = new HashSet<>();
 
-    @OneToMany(mappedBy = "admin")
-    private Set<SolicitudDomDistribuidor> adminSolicitudDomDistribuidors = new HashSet<>();
+    public Integer getIdAdmin() {
+        return idAdmin;
+    }
+
+    public void setIdAdmin(final Integer idAdmin) {
+        this.idAdmin = idAdmin;
+    }
+
+    public String getNombreAdmin() {
+        return nombreAdmin;
+    }
+
+    public void setNombreAdmin(final String nombreAdmin) {
+        this.nombreAdmin = nombreAdmin;
+    }
+
+    public String getApellidoAdmin() {
+        return apellidoAdmin;
+    }
+
+    public void setApellidoAdmin(final String apellidoAdmin) {
+        this.apellidoAdmin = apellidoAdmin;
+    }
+
+    public LocalDate getFechaNacimientoAdmin() {
+        return fechaNacimientoAdmin;
+    }
+
+    public void setFechaNacimientoAdmin(final LocalDate fechaNacimientoAdmin) {
+        this.fechaNacimientoAdmin = fechaNacimientoAdmin;
+    }
+
+    public Set<Usuario> getAdminUsuarios() {
+        return adminUsuarios;
+    }
+
+    public void setAdminUsuarios(final Set<Usuario> adminUsuarios) {
+        this.adminUsuarios = adminUsuarios;
+    }
+
+    public Set<SolicitudDominio> getAdminSolicitudDominios() {
+        return adminSolicitudDominios;
+    }
+
+    public void setAdminSolicitudDominios(final Set<SolicitudDominio> adminSolicitudDominios) {
+        this.adminSolicitudDominios = adminSolicitudDominios;
+    }
 
 }
