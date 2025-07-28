@@ -44,7 +44,7 @@ public class EmpleadoResource {
         return ResponseEntity.ok(empleadoService.get(idEmpleado));
     }
 
-    @PostMapping
+    @PostMapping("/registroEmpleado")
     @Operation(summary = "Registro de un nuevo empleado")
     public ResponseEntity<EmpleadoRegistroResponseDTO> createEmpleado(
             @RequestBody @Valid final EmpleadoRegistroRequestDTO dto) {
