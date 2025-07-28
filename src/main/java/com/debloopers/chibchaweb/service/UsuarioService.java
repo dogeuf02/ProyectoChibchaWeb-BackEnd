@@ -68,11 +68,11 @@ public class UsuarioService {
         final Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(NotFoundException::new);
 
-        if (usuarioDTO.getContrasena() != null) {
+        if (usuarioDTO.getContrasena() != null && !usuarioDTO.getContrasena().isBlank()) {
             usuario.setContrasena(passwordEncoder.encode(usuarioDTO.getContrasena()));
         }
 
-        if (usuarioDTO.getEstado() != null) {
+        if (usuarioDTO.getEstado() != null && !usuarioDTO.getEstado().isBlank()) {
             List<String> estadosValidos = List.of("ACTIVO", "INACTIVO", "PENDIENTE");
             if (estadosValidos.contains(usuarioDTO.getEstado().toUpperCase())) {
                 usuario.setEstado(usuarioDTO.getEstado().toUpperCase());
