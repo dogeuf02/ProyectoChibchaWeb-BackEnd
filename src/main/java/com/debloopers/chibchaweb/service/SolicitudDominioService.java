@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.debloopers.chibchaweb.domain.*;
 import com.debloopers.chibchaweb.model.SolicitudDominioDTO;
+import com.debloopers.chibchaweb.model.SolicitudDominioRegistroRequestDTO;
+import com.debloopers.chibchaweb.model.SolicitudDominioRegistroResponseDTO;
 import com.debloopers.chibchaweb.repos.*;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import org.springframework.data.domain.Sort;
@@ -45,46 +47,44 @@ public class SolicitudDominioService {
     }
 
     @Transactional
-    public Integer create(final SolicitudDominioDTO dto) {
-        SolicitudDominio solicitud = new SolicitudDominio();
-
-        solicitud.setNombreDominio(dto.getNombreDominio());
-        solicitud.setEstadoSolicitud(dto.getEstadoSolicitud());
-        solicitud.setFechaSolicitud(dto.getFechaSolicitud());
-
-        if (dto.getEstadoDominio() != null && !dto.getEstadoDominio().isBlank()) {
+    public SolicitudDominioRegistroResponseDTO create(SolicitudDominioRegistroRequestDTO dto) {
+        try {
+            SolicitudDominio solicitud = new SolicitudDominio();
+            solicitud.setNombreDominio(dto.getNombreDominio());
             solicitud.setEstadoDominio(dto.getEstadoDominio());
-        }
-
-        if (dto.getFechaAprobacion() != null) {
+            solicitud.setEstadoSolicitud(dto.getEstadoSolicitud());
+            solicitud.setFechaSolicitud(dto.getFechaSolicitud());
             solicitud.setFechaAprobacion(dto.getFechaAprobacion());
+
+            if (dto.getCliente() != null) {
+                ClienteDirecto cliente = clienteDirectoRepository.findById(dto.getCliente())
+                        .orElseThrow(() -> new NotFoundException("Cliente no encontrado"));
+                solicitud.setCliente(cliente);
+            }
+
+            if (dto.getDistribuidor() != null) {
+                Distribuidor distribuidor = distribuidorRepository.findById(dto.getDistribuidor())
+                        .orElseThrow(() -> new NotFoundException("Distribuidor no encontrado"));
+                solicitud.setDistribuidor(distribuidor);
+            }
+
+            if (dto.getAdmin() != null) {
+                Administrador admin = administradorRepository.findById(dto.getAdmin())
+                        .orElseThrow(() -> new NotFoundException("Administrador no encontrado"));
+                solicitud.setAdmin(admin);
+            }
+
+            Tld tld = tldRepository.findById(dto.getTld())
+                    .orElseThrow(() -> new NotFoundException("TLD no encontrado"));
+            solicitud.setTld(tld);
+
+            Integer id = solicitudDominioRepository.save(solicitud).getIdSolicitud();
+            return new SolicitudDominioRegistroResponseDTO(true, "Solicitud creada exitosamente", id);
+
+        } catch (Exception e) {
+            return new SolicitudDominioRegistroResponseDTO(false, "Error al crear la solicitud", null);
         }
-
-        if (dto.getCliente() != null) {
-            ClienteDirecto cliente = clienteDirectoRepository.findById(dto.getCliente())
-                    .orElseThrow(() -> new NotFoundException("Cliente no encontrado"));
-            solicitud.setCliente(cliente);
-        }
-
-        if (dto.getDistribuidor() != null) {
-            Distribuidor distribuidor = distribuidorRepository.findById(dto.getDistribuidor())
-                    .orElseThrow(() -> new NotFoundException("Distribuidor no encontrado"));
-            solicitud.setDistribuidor(distribuidor);
-        }
-
-        if (dto.getAdmin() != null) {
-            Administrador admin = administradorRepository.findById(dto.getAdmin())
-                    .orElseThrow(() -> new NotFoundException("Administrador no encontrado"));
-            solicitud.setAdmin(admin);
-        }
-
-        Tld tld = tldRepository.findById(dto.getTld())
-                .orElseThrow(() -> new NotFoundException("TLD no encontrado"));
-        solicitud.setTld(tld);
-
-        return solicitudDominioRepository.save(solicitud).getIdSolicitud();
     }
-
 
     public void update(final Integer idSolicitud, final SolicitudDominioDTO solicitudDominioDTO) {
         final SolicitudDominio solicitudDominio = solicitudDominioRepository.findById(idSolicitud)

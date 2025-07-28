@@ -1,7 +1,10 @@
 package com.debloopers.chibchaweb.rest;
 
 import com.debloopers.chibchaweb.model.SolicitudDominioDTO;
+import com.debloopers.chibchaweb.model.SolicitudDominioRegistroRequestDTO;
+import com.debloopers.chibchaweb.model.SolicitudDominioRegistroResponseDTO;
 import com.debloopers.chibchaweb.service.SolicitudDominioService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -39,13 +42,19 @@ public class SolicitudDominioResource {
         return ResponseEntity.ok(solicitudDominioService.get(idSolicitud));
     }
 
+    @Operation(summary = "Registro de una solicitud de dominio")
     @PostMapping
-    @ApiResponse(responseCode = "201")
-    public ResponseEntity<Integer> createSolicitudDominio(
-            @RequestBody @Valid final SolicitudDominioDTO solicitudDominioDTO) {
-        final Integer createdIdSolicitud = solicitudDominioService.create(solicitudDominioDTO);
-        return new ResponseEntity<>(createdIdSolicitud, HttpStatus.CREATED);
+    public ResponseEntity<SolicitudDominioRegistroResponseDTO> createSolicitudDominio(
+            @RequestBody @Valid final SolicitudDominioRegistroRequestDTO solicitudDominioDTO) {
+
+        SolicitudDominioRegistroResponseDTO response = solicitudDominioService.create(solicitudDominioDTO);
+        if (response.isExito()) {
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
     }
+
 
     @PutMapping("/{idSolicitud}")
     public ResponseEntity<Integer> updateSolicitudDominio(
