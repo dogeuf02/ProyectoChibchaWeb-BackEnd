@@ -3,14 +3,21 @@ package com.debloopers.chibchaweb.service;
 import com.debloopers.chibchaweb.domain.Empleado;
 import com.debloopers.chibchaweb.domain.Ticket;
 import com.debloopers.chibchaweb.domain.Usuario;
+import com.debloopers.chibchaweb.model.ClienteDirectoRegistroResponseDTO;
 import com.debloopers.chibchaweb.model.EmpleadoDTO;
+import com.debloopers.chibchaweb.model.EmpleadoRegistroRequestDTO;
+import com.debloopers.chibchaweb.model.EmpleadoRegistroResponseDTO;
 import com.debloopers.chibchaweb.repos.EmpleadoRepository;
 import com.debloopers.chibchaweb.repos.TicketRepository;
 import com.debloopers.chibchaweb.repos.UsuarioRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
 import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +29,9 @@ public class EmpleadoService {
     private final EmpleadoRepository empleadoRepository;
     private final TicketRepository ticketRepository;
     private final UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public EmpleadoService(final EmpleadoRepository empleadoRepository,
             final TicketRepository ticketRepository, final UsuarioRepository usuarioRepository) {
@@ -43,10 +53,34 @@ public class EmpleadoService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public Integer create(final EmpleadoDTO empleadoDTO) {
-        final Empleado empleado = new Empleado();
-        mapToEntity(empleadoDTO, empleado);
-        return empleadoRepository.save(empleado).getIdEmpleado();
+    public EmpleadoRegistroResponseDTO create(final EmpleadoRegistroRequestDTO dto) {
+
+        if (usuarioRepository.findByCorreoUsuario(dto.getCorreo()) != null) {
+            return new EmpleadoRegistroResponseDTO(false, "El correo ya está registrado.");
+        }
+
+        try {
+
+            final Empleado empleado = new Empleado();
+            empleado.setNombreEmpleado(dto.getNombreEmpleado());
+            empleado.setApellidoEmpleado(dto.getApellidoEmpleado());
+            empleado.setCargoEmpleado(dto.getCargoEmpleado());
+
+            final Empleado empleadoCreado = empleadoRepository.save(empleado);
+
+            Usuario usuario = new Usuario();
+            usuario.setCorreoUsuario(dto.getCorreo());
+            usuario.setContrasena(passwordEncoder.encode(dto.getContrasena()));
+            usuario.setRol("Empleado");
+            usuario.setEstado("ACTIVO");
+            usuario.setEmpleado(empleadoCreado);
+            usuarioRepository.save(usuario);
+
+            return new EmpleadoRegistroResponseDTO(true, "Empleado registrado exitosamente.");
+
+        } catch (Exception e) {
+            return new EmpleadoRegistroResponseDTO(false, "Error al registrar el empleado: " + e.getMessage());
+        }
     }
 
     public void update(final Integer idEmpleado, final EmpleadoDTO empleadoDTO) {

@@ -1,9 +1,12 @@
 package com.debloopers.chibchaweb.rest;
 
 import com.debloopers.chibchaweb.model.EmpleadoDTO;
+import com.debloopers.chibchaweb.model.EmpleadoRegistroRequestDTO;
+import com.debloopers.chibchaweb.model.EmpleadoRegistroResponseDTO;
 import com.debloopers.chibchaweb.service.EmpleadoService;
 import com.debloopers.chibchaweb.util.ReferencedException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -42,11 +45,17 @@ public class EmpleadoResource {
     }
 
     @PostMapping
-    @ApiResponse(responseCode = "201")
-    public ResponseEntity<Integer> createEmpleado(
-            @RequestBody @Valid final EmpleadoDTO empleadoDTO) {
-        final Integer createdIdEmpleado = empleadoService.create(empleadoDTO);
-        return new ResponseEntity<>(createdIdEmpleado, HttpStatus.CREATED);
+    @Operation(summary = "Registro de un nuevo empleado")
+    public ResponseEntity<EmpleadoRegistroResponseDTO> createEmpleado(
+            @RequestBody @Valid final EmpleadoRegistroRequestDTO dto) {
+
+        EmpleadoRegistroResponseDTO response = empleadoService.create(dto);
+
+        if (response.isSuccess()) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
 
     @PutMapping("/{idEmpleado}")
