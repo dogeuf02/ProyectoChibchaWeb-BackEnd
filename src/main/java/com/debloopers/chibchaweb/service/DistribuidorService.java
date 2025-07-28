@@ -1,10 +1,7 @@
 package com.debloopers.chibchaweb.service;
 
 import com.debloopers.chibchaweb.domain.*;
-import com.debloopers.chibchaweb.model.DistribuidorActualizarDTO;
-import com.debloopers.chibchaweb.model.DistribuidorDTO;
-import com.debloopers.chibchaweb.model.DistribuidorRegistroRequestDTO;
-import com.debloopers.chibchaweb.model.DistribuidorRegistroResponseDTO;
+import com.debloopers.chibchaweb.model.*;
 import com.debloopers.chibchaweb.repos.*;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
@@ -115,6 +112,25 @@ public class DistribuidorService {
         }
 
         distribuidorRepository.save(distribuidor);
+    }
+
+    public List<DistribuidorConCorreoDTO> findAllWithCorreo() {
+        List<Distribuidor> distribuidores = distribuidorRepository.findAll(Sort.by("idDistribuidor"));
+
+        return distribuidores.stream().map(distribuidor -> {
+            Usuario usuario = usuarioRepository.findFirstByDistribuidor(distribuidor);
+
+            DistribuidorConCorreoDTO dto = new DistribuidorConCorreoDTO();
+            dto.setIdDistribuidor(distribuidor.getIdDistribuidor());
+            dto.setNumeroDocEmpresa(distribuidor.getNumeroDocEmpresa());
+            dto.setNombreEmpresa(distribuidor.getNombreEmpresa());
+            dto.setDireccionEmpresa(distribuidor.getDireccionEmpresa());
+            dto.setNombreTipoDoc(distribuidor.getNombreTipoDoc() != null ? distribuidor.getNombreTipoDoc().getNombreTipoDoc() : null);
+            dto.setCorreo(usuario != null ? usuario.getCorreoUsuario() : null);
+            dto.setEstado(usuario != null ? usuario.getEstado() : null);
+
+            return dto;
+        }).toList();
     }
 
 

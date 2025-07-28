@@ -1,9 +1,6 @@
 package com.debloopers.chibchaweb.rest;
 
-import com.debloopers.chibchaweb.model.DistribuidorActualizarDTO;
-import com.debloopers.chibchaweb.model.DistribuidorDTO;
-import com.debloopers.chibchaweb.model.DistribuidorRegistroRequestDTO;
-import com.debloopers.chibchaweb.model.DistribuidorRegistroResponseDTO;
+import com.debloopers.chibchaweb.model.*;
 import com.debloopers.chibchaweb.service.DistribuidorService;
 import com.debloopers.chibchaweb.util.ReferencedException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
@@ -68,6 +65,12 @@ public class DistribuidorResource {
             @RequestBody @Valid final DistribuidorActualizarDTO distribuidorDTO) {
         distribuidorService.update(idDistribuidor, distribuidorDTO);
         return ResponseEntity.ok("Distributor successfully updated with ID: " + idDistribuidor);
+    }
+
+    @Operation(summary = "Obtener los distribuidores con su correo y estado")
+    @GetMapping("/obtenerDistribuidores")
+    public ResponseEntity<List<DistribuidorConCorreoDTO>> getAllDistribuidoresConCorreo() {
+        return ResponseEntity.ok(distribuidorService.findAllWithCorreo());
     }
 
     @DeleteMapping("/{idDistribuidor}")
