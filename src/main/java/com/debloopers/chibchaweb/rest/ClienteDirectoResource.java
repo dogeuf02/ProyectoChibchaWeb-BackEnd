@@ -1,9 +1,6 @@
 package com.debloopers.chibchaweb.rest;
 
-import com.debloopers.chibchaweb.model.ClienteDirectoActualizarDTO;
-import com.debloopers.chibchaweb.model.ClienteDirectoDTO;
-import com.debloopers.chibchaweb.model.ClienteDirectoRegistroRequestDTO;
-import com.debloopers.chibchaweb.model.ClienteDirectoRegistroResponseDTO;
+import com.debloopers.chibchaweb.model.*;
 import com.debloopers.chibchaweb.service.ClienteDirectoService;
 import com.debloopers.chibchaweb.util.ReferencedException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
@@ -58,7 +55,6 @@ public class ClienteDirectoResource {
         }
     }
 
-
     @Operation(summary = "Actualizar campos excepto el id")
     @PutMapping("/{idCliente}")
     public ResponseEntity<String> updateClienteDirecto(
@@ -66,6 +62,12 @@ public class ClienteDirectoResource {
             @RequestBody @Valid final ClienteDirectoActualizarDTO clienteDirectoDTO) {
         clienteDirectoService.update(idCliente, clienteDirectoDTO);
         return ResponseEntity.ok("Cliente actualizado correctamente con ID: " + idCliente);
+    }
+
+    @Operation(summary = "Obtener los clientes con su correo y estado")
+    @GetMapping("/obtenerClientes")
+    public ResponseEntity<List<ClienteDirectoConCorreoDTO>> getAllClientesConCorreo() {
+        return ResponseEntity.ok(clienteDirectoService.findAllWithCorreo());
     }
 
     @DeleteMapping("/{idCliente}")

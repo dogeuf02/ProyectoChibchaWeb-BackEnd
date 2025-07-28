@@ -105,7 +105,6 @@ public class UsuarioService {
                 throw new IllegalArgumentException("Estado inválido: " + usuarioDTO.getEstado());
             }
         }
-
         usuarioRepository.save(usuario);
     }
 

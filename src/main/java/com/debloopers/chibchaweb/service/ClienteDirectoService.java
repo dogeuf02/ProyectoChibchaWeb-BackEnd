@@ -1,10 +1,7 @@
 package com.debloopers.chibchaweb.service;
 
 import com.debloopers.chibchaweb.domain.*;
-import com.debloopers.chibchaweb.model.ClienteDirectoActualizarDTO;
-import com.debloopers.chibchaweb.model.ClienteDirectoDTO;
-import com.debloopers.chibchaweb.model.ClienteDirectoRegistroRequestDTO;
-import com.debloopers.chibchaweb.model.ClienteDirectoRegistroResponseDTO;
+import com.debloopers.chibchaweb.model.*;
 import com.debloopers.chibchaweb.repos.*;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
@@ -104,6 +101,26 @@ public class ClienteDirectoService {
         }
 
         clienteDirectoRepository.save(cliente);
+    }
+
+    public List<ClienteDirectoConCorreoDTO> findAllWithCorreo() {
+        List<ClienteDirecto> clientes = clienteDirectoRepository.findAll(Sort.by("idCliente"));
+
+        return clientes.stream().map(cliente -> {
+            Usuario usuario = usuarioRepository.findFirstByCliente(cliente);
+
+            ClienteDirectoConCorreoDTO dto = new ClienteDirectoConCorreoDTO();
+            dto.setIdCliente(cliente.getIdCliente());
+            dto.setNombreCliente(cliente.getNombreCliente());
+            dto.setApellidoCliente(cliente.getApellidoCliente());
+            dto.setTelefono(cliente.getTelefono());
+            dto.setFechaNacimientoCliente(cliente.getFechaNacimientoCliente());
+            dto.setPlan(cliente.getPlan() != null ? cliente.getPlan().getIdPlan() : null);
+            dto.setCorreo(usuario != null ? usuario.getCorreoUsuario() : null);
+            dto.setEstado(usuario != null ? usuario.getEstado() : null);
+
+            return dto;
+        }).toList();
     }
 
     public void delete(final Integer idCliente) {
