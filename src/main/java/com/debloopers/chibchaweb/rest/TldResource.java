@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping(value = "/api/tlds", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/tld", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TldResource {
 
     private final TldService tldService;

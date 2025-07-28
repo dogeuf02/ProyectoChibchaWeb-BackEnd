@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping(value = "/api/distribuidors", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/distribuidor", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DistribuidorResource {
 
     private final DistribuidorService distribuidorService;

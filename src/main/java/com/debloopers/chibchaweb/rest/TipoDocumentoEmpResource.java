@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping(value = "/api/tipoDocumentoEmps", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/tipoDocumentoEmp", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TipoDocumentoEmpResource {
 
     private final TipoDocumentoEmpService tipoDocumentoEmpService;

@@ -1,9 +1,6 @@
 package com.debloopers.chibchaweb.rest;
 
-import com.debloopers.chibchaweb.model.AdministradorActualizarDTO;
-import com.debloopers.chibchaweb.model.AdministradorDTO;
-import com.debloopers.chibchaweb.model.AdministradorRegistroRequestDTO;
-import com.debloopers.chibchaweb.model.AdministradorRegistroResponseDTO;
+import com.debloopers.chibchaweb.model.*;
 import com.debloopers.chibchaweb.service.AdministradorService;
 import com.debloopers.chibchaweb.util.ReferencedException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
@@ -67,6 +64,13 @@ public class AdministradorResource {
             @RequestBody @Valid final AdministradorActualizarDTO administradorDTO) {
         administradorService.update(idAdmin, administradorDTO);
         return ResponseEntity.ok(idAdmin);
+    }
+
+    @Operation(summary = "Obtener todos los administradores con su correo y estado")
+    @GetMapping("/obtenerAdministradores")
+    public ResponseEntity<List<AdministradorConCorreoDTO>> getAllAdministradoresConCorreo() {
+        List<AdministradorConCorreoDTO> administradores = administradorService.findAllWithCorreo();
+        return ResponseEntity.ok(administradores);
     }
 
     @DeleteMapping("/{idAdmin}")

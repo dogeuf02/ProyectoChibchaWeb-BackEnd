@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping(value = "/api/clienteDirectos", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/clienteDirecto", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ClienteDirectoResource {
 
     private final ClienteDirectoService clienteDirectoService;

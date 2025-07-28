@@ -3,10 +3,7 @@ package com.debloopers.chibchaweb.service;
 import com.debloopers.chibchaweb.domain.Administrador;
 import com.debloopers.chibchaweb.domain.SolicitudDominio;
 import com.debloopers.chibchaweb.domain.Usuario;
-import com.debloopers.chibchaweb.model.AdministradorActualizarDTO;
-import com.debloopers.chibchaweb.model.AdministradorDTO;
-import com.debloopers.chibchaweb.model.AdministradorRegistroRequestDTO;
-import com.debloopers.chibchaweb.model.AdministradorRegistroResponseDTO;
+import com.debloopers.chibchaweb.model.*;
 import com.debloopers.chibchaweb.repos.AdministradorRepository;
 import com.debloopers.chibchaweb.repos.SolicitudDominioRepository;
 import com.debloopers.chibchaweb.repos.UsuarioRepository;
@@ -96,6 +93,24 @@ public class AdministradorService {
         }
 
         administradorRepository.save(administrador);
+    }
+
+    public List<AdministradorConCorreoDTO> findAllWithCorreo() {
+        List<Administrador> administradores = administradorRepository.findAll(Sort.by("idAdmin"));
+
+        return administradores.stream().map(admin -> {
+            Usuario usuario = usuarioRepository.findFirstByAdmin(admin);
+
+            AdministradorConCorreoDTO dto = new AdministradorConCorreoDTO();
+            dto.setIdAdmin(admin.getIdAdmin());
+            dto.setNombreAdmin(admin.getNombreAdmin());
+            dto.setApellidoAdmin(admin.getApellidoAdmin());
+            dto.setFechaNacimientoAdmin(admin.getFechaNacimientoAdmin());
+            dto.setCorreo(usuario != null ? usuario.getCorreoUsuario() : null);
+            dto.setEstado(usuario != null ? usuario.getEstado() : null);
+
+            return dto;
+        }).toList();
     }
 
     public void delete(final Integer idAdmin) {

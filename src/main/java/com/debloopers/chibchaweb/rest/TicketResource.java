@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping(value = "/api/tickets", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/ticket", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TicketResource {
 
     private final TicketService ticketService;
