@@ -57,7 +57,7 @@ public class ClienteDirectoService {
     public ClienteDirectoRegistroResponseDTO create(ClienteDirectoRegistroRequestDTO dto) {
         try {
             if (usuarioRepository.findByCorreoUsuario(dto.getCorreoCliente()) != null) {
-                return new ClienteDirectoRegistroResponseDTO(false, "El correo ya está registrado.");
+                return new ClienteDirectoRegistroResponseDTO(false, "The email is already registered.");
             }
 
             ClienteDirecto cliente = new ClienteDirecto();
@@ -75,9 +75,9 @@ public class ClienteDirectoService {
             usuario.setCliente(cliente);
             usuarioRepository.save(usuario);
 
-            return new ClienteDirectoRegistroResponseDTO(true, "Cliente creado exitosamente.");
+            return new ClienteDirectoRegistroResponseDTO(true, "Customer successfully created.");
         } catch (Exception e) {
-            return new ClienteDirectoRegistroResponseDTO(false, "Error interno al crear el cliente.");
+            return new ClienteDirectoRegistroResponseDTO(false, "Internal error when creating the client.");
         }
     }
 
@@ -99,7 +99,7 @@ public class ClienteDirectoService {
         }
         if (clienteDirectoDTO.getPlan() != null) {
             Plan plan = planRepository.findById(clienteDirectoDTO.getPlan())
-                    .orElseThrow(() -> new NotFoundException("Plan no encontrado"));
+                    .orElseThrow(() -> new NotFoundException("Plan not found"));
             cliente.setPlan(plan);
         }
 

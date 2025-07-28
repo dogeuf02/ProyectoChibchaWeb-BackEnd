@@ -56,7 +56,7 @@ public class AdministradorService {
     public AdministradorRegistroResponseDTO create(AdministradorRegistroRequestDTO dto) {
         try {
             if (usuarioRepository.findByCorreoUsuario(dto.getCorreoAdmin()) != null) {
-                return new AdministradorRegistroResponseDTO(false, "El correo ya está registrado.");
+                return new AdministradorRegistroResponseDTO(false, "The email is already registered.");
             }
 
             Administrador administrador = new Administrador();
@@ -73,9 +73,9 @@ public class AdministradorService {
             usuario.setAdmin(administrador);
             usuarioRepository.save(usuario);
 
-            return new AdministradorRegistroResponseDTO(true, "Administrador creado exitosamente.");
+            return new AdministradorRegistroResponseDTO(true, "Administrator successfully created.");
         } catch (Exception e) {
-            return new AdministradorRegistroResponseDTO(false, "Error interno al crear el administrador.");
+            return new AdministradorRegistroResponseDTO(false, "Internal error when creating the administrator.");
         }
     }
 

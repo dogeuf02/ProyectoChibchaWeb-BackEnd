@@ -58,31 +58,31 @@ public class SolicitudDominioService {
 
             if (dto.getCliente() != null) {
                 ClienteDirecto cliente = clienteDirectoRepository.findById(dto.getCliente())
-                        .orElseThrow(() -> new NotFoundException("Cliente no encontrado"));
+                        .orElseThrow(() -> new NotFoundException("Customer not found"));
                 solicitud.setCliente(cliente);
             }
 
             if (dto.getDistribuidor() != null) {
                 Distribuidor distribuidor = distribuidorRepository.findById(dto.getDistribuidor())
-                        .orElseThrow(() -> new NotFoundException("Distribuidor no encontrado"));
+                        .orElseThrow(() -> new NotFoundException("Distributor not found"));
                 solicitud.setDistribuidor(distribuidor);
             }
 
             if (dto.getAdmin() != null) {
                 Administrador admin = administradorRepository.findById(dto.getAdmin())
-                        .orElseThrow(() -> new NotFoundException("Administrador no encontrado"));
+                        .orElseThrow(() -> new NotFoundException("Administrator not found"));
                 solicitud.setAdmin(admin);
             }
 
             Tld tld = tldRepository.findById(dto.getTld())
-                    .orElseThrow(() -> new NotFoundException("TLD no encontrado"));
+                    .orElseThrow(() -> new NotFoundException("TLD not found"));
             solicitud.setTld(tld);
 
             Integer id = solicitudDominioRepository.save(solicitud).getIdSolicitud();
-            return new SolicitudDominioRegistroResponseDTO(true, "Solicitud creada exitosamente", id);
+            return new SolicitudDominioRegistroResponseDTO(true, "Application successfully created", id);
 
         } catch (Exception e) {
-            return new SolicitudDominioRegistroResponseDTO(false, "Error al crear la solicitud", null);
+            return new SolicitudDominioRegistroResponseDTO(false, "Error creating request", null);
         }
     }
 

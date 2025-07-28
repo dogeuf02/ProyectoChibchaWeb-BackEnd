@@ -57,12 +57,12 @@ public class DistribuidorService {
     public DistribuidorRegistroResponseDTO create(DistribuidorRegistroRequestDTO dto) {
         try {
             if (usuarioRepository.findByCorreoUsuario(dto.getCorreoDistrbuidor()) != null) {
-                return new DistribuidorRegistroResponseDTO(false, "El correo ya está registrado.");
+                return new DistribuidorRegistroResponseDTO(false, "The email is already registered.");
             }
 
             TipoDocumentoEmp tipoDoc = tipoDocumentoEmpRepository.findByNombreTipoDoc(dto.getNombreTipoDoc());
             if (tipoDoc == null) {
-                return new DistribuidorRegistroResponseDTO(false, "El tipo de documento no existe.");
+                return new DistribuidorRegistroResponseDTO(false, "The document type does not exist.");
             }
 
             Distribuidor distribuidor = new Distribuidor();
@@ -80,9 +80,9 @@ public class DistribuidorService {
             usuario.setDistribuidor(distribuidor);
             usuarioRepository.save(usuario);
 
-            return new DistribuidorRegistroResponseDTO(true, "Distribuidor creado exitosamente.");
+            return new DistribuidorRegistroResponseDTO(true, "Distributor successfully created.");
         } catch (Exception e) {
-            return new DistribuidorRegistroResponseDTO(false, "Error interno al crear el distribuidor.");
+            return new DistribuidorRegistroResponseDTO(false, "Internal error creating the distributor.");
         }
     }
 
@@ -108,7 +108,7 @@ public class DistribuidorService {
                     .findByNombreTipoDoc(distribuidorDTO.getNombreTipoDoc());
 
             if (tipoDocumento == null) {
-                throw new IllegalArgumentException("Tipo de documento no encontrado: " + distribuidorDTO.getNombreTipoDoc());
+                throw new IllegalArgumentException("Document type not found: " + distribuidorDTO.getNombreTipoDoc());
             }
 
             distribuidor.setNombreTipoDoc(tipoDocumento);

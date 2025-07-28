@@ -67,7 +67,7 @@ public class DistribuidorResource {
             @PathVariable(name = "idDistribuidor") final Integer idDistribuidor,
             @RequestBody @Valid final DistribuidorActualizarDTO distribuidorDTO) {
         distribuidorService.update(idDistribuidor, distribuidorDTO);
-        return ResponseEntity.ok("Distribuidor actualizado correctamente con ID: " + idDistribuidor);
+        return ResponseEntity.ok("Distributor successfully updated with ID: " + idDistribuidor);
     }
 
     @DeleteMapping("/{idDistribuidor}")

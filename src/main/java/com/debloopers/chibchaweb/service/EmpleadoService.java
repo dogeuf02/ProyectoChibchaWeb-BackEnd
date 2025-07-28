@@ -53,7 +53,7 @@ public class EmpleadoService {
     public EmpleadoRegistroResponseDTO create(final EmpleadoRegistroRequestDTO dto) {
 
         if (usuarioRepository.findByCorreoUsuario(dto.getCorreo()) != null) {
-            return new EmpleadoRegistroResponseDTO(false, "El correo ya está registrado.");
+            return new EmpleadoRegistroResponseDTO(false, "The email is already registered.");
         }
 
         try {
@@ -73,10 +73,10 @@ public class EmpleadoService {
             usuario.setEmpleado(empleadoCreado);
             usuarioRepository.save(usuario);
 
-            return new EmpleadoRegistroResponseDTO(true, "Empleado registrado exitosamente.");
+            return new EmpleadoRegistroResponseDTO(true, "Employee successfully registered.");
 
         } catch (Exception e) {
-            return new EmpleadoRegistroResponseDTO(false, "Error al registrar el empleado: " + e.getMessage());
+            return new EmpleadoRegistroResponseDTO(false, "Error registering employee: " + e.getMessage());
         }
     }
 

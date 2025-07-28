@@ -20,22 +20,22 @@ public class AuthService {
     public LoginResponseDTO login(LoginRequestDTO dto) {
         Usuario usuario = usuarioRepository.findByCorreoUsuario(dto.getCorreo());
         if (usuario == null) {
-            return new LoginResponseDTO(false, "Correo no registrado", null, null);
+            return new LoginResponseDTO(false, "Unregistered email", null, null);
         }
 
         if ("INACTIVO".equalsIgnoreCase(usuario.getEstado())) {
-            return new LoginResponseDTO(false, "El usuario está inactivo", null, null);
+            return new LoginResponseDTO(false, "The user is inactive.", null, null);
         }
 
         if ("PENDIENTE".equalsIgnoreCase(usuario.getEstado())) {
-            return new LoginResponseDTO(false, "El usuario aún no ha sido activado", null, null);
+            return new LoginResponseDTO(false, "The user has not yet been activated.", null, null);
         }
 
         boolean coincide = passwordEncoder.matches(dto.getContrasena(), usuario.getContrasena());
         if (!coincide) {
-            return new LoginResponseDTO(false, "Contraseña incorrecta", null, null);
+            return new LoginResponseDTO(false, "Incorrect password", null, null);
         }
 
-        return new LoginResponseDTO(true, "Inicio de sesión exitoso", usuario.getRol(), usuario.getIdUsuario());
+        return new LoginResponseDTO(true, "Login successful", usuario.getRol(), usuario.getIdUsuario());
     }
 }

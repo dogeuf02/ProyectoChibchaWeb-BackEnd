@@ -77,7 +77,7 @@ public class UsuarioService {
             if (estadosValidos.contains(usuarioDTO.getEstado().toUpperCase())) {
                 usuario.setEstado(usuarioDTO.getEstado().toUpperCase());
             } else {
-                throw new IllegalArgumentException("Estado no válido: " + usuarioDTO.getEstado());
+                throw new IllegalArgumentException("Invalid status: " + usuarioDTO.getEstado());
             }
         }
         usuarioRepository.save(usuario);
