@@ -1,5 +1,6 @@
 package com.debloopers.chibchaweb.rest;
 
+import com.debloopers.chibchaweb.model.EmpleadoActualizarDTO;
 import com.debloopers.chibchaweb.model.EmpleadoDTO;
 import com.debloopers.chibchaweb.model.EmpleadoRegistroRequestDTO;
 import com.debloopers.chibchaweb.model.EmpleadoRegistroResponseDTO;
@@ -58,10 +59,11 @@ public class EmpleadoResource {
         }
     }
 
+    @Operation(summary = "Actualizar un empleado")
     @PutMapping("/{idEmpleado}")
     public ResponseEntity<Integer> updateEmpleado(
             @PathVariable(name = "idEmpleado") final Integer idEmpleado,
-            @RequestBody @Valid final EmpleadoDTO empleadoDTO) {
+            @RequestBody @Valid final EmpleadoActualizarDTO empleadoDTO) {
         empleadoService.update(idEmpleado, empleadoDTO);
         return ResponseEntity.ok(idEmpleado);
     }

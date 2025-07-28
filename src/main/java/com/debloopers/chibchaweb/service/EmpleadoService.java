@@ -3,10 +3,7 @@ package com.debloopers.chibchaweb.service;
 import com.debloopers.chibchaweb.domain.Empleado;
 import com.debloopers.chibchaweb.domain.Ticket;
 import com.debloopers.chibchaweb.domain.Usuario;
-import com.debloopers.chibchaweb.model.ClienteDirectoRegistroResponseDTO;
-import com.debloopers.chibchaweb.model.EmpleadoDTO;
-import com.debloopers.chibchaweb.model.EmpleadoRegistroRequestDTO;
-import com.debloopers.chibchaweb.model.EmpleadoRegistroResponseDTO;
+import com.debloopers.chibchaweb.model.*;
 import com.debloopers.chibchaweb.repos.EmpleadoRepository;
 import com.debloopers.chibchaweb.repos.TicketRepository;
 import com.debloopers.chibchaweb.repos.UsuarioRepository;
@@ -83,10 +80,22 @@ public class EmpleadoService {
         }
     }
 
-    public void update(final Integer idEmpleado, final EmpleadoDTO empleadoDTO) {
+    public void update(final Integer idEmpleado, final EmpleadoActualizarDTO empleadoDTO) {
         final Empleado empleado = empleadoRepository.findById(idEmpleado)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(empleadoDTO, empleado);
+
+        if (empleadoDTO.getNombreEmpleado() != null && !empleadoDTO.getNombreEmpleado().isBlank()) {
+            empleado.setNombreEmpleado(empleadoDTO.getNombreEmpleado().trim());
+        }
+
+        if (empleadoDTO.getApellidoEmpleado() != null && !empleadoDTO.getApellidoEmpleado().isBlank()) {
+            empleado.setApellidoEmpleado(empleadoDTO.getApellidoEmpleado().trim());
+        }
+
+        if (empleadoDTO.getCargoEmpleado() != null && !empleadoDTO.getCargoEmpleado().isBlank()) {
+            empleado.setCargoEmpleado(empleadoDTO.getCargoEmpleado().trim());
+        }
+
         empleadoRepository.save(empleado);
     }
 

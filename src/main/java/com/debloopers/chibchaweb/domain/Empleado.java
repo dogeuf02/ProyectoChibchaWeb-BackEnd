@@ -50,5 +50,4 @@ public class Empleado {
 
     @ManyToMany(mappedBy = "historialTicketUsuarioEmpleadoes")
     private Set<Ticket> historialTicketUsuarioTickets = new HashSet<>();
-
 }
