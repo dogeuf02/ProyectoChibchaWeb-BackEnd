@@ -12,5 +12,4 @@ public class TldDTO {
     @Size(max = 63)
     @TldTldValid
     private String tld;
-
 }

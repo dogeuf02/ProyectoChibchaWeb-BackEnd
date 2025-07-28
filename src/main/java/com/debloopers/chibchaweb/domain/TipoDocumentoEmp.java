@@ -21,5 +21,4 @@ public class TipoDocumentoEmp {
 
     @OneToMany(mappedBy = "nombreTipoDoc")
     private Set<Distribuidor> nombreTipoDocDistribuidors = new HashSet<>();
-
 }

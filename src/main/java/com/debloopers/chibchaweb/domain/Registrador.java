@@ -6,9 +6,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
+import lombok.Getter;
+import lombok.Setter;
 
 
 @Entity
+@Getter
+@Setter
 public class Registrador {
 
     @Id
@@ -30,29 +34,4 @@ public class Registrador {
 
     @Column(nullable = false, length = 150)
     private String correoRegistrador;
-
-    public Integer getIdRegistrador() {
-        return idRegistrador;
-    }
-
-    public void setIdRegistrador(final Integer idRegistrador) {
-        this.idRegistrador = idRegistrador;
-    }
-
-    public String getNombreRegistrador() {
-        return nombreRegistrador;
-    }
-
-    public void setNombreRegistrador(final String nombreRegistrador) {
-        this.nombreRegistrador = nombreRegistrador;
-    }
-
-    public String getCorreoRegistrador() {
-        return correoRegistrador;
-    }
-
-    public void setCorreoRegistrador(final String correoRegistrador) {
-        this.correoRegistrador = correoRegistrador;
-    }
-
 }

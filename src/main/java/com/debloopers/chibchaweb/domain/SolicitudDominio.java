@@ -9,10 +9,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
 
 
 @Entity
+@Getter
+@Setter
 public class SolicitudDominio {
 
     @Id
@@ -59,85 +64,4 @@ public class SolicitudDominio {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id")
     private Administrador admin;
-
-    public Integer getIdSolicitud() {
-        return idSolicitud;
-    }
-
-    public void setIdSolicitud(final Integer idSolicitud) {
-        this.idSolicitud = idSolicitud;
-    }
-
-    public String getNombreDominio() {
-        return nombreDominio;
-    }
-
-    public void setNombreDominio(final String nombreDominio) {
-        this.nombreDominio = nombreDominio;
-    }
-
-    public String getEstadoDominio() {
-        return estadoDominio;
-    }
-
-    public void setEstadoDominio(final String estadoDominio) {
-        this.estadoDominio = estadoDominio;
-    }
-
-    public String getEstadoSolicitud() {
-        return estadoSolicitud;
-    }
-
-    public void setEstadoSolicitud(final String estadoSolicitud) {
-        this.estadoSolicitud = estadoSolicitud;
-    }
-
-    public LocalDate getFechaSolicitud() {
-        return fechaSolicitud;
-    }
-
-    public void setFechaSolicitud(final LocalDate fechaSolicitud) {
-        this.fechaSolicitud = fechaSolicitud;
-    }
-
-    public LocalDate getFechaAprobacion() {
-        return fechaAprobacion;
-    }
-
-    public void setFechaAprobacion(final LocalDate fechaAprobacion) {
-        this.fechaAprobacion = fechaAprobacion;
-    }
-
-    public ClienteDirecto getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(final ClienteDirecto cliente) {
-        this.cliente = cliente;
-    }
-
-    public Distribuidor getDistribuidor() {
-        return distribuidor;
-    }
-
-    public void setDistribuidor(final Distribuidor distribuidor) {
-        this.distribuidor = distribuidor;
-    }
-
-    public Tld getTld() {
-        return tld;
-    }
-
-    public void setTld(final Tld tld) {
-        this.tld = tld;
-    }
-
-    public Administrador getAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(final Administrador admin) {
-        this.admin = admin;
-    }
-
 }
