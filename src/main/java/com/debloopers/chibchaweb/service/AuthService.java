@@ -20,22 +20,33 @@ public class AuthService {
     public LoginResponseDTO login(LoginRequestDTO dto) {
         Usuario usuario = usuarioRepository.findByCorreoUsuario(dto.getCorreo());
         if (usuario == null) {
-            return new LoginResponseDTO(false, "Unregistered email", null, null);
+            return new LoginResponseDTO(false, "Unregistered email", null, null, null);
         }
 
         if ("INACTIVO".equalsIgnoreCase(usuario.getEstado())) {
-            return new LoginResponseDTO(false, "The user is inactive.", null, null);
+            return new LoginResponseDTO(false, "The user is inactive.", null, null, null);
         }
 
         if ("PENDIENTE".equalsIgnoreCase(usuario.getEstado())) {
-            return new LoginResponseDTO(false, "Account pending from aprovation", null, null);
+            return new LoginResponseDTO(false, "Account pending from approval.", null, null, null);
         }
 
         boolean coincide = passwordEncoder.matches(dto.getContrasena(), usuario.getContrasena());
         if (!coincide) {
-            return new LoginResponseDTO(false, "Incorrect password", null, null);
+            return new LoginResponseDTO(false, "Incorrect password", null, null, null);
         }
 
-        return new LoginResponseDTO(true, "Login successful", usuario.getRol(), usuario.getIdUsuario());
+        Integer idRelacionado = null;
+        if (usuario.getAdmin() != null) {
+            idRelacionado = usuario.getAdmin().getIdAdmin();
+        } else if (usuario.getCliente() != null) {
+            idRelacionado = usuario.getCliente().getIdCliente();
+        } else if (usuario.getEmpleado() != null) {
+            idRelacionado = usuario.getEmpleado().getIdEmpleado();
+        } else if (usuario.getDistribuidor() != null) {
+            idRelacionado = usuario.getDistribuidor().getIdDistribuidor();
+        }
+
+        return new LoginResponseDTO(true, "Login successful", usuario.getRol(), usuario.getIdUsuario(),idRelacionado );
     }
 }

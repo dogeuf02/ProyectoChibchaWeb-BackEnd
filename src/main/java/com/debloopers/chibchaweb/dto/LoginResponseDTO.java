@@ -12,4 +12,5 @@ public class LoginResponseDTO {
     private String mensaje;
     private String rol;
     private Integer id;
+    private Integer idRol;
 }
