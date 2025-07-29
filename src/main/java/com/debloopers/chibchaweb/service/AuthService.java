@@ -28,7 +28,7 @@ public class AuthService {
         }
 
         if ("PENDIENTE".equalsIgnoreCase(usuario.getEstado())) {
-            return new LoginResponseDTO(false, "The user has not yet been activated.", null, null);
+            return new LoginResponseDTO(false, "Account pending from aprovation", null, null);
         }
 
         boolean coincide = passwordEncoder.matches(dto.getContrasena(), usuario.getContrasena());
