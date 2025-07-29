@@ -1,8 +1,8 @@
 package com.debloopers.chibchaweb.config;
 
-import com.debloopers.chibchaweb.model.AdministradorRegistroRequestDTO;
-import com.debloopers.chibchaweb.model.AdministradorRegistroResponseDTO;
-import com.debloopers.chibchaweb.model.TipoDocumentoEmpDTO;
+import com.debloopers.chibchaweb.dto.AdministradorRegistroRequestDTO;
+import com.debloopers.chibchaweb.dto.AdministradorRegistroResponseDTO;
+import com.debloopers.chibchaweb.dto.TipoDocumentoEmpDTO;
 import com.debloopers.chibchaweb.service.AdministradorService;
 import com.debloopers.chibchaweb.service.TipoDocumentoEmpService;
 
