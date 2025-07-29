@@ -3,8 +3,10 @@ package com.debloopers.chibchaweb.config;
 import com.debloopers.chibchaweb.dto.AdministradorRegistroRequestDTO;
 import com.debloopers.chibchaweb.dto.AdministradorRegistroResponseDTO;
 import com.debloopers.chibchaweb.dto.TipoDocumentoEmpDTO;
+import com.debloopers.chibchaweb.dto.TldDTO;
 import com.debloopers.chibchaweb.service.AdministradorService;
 import com.debloopers.chibchaweb.service.TipoDocumentoEmpService;
+import com.debloopers.chibchaweb.service.TldService;
 
 import java.time.LocalDate;
 
@@ -17,11 +19,12 @@ public class DatabaseSeeder {
 
     @Bean
     CommandLineRunner seedTipoDocumentoEmp(TipoDocumentoEmpService tipoDocumentoEmpService,
-            AdministradorService administradorService) {
+            AdministradorService administradorService,
+            TldService tldService) {
         return args -> {
             insertarTipo(tipoDocumentoEmpService, "NIT");
             insertarAdministradorPorDefecto(administradorService);
-
+            insertarTld(tldService, ".sapa");
         };
     }
 
@@ -54,4 +57,15 @@ public class DatabaseSeeder {
             }
         }
     }
+
+
+    private void insertarTld(TldService service, String tldString) {
+    if (!service.tldExists(tldString)) {
+        TldDTO dto = new TldDTO();
+        dto.setTld(tldString);
+        service.create(dto);
+        System.out.println("🟢 TLD insertado: " + tldString);
+    }
+}
+
 }
