@@ -1,14 +1,14 @@
 package com.debloopers.chibchaweb.service;
 
-import com.debloopers.chibchaweb.domain.ClienteDirecto;
-import com.debloopers.chibchaweb.domain.Distribuidor;
-import com.debloopers.chibchaweb.domain.Empleado;
-import com.debloopers.chibchaweb.domain.Ticket;
-import com.debloopers.chibchaweb.model.TicketDTO;
-import com.debloopers.chibchaweb.repos.ClienteDirectoRepository;
-import com.debloopers.chibchaweb.repos.DistribuidorRepository;
-import com.debloopers.chibchaweb.repos.EmpleadoRepository;
-import com.debloopers.chibchaweb.repos.TicketRepository;
+import com.debloopers.chibchaweb.entity.ClienteDirecto;
+import com.debloopers.chibchaweb.entity.Distribuidor;
+import com.debloopers.chibchaweb.entity.Empleado;
+import com.debloopers.chibchaweb.entity.Ticket;
+import com.debloopers.chibchaweb.dto.TicketDTO;
+import com.debloopers.chibchaweb.repository.ClienteDirectoRepository;
+import com.debloopers.chibchaweb.repository.DistribuidorRepository;
+import com.debloopers.chibchaweb.repository.EmpleadoRepository;
+import com.debloopers.chibchaweb.repository.TicketRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import java.util.HashSet;
 import java.util.List;

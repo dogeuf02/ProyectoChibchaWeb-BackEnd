@@ -1,12 +1,12 @@
 package com.debloopers.chibchaweb.service;
 
-import com.debloopers.chibchaweb.domain.Administrador;
-import com.debloopers.chibchaweb.domain.SolicitudDominio;
-import com.debloopers.chibchaweb.domain.Usuario;
-import com.debloopers.chibchaweb.model.*;
-import com.debloopers.chibchaweb.repos.AdministradorRepository;
-import com.debloopers.chibchaweb.repos.SolicitudDominioRepository;
-import com.debloopers.chibchaweb.repos.UsuarioRepository;
+import com.debloopers.chibchaweb.entity.Administrador;
+import com.debloopers.chibchaweb.entity.SolicitudDominio;
+import com.debloopers.chibchaweb.entity.Usuario;
+import com.debloopers.chibchaweb.dto.*;
+import com.debloopers.chibchaweb.repository.AdministradorRepository;
+import com.debloopers.chibchaweb.repository.SolicitudDominioRepository;
+import com.debloopers.chibchaweb.repository.UsuarioRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
 import java.util.List;

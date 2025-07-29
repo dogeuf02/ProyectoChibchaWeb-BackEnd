@@ -1,8 +1,8 @@
 package com.debloopers.chibchaweb.service;
 
-import com.debloopers.chibchaweb.domain.*;
-import com.debloopers.chibchaweb.model.*;
-import com.debloopers.chibchaweb.repos.*;
+import com.debloopers.chibchaweb.entity.*;
+import com.debloopers.chibchaweb.dto.*;
+import com.debloopers.chibchaweb.repository.*;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
 import java.util.List;

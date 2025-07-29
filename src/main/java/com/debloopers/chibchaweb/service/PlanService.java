@@ -1,10 +1,10 @@
 package com.debloopers.chibchaweb.service;
 
-import com.debloopers.chibchaweb.domain.ClienteDirecto;
-import com.debloopers.chibchaweb.domain.Plan;
-import com.debloopers.chibchaweb.model.PlanDTO;
-import com.debloopers.chibchaweb.repos.ClienteDirectoRepository;
-import com.debloopers.chibchaweb.repos.PlanRepository;
+import com.debloopers.chibchaweb.entity.ClienteDirecto;
+import com.debloopers.chibchaweb.entity.Plan;
+import com.debloopers.chibchaweb.dto.PlanDTO;
+import com.debloopers.chibchaweb.repository.ClienteDirectoRepository;
+import com.debloopers.chibchaweb.repository.PlanRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
 import java.util.List;

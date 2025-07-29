@@ -2,12 +2,12 @@ package com.debloopers.chibchaweb.service;
 
 import java.util.List;
 
-import com.debloopers.chibchaweb.domain.*;
-import com.debloopers.chibchaweb.model.SolicitudDominioActualizarDTO;
-import com.debloopers.chibchaweb.model.SolicitudDominioDTO;
-import com.debloopers.chibchaweb.model.SolicitudDominioRegistroRequestDTO;
-import com.debloopers.chibchaweb.model.SolicitudDominioRegistroResponseDTO;
-import com.debloopers.chibchaweb.repos.*;
+import com.debloopers.chibchaweb.entity.*;
+import com.debloopers.chibchaweb.dto.SolicitudDominioActualizarDTO;
+import com.debloopers.chibchaweb.dto.SolicitudDominioDTO;
+import com.debloopers.chibchaweb.dto.SolicitudDominioRegistroRequestDTO;
+import com.debloopers.chibchaweb.dto.SolicitudDominioRegistroResponseDTO;
+import com.debloopers.chibchaweb.repository.*;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;

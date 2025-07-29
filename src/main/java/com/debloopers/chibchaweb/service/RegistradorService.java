@@ -1,10 +1,10 @@
 package com.debloopers.chibchaweb.service;
 
-import com.debloopers.chibchaweb.domain.Registrador;
-import com.debloopers.chibchaweb.model.RegistradorDTO;
-import com.debloopers.chibchaweb.repos.RegistradorRepository;
+import com.debloopers.chibchaweb.entity.Registrador;
+import com.debloopers.chibchaweb.dto.RegistradorDTO;
+import com.debloopers.chibchaweb.repository.RegistradorRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
-import com.debloopers.chibchaweb.util.ReferencedWarning;
+
 import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;

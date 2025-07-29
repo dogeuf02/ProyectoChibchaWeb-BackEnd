@@ -1,9 +1,9 @@
 package com.debloopers.chibchaweb.service;
 
-import com.debloopers.chibchaweb.domain.Usuario;
-import com.debloopers.chibchaweb.model.LoginRequestDTO;
-import com.debloopers.chibchaweb.model.LoginResponseDTO;
-import com.debloopers.chibchaweb.repos.UsuarioRepository;
+import com.debloopers.chibchaweb.entity.Usuario;
+import com.debloopers.chibchaweb.dto.LoginRequestDTO;
+import com.debloopers.chibchaweb.dto.LoginResponseDTO;
+import com.debloopers.chibchaweb.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

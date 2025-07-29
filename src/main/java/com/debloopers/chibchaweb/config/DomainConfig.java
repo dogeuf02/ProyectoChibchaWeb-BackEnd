@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
 @Configuration
-@EntityScan("com.debloopers.chibchaweb.domain")
-@EnableJpaRepositories("com.debloopers.chibchaweb.repos")
+@EntityScan("com.debloopers.chibchaweb.entity")
+@EnableJpaRepositories("com.debloopers.chibchaweb.repository")
 @EnableTransactionManagement
 public class DomainConfig {
 }

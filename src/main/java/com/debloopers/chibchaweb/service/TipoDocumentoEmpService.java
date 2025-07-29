@@ -1,10 +1,10 @@
 package com.debloopers.chibchaweb.service;
 
-import com.debloopers.chibchaweb.domain.Distribuidor;
-import com.debloopers.chibchaweb.domain.TipoDocumentoEmp;
-import com.debloopers.chibchaweb.model.TipoDocumentoEmpDTO;
-import com.debloopers.chibchaweb.repos.DistribuidorRepository;
-import com.debloopers.chibchaweb.repos.TipoDocumentoEmpRepository;
+import com.debloopers.chibchaweb.entity.Distribuidor;
+import com.debloopers.chibchaweb.entity.TipoDocumentoEmp;
+import com.debloopers.chibchaweb.dto.TipoDocumentoEmpDTO;
+import com.debloopers.chibchaweb.repository.DistribuidorRepository;
+import com.debloopers.chibchaweb.repository.TipoDocumentoEmpRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
 import java.util.List;

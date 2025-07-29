@@ -1,17 +1,17 @@
 package com.debloopers.chibchaweb.service;
 
-import com.debloopers.chibchaweb.domain.Administrador;
-import com.debloopers.chibchaweb.domain.ClienteDirecto;
-import com.debloopers.chibchaweb.domain.Distribuidor;
-import com.debloopers.chibchaweb.domain.Empleado;
-import com.debloopers.chibchaweb.domain.Usuario;
-import com.debloopers.chibchaweb.model.UsuarioActualizarDTO;
-import com.debloopers.chibchaweb.model.UsuarioDTO;
-import com.debloopers.chibchaweb.repos.AdministradorRepository;
-import com.debloopers.chibchaweb.repos.ClienteDirectoRepository;
-import com.debloopers.chibchaweb.repos.DistribuidorRepository;
-import com.debloopers.chibchaweb.repos.EmpleadoRepository;
-import com.debloopers.chibchaweb.repos.UsuarioRepository;
+import com.debloopers.chibchaweb.entity.Administrador;
+import com.debloopers.chibchaweb.entity.ClienteDirecto;
+import com.debloopers.chibchaweb.entity.Distribuidor;
+import com.debloopers.chibchaweb.entity.Empleado;
+import com.debloopers.chibchaweb.entity.Usuario;
+import com.debloopers.chibchaweb.dto.UsuarioActualizarDTO;
+import com.debloopers.chibchaweb.dto.UsuarioDTO;
+import com.debloopers.chibchaweb.repository.AdministradorRepository;
+import com.debloopers.chibchaweb.repository.ClienteDirectoRepository;
+import com.debloopers.chibchaweb.repository.DistribuidorRepository;
+import com.debloopers.chibchaweb.repository.EmpleadoRepository;
+import com.debloopers.chibchaweb.repository.UsuarioRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import java.util.List;
 

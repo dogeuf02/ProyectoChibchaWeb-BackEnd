@@ -1,16 +1,15 @@
 package com.debloopers.chibchaweb.service;
 
-import com.debloopers.chibchaweb.domain.Empleado;
-import com.debloopers.chibchaweb.domain.Ticket;
-import com.debloopers.chibchaweb.domain.Usuario;
-import com.debloopers.chibchaweb.model.*;
-import com.debloopers.chibchaweb.repos.EmpleadoRepository;
-import com.debloopers.chibchaweb.repos.TicketRepository;
-import com.debloopers.chibchaweb.repos.UsuarioRepository;
+import com.debloopers.chibchaweb.entity.Empleado;
+import com.debloopers.chibchaweb.entity.Ticket;
+import com.debloopers.chibchaweb.entity.Usuario;
+import com.debloopers.chibchaweb.dto.*;
+import com.debloopers.chibchaweb.repository.EmpleadoRepository;
+import com.debloopers.chibchaweb.repository.TicketRepository;
+import com.debloopers.chibchaweb.repository.UsuarioRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
