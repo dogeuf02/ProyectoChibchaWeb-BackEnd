@@ -33,13 +33,16 @@ public class TokenVerificacionService {
 
     public TokenVerificacion crearTokenParaUsuario(Usuario usuario) {
         String token = UUID.randomUUID().toString();
-        LocalDateTime expiracion = LocalDateTime.now().plusHours(24);
+        LocalDateTime ahora = LocalDateTime.now();
+        LocalDateTime expiracion = ahora.plusHours(24);
 
         TokenVerificacion nuevoToken = new TokenVerificacion();
         nuevoToken.setToken(token);
         nuevoToken.setUsuario(usuario);
         nuevoToken.setFechaExpiracion(expiracion);
         nuevoToken.setEstado(false);
+        nuevoToken.setCreadoEn(ahora);
+        nuevoToken.setActualizadoEn(ahora);
 
         return tokenVerificacionRepository.save(nuevoToken);
     }
@@ -53,6 +56,7 @@ public class TokenVerificacionService {
         }
 
         encontrado.setEstado(true);
+        encontrado.setActualizadoEn(LocalDateTime.now());
         tokenVerificacionRepository.save(encontrado);
 
         return encontrado.getUsuario();
@@ -107,6 +111,8 @@ public class TokenVerificacionService {
         dto.setFechaExpiracion(token.getFechaExpiracion());
         dto.setIdUsuario(token.getUsuario().getIdUsuario());
         dto.setEstado(token.getEstado());
+        dto.setCreadoEn(token.getCreadoEn());
+        dto.setActualizadoEn(token.getActualizadoEn());
         return dto;
     }
 
@@ -114,6 +120,8 @@ public class TokenVerificacionService {
         token.setToken(dto.getToken());
         token.setFechaExpiracion(dto.getFechaExpiracion());
         token.setEstado(dto.isEstado());
+        token.setCreadoEn(dto.getCreadoEn());
+        token.setActualizadoEn(dto.getActualizadoEn());
 
         final Usuario usuario = usuarioRepository.findById(dto.getIdUsuario())
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));

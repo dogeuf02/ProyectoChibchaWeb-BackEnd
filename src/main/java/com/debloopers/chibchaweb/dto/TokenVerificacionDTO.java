@@ -17,11 +17,15 @@ public class TokenVerificacionDTO {
     private String token;
 
     @NotNull
-    private LocalDateTime fechaExpiracion;
-
-    @NotNull
     private Integer idUsuario;
 
     @NotNull
+    private LocalDateTime fechaExpiracion;
+
+    @NotNull
     private boolean estado;
+
+    private LocalDateTime creadoEn;
+
+    private LocalDateTime actualizadoEn;
 }
