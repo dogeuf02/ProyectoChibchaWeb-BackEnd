@@ -22,4 +22,9 @@ public class AuthController {
         }
         return ResponseEntity.ok(respuesta);
     }
+
+    @GetMapping("/activar")
+    public ResponseEntity<String> activarCuenta(@RequestParam("token") String token) {
+        return authService.activarCuentaConToken(token);
+    }
 }

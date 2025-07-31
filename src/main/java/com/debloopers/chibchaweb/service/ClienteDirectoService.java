@@ -5,6 +5,7 @@ import com.debloopers.chibchaweb.dto.*;
 import com.debloopers.chibchaweb.repository.*;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 @Service
 public class ClienteDirectoService {
@@ -25,6 +25,12 @@ public class ClienteDirectoService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private TokenVerificacionService tokenService;
+
+    @Autowired
+    private EmailService emailService;
 
     public ClienteDirectoService(final ClienteDirectoRepository clienteDirectoRepository,
                                  final PlanRepository planRepository, final UsuarioRepository usuarioRepository,
@@ -68,11 +74,19 @@ public class ClienteDirectoService {
             usuario.setCorreoUsuario(dto.getCorreoCliente());
             usuario.setContrasena(passwordEncoder.encode(dto.getContrasenaCliente()));
             usuario.setRol("Cliente");
-            usuario.setEstado("ACTIVO");
+            usuario.setEstado("PENDIENTE");
             usuario.setCliente(cliente);
             usuarioRepository.save(usuario);
 
-            return new ClienteDirectoRegistroResponseDTO(true, "Customer successfully created.");
+            TokenVerificacion tokenVerificacion = tokenService.crearTokenParaUsuario(usuario);
+
+            emailService.enviarCorreoActivacion(
+                    usuario.getCorreoUsuario(),
+                    "Activación de cuenta",
+                    tokenVerificacion.getToken()
+            );
+
+            return new ClienteDirectoRegistroResponseDTO(true, "Customer registered. Please check your email to activate your account.");
         } catch (Exception e) {
             return new ClienteDirectoRegistroResponseDTO(false, "Internal error when creating the client.");
         }
@@ -122,6 +136,8 @@ public class ClienteDirectoService {
             return dto;
         }).toList();
     }
+
+
 
     public void delete(final Integer idCliente) {
         clienteDirectoRepository.deleteById(idCliente);
