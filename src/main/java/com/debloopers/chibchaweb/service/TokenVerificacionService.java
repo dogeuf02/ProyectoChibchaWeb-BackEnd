@@ -55,6 +55,10 @@ public class TokenVerificacionService {
             throw new RuntimeException("The token has expired.");
         }
 
+        if(encontrado.getEstado() == false) {
+            throw new RuntimeException("The token has already been used.");
+        }
+
         encontrado.setEstado(true);
         encontrado.setActualizadoEn(LocalDateTime.now());
         tokenVerificacionRepository.save(encontrado);
