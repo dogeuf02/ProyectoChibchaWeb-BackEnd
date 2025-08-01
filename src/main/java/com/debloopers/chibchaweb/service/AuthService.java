@@ -5,6 +5,7 @@ import com.debloopers.chibchaweb.dto.LoginRequestDTO;
 import com.debloopers.chibchaweb.dto.LoginResponseDTO;
 import com.debloopers.chibchaweb.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,9 @@ public class AuthService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private TokenVerificacionService tokenVerificacionService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -48,5 +52,17 @@ public class AuthService {
         }
 
         return new LoginResponseDTO(true, "Login successful", usuario.getRol(), usuario.getIdUsuario(),idRelacionado );
+    }
+
+    public ResponseEntity<String> activarCuentaConToken(String token) {
+        try {
+            Usuario usuario = tokenVerificacionService.validarToken(token);
+            usuario.setEstado("ACTIVO");
+            usuarioRepository.save(usuario);
+
+            return ResponseEntity.ok("Account successfully activated.");
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 }
