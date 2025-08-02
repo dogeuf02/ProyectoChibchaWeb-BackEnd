@@ -1,8 +1,8 @@
 
-
 /* --- 1. Creación de ENUMS --- */
 CREATE TYPE estado_usuario_enum AS ENUM ('ACTIVO','INACTIVO','PENDIENTE');
-CREATE TYPE prioridad_enum AS ENUM ('Baja', 'Media', 'Alta');
+/*cambiar nivel_complejidad*/
+CREATE TYPE nivel_complejidad_enum AS ENUM ('nivel-1', 'nivel-2', 'nivel-3');
 CREATE TYPE estado_ticket_enum AS ENUM ('Abierto', 'En Progreso', 'Cerrado');
 CREATE TYPE estado_solicitud_enum AS ENUM ('Aprobada', 'Rechazada', 'En Revisión');
 CREATE TYPE estado_traslado_enum AS ENUM ('Pendiente', 'Aprobado', 'Rechazado');
@@ -130,7 +130,7 @@ CREATE TABLE TICKET (
    ID_CLIENTE INT NULL,
    ASUNTO VARCHAR(100) NOT NULL,
    DESCRIPCION TEXT NULL,
-   PRIORIDAD prioridad_enum NULL,
+   NIVEL_COMPLEJIDAD nivel_complejidad_enum NOT NULL DEFAULT 'nivel-1',
    ESTADO estado_ticket_enum NOT NULL DEFAULT 'Abierto',
    FECHA_CREACION TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
    FECHA_CIERRE TIMESTAMP NULL,
@@ -143,6 +143,7 @@ CREATE TABLE TICKET (
       (ID_CLIENTE IS NULL AND ID_DISTRIBUIDOR IS NOT NULL)
    )
 );
+
 
 /*Actualizado*/
 CREATE TABLE HISTORIAL_TICKET (
@@ -329,7 +330,4 @@ CREATE TABLE SOLICITUD_TRASLADO (
         (ID_CLIENTE IS NULL AND ID_DISTRIBUIDOR IS NOT NULL)
     )
 );
-
-
-
 
