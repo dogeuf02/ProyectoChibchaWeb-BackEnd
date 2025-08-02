@@ -3,7 +3,7 @@
 CREATE TYPE estado_usuario_enum AS ENUM ('ACTIVO','INACTIVO','PENDIENTE');
 /*cambiar nivel_complejidad*/
 CREATE TYPE nivel_complejidad_enum AS ENUM ('nivel-1', 'nivel-2', 'nivel-3');
-CREATE TYPE estado_ticket_enum AS ENUM ('Abierto', 'En Progreso', 'Cerrado');
+CREATE TYPE estado_ticket_enum AS ENUM ('Abierto', 'En Progreso', 'Cerrado','Escalado');
 CREATE TYPE estado_solicitud_enum AS ENUM ('Aprobada', 'Rechazada', 'En Revisión');
 CREATE TYPE estado_traslado_enum AS ENUM ('Pendiente', 'Aprobado', 'Rechazado');
 /* actualizado */
