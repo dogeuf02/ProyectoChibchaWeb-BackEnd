@@ -83,5 +83,4 @@ public class EmpleadoController {
         empleadoService.delete(idEmpleado);
         return ResponseEntity.noContent().build();
     }
-
 }

@@ -81,5 +81,4 @@ public class ClienteDirectoController {
         clienteDirectoService.delete(idCliente);
         return ResponseEntity.noContent().build();
     }
-
 }

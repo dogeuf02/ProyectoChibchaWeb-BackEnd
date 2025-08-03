@@ -2,6 +2,7 @@ package com.debloopers.chibchaweb.config;
 
 import com.debloopers.chibchaweb.security.JwtAuthenticationFilter;
 import com.debloopers.chibchaweb.service.UsuarioDetailsService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +32,26 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/api/auth/**","/swagger-ui/**","/v3/api-docs/**","/proxy/**").permitAll()
+//                        .requestMatchers("/api/auth/**","/swagger-ui/**","/v3/api-docs/**","/proxy/**","/redis/**").permitAll()
 //                        .requestMatchers("/api/clienteDirecto/**").hasAnyAuthority("Cliente", "Administrador")
 //                        .requestMatchers("/api/empleado/**").hasAuthority("Empleado")
 //                        .requestMatchers("/api/distribuidor/**").hasAuthority("Distribuidor")
 //                        .requestMatchers("/api/**").hasAuthority("Administrador")
 //                        .anyRequest().authenticated()
 
-                          .anyRequest().permitAll()
+                         .anyRequest().permitAll()
+                )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"error\": \"Missing or invalid token.\"}");
+                        })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"error\": \"You do not have permission to access this resource.\"}");
+                        })
                 )
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

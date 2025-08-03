@@ -3,7 +3,8 @@ package com.debloopers.chibchaweb.controller;
 import com.debloopers.chibchaweb.dto.LoginRequestDTO;
 import com.debloopers.chibchaweb.dto.LoginResponseDTO;
 import com.debloopers.chibchaweb.service.AuthService;
-import com.debloopers.chibchaweb.service.JwtService;
+
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,16 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(respuesta);
         }
         return ResponseEntity.ok(respuesta);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        try {
+            authService.logoutUsuario(request);
+            return ResponseEntity.ok("Session closed successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/activar")

@@ -84,5 +84,4 @@ public class DistribuidorController {
         distribuidorService.delete(idDistribuidor);
         return ResponseEntity.noContent().build();
     }
-
 }

@@ -4,10 +4,16 @@ import com.debloopers.chibchaweb.entity.Usuario;
 import com.debloopers.chibchaweb.dto.LoginRequestDTO;
 import com.debloopers.chibchaweb.dto.LoginResponseDTO;
 import com.debloopers.chibchaweb.repository.UsuarioRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.token.TokenService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class AuthService {
@@ -20,6 +26,9 @@ public class AuthService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private TokenListaNegraService tokenListaNegraService;
 
     @Autowired
     private JwtService jwtService;
@@ -51,6 +60,17 @@ public class AuthService {
                 "Login successful",
                 token
         );
+    }
+
+    public void logoutUsuario(HttpServletRequest request) {
+        final String authHeader = request.getHeader("Authorization");
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new IllegalArgumentException("The Bearer token was not found in the header.");
+        }
+
+        final String token = authHeader.substring(7);
+        tokenListaNegraService.invalidarToken(token);
     }
 
     public ResponseEntity<String> activarCuentaConToken(String token) {

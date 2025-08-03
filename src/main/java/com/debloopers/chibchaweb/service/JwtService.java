@@ -67,6 +67,10 @@ public class JwtService {
                 .getBody();
     }
 
+    public Date extractExpiration(String token) {
+        return extractClaims(token).getExpiration();
+    }
+
     private Key getKey() {
         byte[] keyBytes = SECRET_KEY.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);

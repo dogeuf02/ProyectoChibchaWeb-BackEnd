@@ -1,6 +1,7 @@
 package com.debloopers.chibchaweb.security;
 
 import com.debloopers.chibchaweb.service.JwtService;
+import com.debloopers.chibchaweb.service.TokenListaNegraService;
 import com.debloopers.chibchaweb.service.UsuarioDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,6 +25,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private UsuarioDetailsService userDetailsService;
 
+    @Autowired
+    private TokenListaNegraService tokenListaNegraService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -36,7 +40,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         final String jwt = authHeader.substring(7);
-        final String username = jwtService.extractUsername(jwt);
+
+        if (tokenListaNegraService.isTokenBlacklisted(jwt)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("{\"error\": \"The token has been revoked or is invalid.\"}");
+            return;
+        }
+
+        final String username;
+        try {
+            username = jwtService.extractUsername(jwt);
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("{\"error\": \"Invalid token.\"}");
+            return;
+        }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UsuarioDetails userDetails = (UsuarioDetails) userDetailsService.loadUserByUsername(username);
@@ -49,7 +71,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
-
         filterChain.doFilter(request, response);
-    }
-}
+    }}
