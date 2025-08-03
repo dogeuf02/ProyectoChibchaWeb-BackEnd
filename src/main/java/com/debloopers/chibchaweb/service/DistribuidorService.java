@@ -32,6 +32,9 @@ public class DistribuidorService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private EmailService emailService;
+
     public DistribuidorService(final DistribuidorRepository distribuidorRepository,
                                final TipoDocumentoEmpRepository tipoDocumentoEmpRepository,
                                final CategoriaDistribuidorRepository categoriaDistribuidorRepository,
@@ -92,6 +95,11 @@ public class DistribuidorService {
             usuario.setEstado("PENDIENTE");
             usuario.setDistribuidor(distribuidor);
             usuarioRepository.save(usuario);
+
+            emailService.enviarCorreoSolicitudRegistro(
+                    usuario.getCorreoUsuario(),
+                    distribuidor.getNombreEmpresa()
+            );
 
             return new ResponseDTO(true, "Distributor successfully created.");
         } catch (Exception e) {

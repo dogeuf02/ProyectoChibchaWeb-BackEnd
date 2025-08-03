@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 @Service
 public class EmailService {
@@ -34,6 +36,27 @@ public class EmailService {
 
         String htmlContent = htmlTemplate.replace("{{token}}", token);
 
+        helper.setText(htmlContent, true);
+
+        FileSystemResource image = new FileSystemResource(new File("src/main/resources/image/Logo_ChibchaWeb.png"));
+        helper.addInline("logo", image, "image/png");
+
+        javaMailSender.send(message);
+    }
+
+    public void enviarCorreoSolicitudRegistro(String to, String nombreEmpresa) throws MessagingException, IOException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        helper.setTo(to);
+        helper.setSubject("Registro recibido para " + nombreEmpresa);
+
+        String htmlTemplate = new String(
+                getClass().getClassLoader().getResourceAsStream("template/registro_exitoso_es.html").readAllBytes(),
+                StandardCharsets.UTF_8
+        );
+
+        String htmlContent = htmlTemplate.replace("{{nombreEmpresa}}", nombreEmpresa);
         helper.setText(htmlContent, true);
 
         FileSystemResource image = new FileSystemResource(new File("src/main/resources/image/Logo_ChibchaWeb.png"));
