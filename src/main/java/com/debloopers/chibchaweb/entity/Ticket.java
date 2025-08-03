@@ -5,9 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
@@ -29,11 +29,17 @@ public class Ticket {
     @Column(columnDefinition = "text")
     private String descripcion;
 
-    @Column
-    private String prioridad;
+    @Column(nullable = false)
+    private String nivelComplejidad;
 
     @Column(nullable = false)
     private String estado;
+
+    @Column
+    private OffsetDateTime fechaCreacion;
+
+    @Column
+    private OffsetDateTime fechaCierre;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "distribuidor_id")
@@ -43,16 +49,7 @@ public class Ticket {
     @JoinColumn(name = "cliente_id")
     private ClienteDirecto cliente;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "empleado_id")
-    private Empleado empleado;
-
-    @ManyToMany
-    @JoinTable(
-            name = "HistorialTicketUsuario",
-            joinColumns = @JoinColumn(name = "idTicket"),
-            inverseJoinColumns = @JoinColumn(name = "idEmpleado")
-    )
-    private Set<Empleado> historialTicketUsuarioEmpleadoes = new HashSet<>();
+    @OneToMany(mappedBy = "ticket")
+    private Set<HistorialTicket> ticketHistorialTickets = new HashSet<>();
 
 }

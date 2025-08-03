@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class LoginResponseDTO {
+
     private boolean autenticado;
     private String mensaje;
     private String token;

@@ -17,7 +17,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Plan {
+public class CategoriaDistribuidor {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -31,15 +31,15 @@ public class Plan {
             strategy = GenerationType.SEQUENCE,
             generator = "primary_sequence"
     )
-    private Integer idPlan;
+    private Integer idCategoria;
 
     @Column(nullable = false, length = 100)
-    private String nombrePlan;
+    private String nombreCategoria;
 
-    @Column(nullable = false, precision = 12, scale = 2)
-    private BigDecimal precio;
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal precioCategoria;
 
-    @OneToMany(mappedBy = "plan")
-    private Set<ClienteDirecto> planClienteDirectoes = new HashSet<>();
+    @OneToMany(mappedBy = "categoria")
+    private Set<Distribuidor> categoriaDistribuidors = new HashSet<>();
 
 }

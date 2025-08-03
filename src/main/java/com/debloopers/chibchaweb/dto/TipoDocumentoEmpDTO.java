@@ -10,7 +10,6 @@ import lombok.Setter;
 public class TipoDocumentoEmpDTO {
 
     @Size(max = 20)
-    @TipoDocumentoEmpNombreTipoDocValid
     private String nombreTipoDoc;
 
 }

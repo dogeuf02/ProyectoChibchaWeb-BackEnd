@@ -1,39 +1,33 @@
 package com.debloopers.chibchaweb.service;
 
-import com.debloopers.chibchaweb.entity.ClienteDirecto;
-import com.debloopers.chibchaweb.entity.Distribuidor;
-import com.debloopers.chibchaweb.entity.Empleado;
-import com.debloopers.chibchaweb.entity.Ticket;
+import com.debloopers.chibchaweb.entity.*;
 import com.debloopers.chibchaweb.dto.TicketDTO;
-import com.debloopers.chibchaweb.repository.ClienteDirectoRepository;
-import com.debloopers.chibchaweb.repository.DistribuidorRepository;
-import com.debloopers.chibchaweb.repository.EmpleadoRepository;
-import com.debloopers.chibchaweb.repository.TicketRepository;
+import com.debloopers.chibchaweb.repository.*;
 import com.debloopers.chibchaweb.util.NotFoundException;
-import java.util.HashSet;
+
 import java.util.List;
+
+import com.debloopers.chibchaweb.util.ReferencedWarning;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
-@Transactional(rollbackFor = Exception.class)
 public class TicketService {
 
     private final TicketRepository ticketRepository;
     private final DistribuidorRepository distribuidorRepository;
     private final ClienteDirectoRepository clienteDirectoRepository;
-    private final EmpleadoRepository empleadoRepository;
+    private final HistorialTicketRepository historialTicketRepository;
 
     public TicketService(final TicketRepository ticketRepository,
-            final DistribuidorRepository distribuidorRepository,
-            final ClienteDirectoRepository clienteDirectoRepository,
-            final EmpleadoRepository empleadoRepository) {
+                         final DistribuidorRepository distribuidorRepository,
+                         final ClienteDirectoRepository clienteDirectoRepository,
+                         final HistorialTicketRepository historialTicketRepository) {
         this.ticketRepository = ticketRepository;
         this.distribuidorRepository = distribuidorRepository;
         this.clienteDirectoRepository = clienteDirectoRepository;
-        this.empleadoRepository = empleadoRepository;
+        this.historialTicketRepository = historialTicketRepository;
     }
 
     public List<TicketDTO> findAll() {
@@ -71,37 +65,28 @@ public class TicketService {
         ticketDTO.setIdTicket(ticket.getIdTicket());
         ticketDTO.setAsunto(ticket.getAsunto());
         ticketDTO.setDescripcion(ticket.getDescripcion());
-        ticketDTO.setPrioridad(ticket.getPrioridad());
+        ticketDTO.setNivelComplejidad(ticket.getNivelComplejidad());
         ticketDTO.setEstado(ticket.getEstado());
+        ticketDTO.setFechaCreacion(ticket.getFechaCreacion());
+        ticketDTO.setFechaCierre(ticket.getFechaCierre());
         ticketDTO.setDistribuidor(ticket.getDistribuidor() == null ? null : ticket.getDistribuidor().getIdDistribuidor());
         ticketDTO.setCliente(ticket.getCliente() == null ? null : ticket.getCliente().getIdCliente());
-        ticketDTO.setEmpleado(ticket.getEmpleado() == null ? null : ticket.getEmpleado().getIdEmpleado());
-        ticketDTO.setHistorialTicketUsuarioEmpleadoes(ticket.getHistorialTicketUsuarioEmpleadoes().stream()
-                .map(empleado -> empleado.getIdEmpleado())
-                .toList());
         return ticketDTO;
     }
 
     private Ticket mapToEntity(final TicketDTO ticketDTO, final Ticket ticket) {
         ticket.setAsunto(ticketDTO.getAsunto());
         ticket.setDescripcion(ticketDTO.getDescripcion());
-        ticket.setPrioridad(ticketDTO.getPrioridad());
+        ticket.setNivelComplejidad(ticketDTO.getNivelComplejidad());
         ticket.setEstado(ticketDTO.getEstado());
+        ticket.setFechaCreacion(ticketDTO.getFechaCreacion());
+        ticket.setFechaCierre(ticketDTO.getFechaCierre());
         final Distribuidor distribuidor = ticketDTO.getDistribuidor() == null ? null : distribuidorRepository.findById(ticketDTO.getDistribuidor())
                 .orElseThrow(() -> new NotFoundException("distribuidor not found"));
         ticket.setDistribuidor(distribuidor);
         final ClienteDirecto cliente = ticketDTO.getCliente() == null ? null : clienteDirectoRepository.findById(ticketDTO.getCliente())
                 .orElseThrow(() -> new NotFoundException("cliente not found"));
         ticket.setCliente(cliente);
-        final Empleado empleado = ticketDTO.getEmpleado() == null ? null : empleadoRepository.findById(ticketDTO.getEmpleado())
-                .orElseThrow(() -> new NotFoundException("empleado not found"));
-        ticket.setEmpleado(empleado);
-        final List<Empleado> historialTicketUsuarioEmpleadoes = empleadoRepository.findAllById(
-                ticketDTO.getHistorialTicketUsuarioEmpleadoes() == null ? List.of() : ticketDTO.getHistorialTicketUsuarioEmpleadoes());
-        if (historialTicketUsuarioEmpleadoes.size() != (ticketDTO.getHistorialTicketUsuarioEmpleadoes() == null ? 0 : ticketDTO.getHistorialTicketUsuarioEmpleadoes().size())) {
-            throw new NotFoundException("one of historialTicketUsuarioEmpleadoes not found");
-        }
-        ticket.setHistorialTicketUsuarioEmpleadoes(new HashSet<>(historialTicketUsuarioEmpleadoes));
         return ticket;
     }
 
@@ -109,4 +94,16 @@ public class TicketService {
         return ticketRepository.existsByIdTicketIgnoreCase(idTicket);
     }
 
+    public ReferencedWarning getReferencedWarning(final String idTicket) {
+        final ReferencedWarning referencedWarning = new ReferencedWarning();
+        final Ticket ticket = ticketRepository.findById(idTicket)
+                .orElseThrow(NotFoundException::new);
+        final HistorialTicket ticketHistorialTicket = historialTicketRepository.findFirstByTicket(ticket);
+        if (ticketHistorialTicket != null) {
+            referencedWarning.setKey("ticket.historialTicket.ticket.referenced");
+            referencedWarning.addParam(ticketHistorialTicket.getIdHistorialTicket());
+            return referencedWarning;
+        }
+        return null;
+    }
 }

@@ -1,14 +1,15 @@
 package com.debloopers.chibchaweb.service;
 
 import com.debloopers.chibchaweb.entity.Empleado;
-import com.debloopers.chibchaweb.entity.Ticket;
+import com.debloopers.chibchaweb.entity.HistorialTicket;
 import com.debloopers.chibchaweb.entity.Usuario;
 import com.debloopers.chibchaweb.dto.*;
 import com.debloopers.chibchaweb.repository.EmpleadoRepository;
-import com.debloopers.chibchaweb.repository.TicketRepository;
+import com.debloopers.chibchaweb.repository.HistorialTicketRepository;
 import com.debloopers.chibchaweb.repository.UsuarioRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,17 +24,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class EmpleadoService {
 
     private final EmpleadoRepository empleadoRepository;
-    private final TicketRepository ticketRepository;
     private final UsuarioRepository usuarioRepository;
+    private final HistorialTicketRepository historialTicketRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     public EmpleadoService(final EmpleadoRepository empleadoRepository,
-            final TicketRepository ticketRepository, final UsuarioRepository usuarioRepository) {
+                           final UsuarioRepository usuarioRepository,
+                           final HistorialTicketRepository historialTicketRepository) {
         this.empleadoRepository = empleadoRepository;
-        this.ticketRepository = ticketRepository;
         this.usuarioRepository = usuarioRepository;
+        this.historialTicketRepository = historialTicketRepository;
     }
 
     public List<EmpleadoDTO> findAll() {
@@ -117,12 +119,7 @@ public class EmpleadoService {
     }
 
     public void delete(final Integer idEmpleado) {
-        final Empleado empleado = empleadoRepository.findById(idEmpleado)
-                .orElseThrow(NotFoundException::new);
-        // remove many-to-many relations at owning side
-        ticketRepository.findAllByHistorialTicketUsuarioEmpleadoes(empleado)
-                .forEach(ticket -> ticket.getHistorialTicketUsuarioEmpleadoes().remove(empleado));
-        empleadoRepository.delete(empleado);
+        empleadoRepository.deleteById(idEmpleado);
     }
 
     private EmpleadoDTO mapToDTO(final Empleado empleado, final EmpleadoDTO empleadoDTO) {
@@ -150,13 +147,18 @@ public class EmpleadoService {
             referencedWarning.addParam(empleadoUsuario.getIdUsuario());
             return referencedWarning;
         }
-        final Ticket empleadoTicket = ticketRepository.findFirstByEmpleado(empleado);
-        if (empleadoTicket != null) {
-            referencedWarning.setKey("empleado.ticket.empleado.referenced");
-            referencedWarning.addParam(empleadoTicket.getIdTicket());
+        final HistorialTicket empleadoRealizadorHistorialTicket = historialTicketRepository.findFirstByEmpleadoRealizador(empleado);
+        if (empleadoRealizadorHistorialTicket != null) {
+            referencedWarning.setKey("empleado.historialTicket.empleadoRealizador.referenced");
+            referencedWarning.addParam(empleadoRealizadorHistorialTicket.getIdHistorialTicket());
+            return referencedWarning;
+        }
+        final HistorialTicket empleadoReceptorHistorialTicket = historialTicketRepository.findFirstByEmpleadoReceptor(empleado);
+        if (empleadoReceptorHistorialTicket != null) {
+            referencedWarning.setKey("empleado.historialTicket.empleadoReceptor.referenced");
+            referencedWarning.addParam(empleadoReceptorHistorialTicket.getIdHistorialTicket());
             return referencedWarning;
         }
         return null;
     }
-
 }

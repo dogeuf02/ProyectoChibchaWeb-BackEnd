@@ -1,13 +1,13 @@
 package com.debloopers.chibchaweb.service;
 
-import com.debloopers.chibchaweb.entity.SolicitudDominio;
 import com.debloopers.chibchaweb.entity.Tld;
 import com.debloopers.chibchaweb.dto.TldDTO;
-import com.debloopers.chibchaweb.repository.SolicitudDominioRepository;
+import com.debloopers.chibchaweb.repository.DominioRepository;
 import com.debloopers.chibchaweb.repository.TldRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
-import com.debloopers.chibchaweb.util.ReferencedWarning;
+
 import java.util.List;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +16,10 @@ import org.springframework.stereotype.Service;
 public class TldService {
 
     private final TldRepository tldRepository;
-    private final SolicitudDominioRepository solicitudDominioRepository;
 
     public TldService(final TldRepository tldRepository,
-                      final SolicitudDominioRepository solicitudDominioRepository) {
+                      final DominioRepository dominioRepository) {
         this.tldRepository = tldRepository;
-        this.solicitudDominioRepository = solicitudDominioRepository;
     }
 
     public List<TldDTO> findAll() {
@@ -57,29 +55,16 @@ public class TldService {
 
     private TldDTO mapToDTO(final Tld tld, final TldDTO tldDTO) {
         tldDTO.setTld(tld.getTld());
+        tldDTO.setPrecioTld(tld.getPrecioTld());
         return tldDTO;
     }
 
     private Tld mapToEntity(final TldDTO tldDTO, final Tld tld) {
+        tld.setPrecioTld(tldDTO.getPrecioTld());
         return tld;
     }
 
     public boolean tldExists(final String tld) {
         return tldRepository.existsByTldIgnoreCase(tld);
-    }
-
-    public ReferencedWarning getReferencedWarning(final String tld) {
-        final ReferencedWarning referencedWarning = new ReferencedWarning();
-
-        final Tld tldEntity = tldRepository.findById(tld)
-                .orElseThrow(NotFoundException::new);
-
-        final SolicitudDominio tldSolicitudDominio = solicitudDominioRepository.findFirstByTld(tldEntity);
-        if (tldSolicitudDominio != null) {
-            referencedWarning.setKey("tld.solicitudDominio.tld.referenced");
-            referencedWarning.addParam(tldSolicitudDominio.getIdSolicitud());
-            return referencedWarning;
-        }
-        return null;
     }
 }

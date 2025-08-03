@@ -2,7 +2,7 @@ package com.debloopers.chibchaweb.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.util.List;
+import java.time.OffsetDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +12,6 @@ import lombok.Setter;
 public class TicketDTO {
 
     @Size(max = 100)
-    @TicketIdTicketValid
     private String idTicket;
 
     @NotNull
@@ -21,19 +20,20 @@ public class TicketDTO {
 
     private String descripcion;
 
+    @NotNull
     @Size(max = 255)
-    private String prioridad;
+    private String nivelComplejidad;
 
     @NotNull
     @Size(max = 255)
     private String estado;
 
+    private OffsetDateTime fechaCreacion;
+
+    private OffsetDateTime fechaCierre;
+
     private Integer distribuidor;
 
     private Integer cliente;
-
-    private Integer empleado;
-
-    private List<Integer> historialTicketUsuarioEmpleadoes;
 
 }

@@ -1,18 +1,11 @@
 package com.debloopers.chibchaweb.service;
 
-import com.debloopers.chibchaweb.entity.Administrador;
-import com.debloopers.chibchaweb.entity.ClienteDirecto;
-import com.debloopers.chibchaweb.entity.Distribuidor;
-import com.debloopers.chibchaweb.entity.Empleado;
-import com.debloopers.chibchaweb.entity.Usuario;
+import com.debloopers.chibchaweb.entity.*;
 import com.debloopers.chibchaweb.dto.UsuarioActualizarDTO;
 import com.debloopers.chibchaweb.dto.UsuarioDTO;
-import com.debloopers.chibchaweb.repository.AdministradorRepository;
-import com.debloopers.chibchaweb.repository.ClienteDirectoRepository;
-import com.debloopers.chibchaweb.repository.DistribuidorRepository;
-import com.debloopers.chibchaweb.repository.EmpleadoRepository;
-import com.debloopers.chibchaweb.repository.UsuarioRepository;
+import com.debloopers.chibchaweb.repository.*;
 import com.debloopers.chibchaweb.util.NotFoundException;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +27,10 @@ public class UsuarioService {
     private PasswordEncoder passwordEncoder;
 
     public UsuarioService(final UsuarioRepository usuarioRepository,
-            final ClienteDirectoRepository clienteDirectoRepository,
-            final AdministradorRepository administradorRepository,
-            final EmpleadoRepository empleadoRepository,
-            final DistribuidorRepository distribuidorRepository) {
+                          final ClienteDirectoRepository clienteDirectoRepository,
+                          final AdministradorRepository administradorRepository,
+                          final EmpleadoRepository empleadoRepository,
+                          final DistribuidorRepository distribuidorRepository) {
         this.usuarioRepository = usuarioRepository;
         this.clienteDirectoRepository = clienteDirectoRepository;
         this.administradorRepository = administradorRepository;
@@ -64,7 +57,7 @@ public class UsuarioService {
         return usuarioRepository.save(usuario).getIdUsuario();
     }
 
-    public void update(final String correoUsuario, final UsuarioActualizarDTO usuarioDTO) {
+    public void updateByCorreo(final String correoUsuario, final UsuarioActualizarDTO usuarioDTO) {
         final Usuario usuario = usuarioRepository.findByCorreoUsuario(correoUsuario);
 
         if (usuario == null) {
@@ -144,5 +137,4 @@ public class UsuarioService {
         usuario.setDistribuidor(distribuidor);
         return usuario;
     }
-
 }

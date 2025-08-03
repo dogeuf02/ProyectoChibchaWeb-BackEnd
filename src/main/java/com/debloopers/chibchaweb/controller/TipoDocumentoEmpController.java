@@ -68,5 +68,4 @@ public class TipoDocumentoEmpController {
         tipoDocumentoEmpService.delete(nombreTipoDoc);
         return ResponseEntity.noContent().build();
     }
-
 }

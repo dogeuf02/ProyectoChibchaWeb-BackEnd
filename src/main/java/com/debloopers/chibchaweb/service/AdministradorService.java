@@ -2,13 +2,16 @@ package com.debloopers.chibchaweb.service;
 
 import com.debloopers.chibchaweb.entity.Administrador;
 import com.debloopers.chibchaweb.entity.SolicitudDominio;
+import com.debloopers.chibchaweb.entity.SolicitudTraslado;
 import com.debloopers.chibchaweb.entity.Usuario;
 import com.debloopers.chibchaweb.dto.*;
 import com.debloopers.chibchaweb.repository.AdministradorRepository;
 import com.debloopers.chibchaweb.repository.SolicitudDominioRepository;
+import com.debloopers.chibchaweb.repository.SolicitudTrasladoRepository;
 import com.debloopers.chibchaweb.repository.UsuarioRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,16 +27,19 @@ public class AdministradorService {
     private final AdministradorRepository administradorRepository;
     private final UsuarioRepository usuarioRepository;
     private final SolicitudDominioRepository solicitudDominioRepository;
+    private final SolicitudTrasladoRepository solicitudTrasladoRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     public AdministradorService(final AdministradorRepository administradorRepository,
                                 final UsuarioRepository usuarioRepository,
-                                final SolicitudDominioRepository solicitudDominioRepository) {
+                                final SolicitudDominioRepository solicitudDominioRepository,
+                                final SolicitudTrasladoRepository solicitudTrasladoRepository) {
         this.administradorRepository = administradorRepository;
         this.usuarioRepository = usuarioRepository;
         this.solicitudDominioRepository = solicitudDominioRepository;
+        this.solicitudTrasladoRepository = solicitudTrasladoRepository;
     }
 
     public List<AdministradorDTO> findAll() {
@@ -118,7 +124,7 @@ public class AdministradorService {
     }
 
     private AdministradorDTO mapToDTO(final Administrador administrador,
-            final AdministradorDTO administradorDTO) {
+                                      final AdministradorDTO administradorDTO) {
         administradorDTO.setIdAdmin(administrador.getIdAdmin());
         administradorDTO.setNombreAdmin(administrador.getNombreAdmin());
         administradorDTO.setApellidoAdmin(administrador.getApellidoAdmin());
@@ -127,7 +133,7 @@ public class AdministradorService {
     }
 
     private Administrador mapToEntity(final AdministradorDTO administradorDTO,
-            final Administrador administrador) {
+                                      final Administrador administrador) {
         administrador.setNombreAdmin(administradorDTO.getNombreAdmin());
         administrador.setApellidoAdmin(administradorDTO.getApellidoAdmin());
         administrador.setFechaNacimientoAdmin(administradorDTO.getFechaNacimientoAdmin());
@@ -148,6 +154,12 @@ public class AdministradorService {
         if (adminSolicitudDominio != null) {
             referencedWarning.setKey("administrador.solicitudDominio.admin.referenced");
             referencedWarning.addParam(adminSolicitudDominio.getIdSolicitud());
+            return referencedWarning;
+        }
+        final SolicitudTraslado adminSolicitudTraslado = solicitudTrasladoRepository.findFirstByAdmin(administrador);
+        if (adminSolicitudTraslado != null) {
+            referencedWarning.setKey("administrador.solicitudTraslado.admin.referenced");
+            referencedWarning.addParam(adminSolicitudTraslado.getIdSolicitudTraslado());
             return referencedWarning;
         }
         return null;

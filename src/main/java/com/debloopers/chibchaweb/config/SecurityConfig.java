@@ -39,7 +39,7 @@ public class SecurityConfig {
 //                        .requestMatchers("/api/**").hasAuthority("Administrador")
 //                        .anyRequest().authenticated()
 
-                         .anyRequest().permitAll()
+                        .anyRequest().permitAll()
                 )
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) -> {

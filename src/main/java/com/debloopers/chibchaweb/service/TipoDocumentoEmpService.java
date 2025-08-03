@@ -7,7 +7,9 @@ import com.debloopers.chibchaweb.repository.DistribuidorRepository;
 import com.debloopers.chibchaweb.repository.TipoDocumentoEmpRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
+
 import java.util.List;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,7 @@ public class TipoDocumentoEmpService {
     private final DistribuidorRepository distribuidorRepository;
 
     public TipoDocumentoEmpService(final TipoDocumentoEmpRepository tipoDocumentoEmpRepository,
-            final DistribuidorRepository distribuidorRepository) {
+                                   final DistribuidorRepository distribuidorRepository) {
         this.tipoDocumentoEmpRepository = tipoDocumentoEmpRepository;
         this.distribuidorRepository = distribuidorRepository;
     }
@@ -56,13 +58,13 @@ public class TipoDocumentoEmpService {
     }
 
     private TipoDocumentoEmpDTO mapToDTO(final TipoDocumentoEmp tipoDocumentoEmp,
-            final TipoDocumentoEmpDTO tipoDocumentoEmpDTO) {
+                                         final TipoDocumentoEmpDTO tipoDocumentoEmpDTO) {
         tipoDocumentoEmpDTO.setNombreTipoDoc(tipoDocumentoEmp.getNombreTipoDoc());
         return tipoDocumentoEmpDTO;
     }
 
     private TipoDocumentoEmp mapToEntity(final TipoDocumentoEmpDTO tipoDocumentoEmpDTO,
-            final TipoDocumentoEmp tipoDocumentoEmp) {
+                                         final TipoDocumentoEmp tipoDocumentoEmp) {
         return tipoDocumentoEmp;
     }
 
@@ -82,5 +84,4 @@ public class TipoDocumentoEmpService {
         }
         return null;
     }
-
 }

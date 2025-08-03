@@ -1,11 +1,7 @@
 package com.debloopers.chibchaweb.controller;
 
-import com.debloopers.chibchaweb.dto.SolicitudDominioActualizarDTO;
 import com.debloopers.chibchaweb.dto.SolicitudDominioDTO;
-import com.debloopers.chibchaweb.dto.SolicitudDominioRegistroRequestDTO;
-import com.debloopers.chibchaweb.dto.SolicitudDominioRegistroResponseDTO;
 import com.debloopers.chibchaweb.service.SolicitudDominioService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -43,24 +39,18 @@ public class SolicitudDominioController {
         return ResponseEntity.ok(solicitudDominioService.get(idSolicitud));
     }
 
-    @Operation(summary = "Registro de una solicitud de dominio")
     @PostMapping
-    public ResponseEntity<SolicitudDominioRegistroResponseDTO> createSolicitudDominio(
-            @RequestBody @Valid final SolicitudDominioRegistroRequestDTO solicitudDominioDTO) {
-
-        SolicitudDominioRegistroResponseDTO response = solicitudDominioService.create(solicitudDominioDTO);
-        if (response.isExito()) {
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
+    @ApiResponse(responseCode = "201")
+    public ResponseEntity<Integer> createSolicitudDominio(
+            @RequestBody @Valid final SolicitudDominioDTO solicitudDominioDTO) {
+        final Integer createdIdSolicitud = solicitudDominioService.create(solicitudDominioDTO);
+        return new ResponseEntity<>(createdIdSolicitud, HttpStatus.CREATED);
     }
-
 
     @PutMapping("/{idSolicitud}")
     public ResponseEntity<Integer> updateSolicitudDominio(
             @PathVariable(name = "idSolicitud") final Integer idSolicitud,
-            @RequestBody @Valid final SolicitudDominioActualizarDTO solicitudDominioDTO) {
+            @RequestBody @Valid final SolicitudDominioDTO solicitudDominioDTO) {
         solicitudDominioService.update(idSolicitud, solicitudDominioDTO);
         return ResponseEntity.ok(idSolicitud);
     }
@@ -72,5 +62,4 @@ public class SolicitudDominioController {
         solicitudDominioService.delete(idSolicitud);
         return ResponseEntity.noContent().build();
     }
-
 }

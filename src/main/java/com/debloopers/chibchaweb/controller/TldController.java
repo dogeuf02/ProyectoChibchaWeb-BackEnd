@@ -2,8 +2,6 @@ package com.debloopers.chibchaweb.controller;
 
 import com.debloopers.chibchaweb.dto.TldDTO;
 import com.debloopers.chibchaweb.service.TldService;
-import com.debloopers.chibchaweb.util.ReferencedException;
-import com.debloopers.chibchaweb.util.ReferencedWarning;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -57,12 +55,7 @@ public class TldController {
     @DeleteMapping("/{tld}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteTld(@PathVariable(name = "tld") final String tld) {
-        final ReferencedWarning referencedWarning = tldService.getReferencedWarning(tld);
-        if (referencedWarning != null) {
-            throw new ReferencedException(referencedWarning);
-        }
         tldService.delete(tld);
         return ResponseEntity.noContent().build();
     }
-
 }

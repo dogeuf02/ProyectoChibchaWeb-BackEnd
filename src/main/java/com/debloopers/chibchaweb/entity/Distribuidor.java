@@ -48,13 +48,29 @@ public class Distribuidor {
     @JoinColumn(name = "nombre_tipo_doc_id", nullable = false)
     private TipoDocumentoEmp nombreTipoDoc;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoria_id")
+    private CategoriaDistribuidor categoria;
+
     @OneToMany(mappedBy = "distribuidor")
     private Set<Usuario> distribuidorUsuarios = new HashSet<>();
+
+    @OneToMany(mappedBy = "distribuidor")
+    private Set<Ticket> distribuidorTickets = new HashSet<>();
 
     @OneToMany(mappedBy = "distribuidor")
     private Set<SolicitudDominio> distribuidorSolicitudDominios = new HashSet<>();
 
     @OneToMany(mappedBy = "distribuidor")
-    private Set<Ticket> distribuidorTickets = new HashSet<>();
+    private Set<MedioPago> distribuidorMedioPagoes = new HashSet<>();
+
+    @OneToMany(mappedBy = "distribuidor")
+    private Set<Comision> distribuidorComisions = new HashSet<>();
+
+    @OneToMany(mappedBy = "distribuidor")
+    private Set<PerteneceDominio> distribuidorPerteneceDominios = new HashSet<>();
+
+    @OneToMany(mappedBy = "distribuidor")
+    private Set<SolicitudTraslado> distribuidorSolicitudTrasladoes = new HashSet<>();
 
 }

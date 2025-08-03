@@ -6,24 +6,34 @@ import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
 
 
 @Getter
 @Setter
-public class PlanDTO {
+public class FacturaDTO {
 
-    private Integer idPlan;
-
-    @NotNull
-    @Size(max = 100)
-    private String nombrePlan;
+    private Integer idFactura;
 
     @NotNull
-    @Digits(integer = 12, fraction = 2)
+    private LocalDate fechaFacturacion;
+
+    @NotNull
+    @Digits(integer = 10, fraction = 2)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @Schema(type = "string", example = "90.08")
-    private BigDecimal precio;
+    @Schema(type = "string", example = "32.08")
+    private BigDecimal total;
+
+    @NotNull
+    @Size(max = 255)
+    private String estadoPago;
+
+    @NotNull
+    private Integer planAdquirido;
+
+    @NotNull
+    private Integer medioPago;
 
 }

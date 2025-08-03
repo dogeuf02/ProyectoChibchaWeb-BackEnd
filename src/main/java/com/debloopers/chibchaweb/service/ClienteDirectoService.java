@@ -18,10 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class ClienteDirectoService {
 
     private final ClienteDirectoRepository clienteDirectoRepository;
-    private final PlanRepository planRepository;
+    private final PlanClienteRepository planClienteRepository;
     private final UsuarioRepository usuarioRepository;
     private final TicketRepository ticketRepository;
     private final SolicitudDominioRepository solicitudDominioRepository;
+    private final MedioPagoRepository medioPagoRepository;
+    private final PlanAdquiridoRepository planAdquiridoRepository;
+    private final PerteneceDominioRepository perteneceDominioRepository;
+    private final SolicitudTrasladoRepository solicitudTrasladoRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -33,14 +37,22 @@ public class ClienteDirectoService {
     private EmailService emailService;
 
     public ClienteDirectoService(final ClienteDirectoRepository clienteDirectoRepository,
-                                 final PlanRepository planRepository, final UsuarioRepository usuarioRepository,
-                                 final TicketRepository ticketRepository,
-                                 final SolicitudDominioRepository solicitudDominioRepository) {
+                                 final PlanClienteRepository planClienteRepository,
+                                 final UsuarioRepository usuarioRepository, final TicketRepository ticketRepository,
+                                 final SolicitudDominioRepository solicitudDominioRepository,
+                                 final MedioPagoRepository medioPagoRepository,
+                                 final PlanAdquiridoRepository planAdquiridoRepository,
+                                 final PerteneceDominioRepository perteneceDominioRepository,
+                                 final SolicitudTrasladoRepository solicitudTrasladoRepository) {
         this.clienteDirectoRepository = clienteDirectoRepository;
-        this.planRepository = planRepository;
+        this.planClienteRepository = planClienteRepository;
         this.usuarioRepository = usuarioRepository;
         this.ticketRepository = ticketRepository;
         this.solicitudDominioRepository = solicitudDominioRepository;
+        this.medioPagoRepository = medioPagoRepository;
+        this.planAdquiridoRepository = planAdquiridoRepository;
+        this.perteneceDominioRepository = perteneceDominioRepository;
+        this.solicitudTrasladoRepository = solicitudTrasladoRepository;
     }
 
     public List<ClienteDirectoDTO> findAll() {
@@ -108,11 +120,6 @@ public class ClienteDirectoService {
         if (clienteDirectoDTO.getFechaNacimientoCliente() != null) {
             cliente.setFechaNacimientoCliente(clienteDirectoDTO.getFechaNacimientoCliente());
         }
-        if (clienteDirectoDTO.getPlan() != null) {
-            Plan plan = planRepository.findById(clienteDirectoDTO.getPlan())
-                    .orElseThrow(() -> new NotFoundException("Plan not found"));
-            cliente.setPlan(plan);
-        }
 
         clienteDirectoRepository.save(cliente);
     }
@@ -129,7 +136,6 @@ public class ClienteDirectoService {
             dto.setApellidoCliente(cliente.getApellidoCliente());
             dto.setTelefono(cliente.getTelefono());
             dto.setFechaNacimientoCliente(cliente.getFechaNacimientoCliente());
-            dto.setPlan(cliente.getPlan() != null ? cliente.getPlan().getIdPlan() : null);
             dto.setCorreo(usuario != null ? usuario.getCorreoUsuario() : null);
             dto.setEstado(usuario != null ? usuario.getEstado() : null);
 
@@ -137,32 +143,30 @@ public class ClienteDirectoService {
         }).toList();
     }
 
-
-
     public void delete(final Integer idCliente) {
         clienteDirectoRepository.deleteById(idCliente);
     }
 
     private ClienteDirectoDTO mapToDTO(final ClienteDirecto clienteDirecto,
-            final ClienteDirectoDTO clienteDirectoDTO) {
+                                       final ClienteDirectoDTO clienteDirectoDTO) {
         clienteDirectoDTO.setIdCliente(clienteDirecto.getIdCliente());
         clienteDirectoDTO.setNombreCliente(clienteDirecto.getNombreCliente());
         clienteDirectoDTO.setApellidoCliente(clienteDirecto.getApellidoCliente());
         clienteDirectoDTO.setTelefono(clienteDirecto.getTelefono());
         clienteDirectoDTO.setFechaNacimientoCliente(clienteDirecto.getFechaNacimientoCliente());
-        clienteDirectoDTO.setPlan(clienteDirecto.getPlan() == null ? null : clienteDirecto.getPlan().getIdPlan());
+        clienteDirectoDTO.setPlanCliente(clienteDirecto.getPlanCliente() == null ? null : clienteDirecto.getPlanCliente().getIdPlanCliente());
         return clienteDirectoDTO;
     }
 
     private ClienteDirecto mapToEntity(final ClienteDirectoDTO clienteDirectoDTO,
-            final ClienteDirecto clienteDirecto) {
+                                       final ClienteDirecto clienteDirecto) {
         clienteDirecto.setNombreCliente(clienteDirectoDTO.getNombreCliente());
         clienteDirecto.setApellidoCliente(clienteDirectoDTO.getApellidoCliente());
         clienteDirecto.setTelefono(clienteDirectoDTO.getTelefono());
         clienteDirecto.setFechaNacimientoCliente(clienteDirectoDTO.getFechaNacimientoCliente());
-        final Plan plan = clienteDirectoDTO.getPlan() == null ? null : planRepository.findById(clienteDirectoDTO.getPlan())
-                .orElseThrow(() -> new NotFoundException("plan not found"));
-        clienteDirecto.setPlan(plan);
+        final PlanCliente planCliente = clienteDirectoDTO.getPlanCliente() == null ? null : planClienteRepository.findById(clienteDirectoDTO.getPlanCliente())
+                .orElseThrow(() -> new NotFoundException("planCliente not found"));
+        clienteDirecto.setPlanCliente(planCliente);
         return clienteDirecto;
     }
 
@@ -188,7 +192,30 @@ public class ClienteDirectoService {
             referencedWarning.addParam(clienteSolicitudDominio.getIdSolicitud());
             return referencedWarning;
         }
+        final MedioPago clienteMedioPago = medioPagoRepository.findFirstByCliente(clienteDirecto);
+        if (clienteMedioPago != null) {
+            referencedWarning.setKey("clienteDirecto.medioPago.cliente.referenced");
+            referencedWarning.addParam(clienteMedioPago.getIdMedioPago());
+            return referencedWarning;
+        }
+        final PlanAdquirido clientePlanAdquirido = planAdquiridoRepository.findFirstByCliente(clienteDirecto);
+        if (clientePlanAdquirido != null) {
+            referencedWarning.setKey("clienteDirecto.planAdquirido.cliente.referenced");
+            referencedWarning.addParam(clientePlanAdquirido.getIdPlanAdquirido());
+            return referencedWarning;
+        }
+        final PerteneceDominio clientePerteneceDominio = perteneceDominioRepository.findFirstByCliente(clienteDirecto);
+        if (clientePerteneceDominio != null) {
+            referencedWarning.setKey("clienteDirecto.perteneceDominio.cliente.referenced");
+            referencedWarning.addParam(clientePerteneceDominio.getIdPertenece());
+            return referencedWarning;
+        }
+        final SolicitudTraslado clienteSolicitudTraslado = solicitudTrasladoRepository.findFirstByCliente(clienteDirecto);
+        if (clienteSolicitudTraslado != null) {
+            referencedWarning.setKey("clienteDirecto.solicitudTraslado.cliente.referenced");
+            referencedWarning.addParam(clienteSolicitudTraslado.getIdSolicitudTraslado());
+            return referencedWarning;
+        }
         return null;
     }
-
 }
