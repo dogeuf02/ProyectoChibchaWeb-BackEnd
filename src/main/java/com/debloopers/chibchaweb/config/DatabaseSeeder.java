@@ -59,7 +59,6 @@ public class DatabaseSeeder {
         }
     }
 
-
     private void insertarTld(TldService service, String tldString, BigDecimal precio) {
     if (!service.tldExists(tldString)) {
         TldDTO dto = new TldDTO();

@@ -104,24 +104,11 @@ public class ClienteDirectoService {
         }
     }
 
-    public void update(final Integer idCliente, final ClienteDirectoActualizarDTO clienteDirectoDTO) {
-        final ClienteDirecto cliente = clienteDirectoRepository.findById(idCliente)
+    public void update(final Integer idCliente, final ClienteDirectoDTO clienteDirectoDTO) {
+        final ClienteDirecto clienteDirecto = clienteDirectoRepository.findById(idCliente)
                 .orElseThrow(NotFoundException::new);
-
-        if (clienteDirectoDTO.getNombreCliente() != null && !clienteDirectoDTO.getNombreCliente().isBlank()) {
-            cliente.setNombreCliente(clienteDirectoDTO.getNombreCliente());
-        }
-        if (clienteDirectoDTO.getApellidoCliente() != null && !clienteDirectoDTO.getApellidoCliente().isBlank()) {
-            cliente.setApellidoCliente(clienteDirectoDTO.getApellidoCliente());
-        }
-        if (clienteDirectoDTO.getTelefono() != null && !clienteDirectoDTO.getTelefono().isBlank()) {
-            cliente.setTelefono(clienteDirectoDTO.getTelefono());
-        }
-        if (clienteDirectoDTO.getFechaNacimientoCliente() != null) {
-            cliente.setFechaNacimientoCliente(clienteDirectoDTO.getFechaNacimientoCliente());
-        }
-
-        clienteDirectoRepository.save(cliente);
+        mapToEntity(clienteDirectoDTO, clienteDirecto);
+        clienteDirectoRepository.save(clienteDirecto);
     }
 
     public List<ClienteDirectoConCorreoDTO> findAllWithCorreo() {
