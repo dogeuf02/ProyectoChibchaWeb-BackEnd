@@ -67,7 +67,7 @@ public class EmpleadoController {
     @PutMapping("/{idEmpleado}")
     public ResponseEntity<Integer> updateEmpleado(
             @PathVariable(name = "idEmpleado") final Integer idEmpleado,
-            @RequestBody @Valid final EmpleadoActualizarDTO empleadoDTO) {
+            @RequestBody @Valid final EmpleadoDTO empleadoDTO) {
         empleadoService.update(idEmpleado, empleadoDTO);
         return ResponseEntity.ok(idEmpleado);
     }

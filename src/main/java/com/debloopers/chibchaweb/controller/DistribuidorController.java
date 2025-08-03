@@ -73,7 +73,7 @@ public class DistribuidorController {
     ) {
         distribuidorService.cambiarEstadoDistribuidor(idDistribuidor, activar);
         String estado = activar ? "ACTIVO" : "INACTIVO";
-        return ResponseEntity.ok("Estado de los usuarios del distribuidor cambiado a: " + estado);
+        return ResponseEntity.ok("Distributor status updated as of: " + estado);
     }
 
     @DeleteMapping("/{idDistribuidor}")

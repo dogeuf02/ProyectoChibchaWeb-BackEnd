@@ -66,4 +66,38 @@ public class EmailService {
 
         javaMailSender.send(message);
     }
+
+    public void enviarCorreoRespuestaSolicitudRegistro(String to, String nombreEmpresa, String nuevoEstado) throws MessagingException, IOException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        helper.setTo(to);
+
+        String asunto;
+        String htmlTemplate;
+
+        if ("ACTIVO".equalsIgnoreCase(nuevoEstado)) {
+            asunto = "¡Tu solicitud ha sido aprobada!";
+            htmlTemplate = new String(
+                    getClass().getClassLoader().getResourceAsStream("template/registro_aprobado_es.html").readAllBytes(),
+                    StandardCharsets.UTF_8
+            );
+        } else {
+            asunto = "Tu solicitud ha sido rechazada";
+            htmlTemplate = new String(
+                    getClass().getClassLoader().getResourceAsStream("template/registro_rechazado_es.html").readAllBytes(),
+                    StandardCharsets.UTF_8
+            );
+        }
+
+        helper.setSubject(asunto);
+
+        String htmlContent = htmlTemplate.replace("{{nombreEmpresa}}", nombreEmpresa);
+        helper.setText(htmlContent, true);
+
+        FileSystemResource image = new FileSystemResource(new File("src/main/resources/image/Logo_ChibchaWeb.png"));
+        helper.addInline("logo", image, "image/png");
+
+        javaMailSender.send(message);
+    }
 }

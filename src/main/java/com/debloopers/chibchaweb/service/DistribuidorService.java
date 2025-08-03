@@ -142,15 +142,27 @@ public class DistribuidorService {
     @Transactional
     public void cambiarEstadoDistribuidor(Integer idDistribuidor, boolean activar) {
         Distribuidor distribuidor = distribuidorRepository.findById(idDistribuidor)
-                .orElseThrow(() -> new EntityNotFoundException("Distribuidor no encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Distributor not found"));
+
+        Usuario usuario = usuarioRepository.findByDistribuidor_IdDistribuidor(idDistribuidor)
+                .orElseThrow(() -> new EntityNotFoundException("Associated user not found"));
 
         String nuevoEstado = activar ? "ACTIVO" : "INACTIVO";
 
-        for (Usuario usuario : distribuidor.getDistribuidorUsuarios()) {
+        if (!nuevoEstado.equals(usuario.getEstado())) {
             usuario.setEstado(nuevoEstado);
-        }
+            usuarioRepository.save(usuario);
 
-        usuarioRepository.saveAll(distribuidor.getDistribuidorUsuarios());
+            try {
+                emailService.enviarCorreoRespuestaSolicitudRegistro(
+                        usuario.getCorreoUsuario(),
+                        distribuidor.getNombreEmpresa(),
+                        nuevoEstado
+                );
+            } catch (Exception e) {
+                System.err.println("Error sending email to " + usuario.getCorreoUsuario() + ": " + e.getMessage());
+            }
+        }
     }
 
     public void delete(final Integer idDistribuidor) {

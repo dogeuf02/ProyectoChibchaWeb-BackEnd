@@ -55,13 +55,13 @@ public class ClienteDirectoController {
         }
     }
 
-    @Operation(summary = "Actualizar campos excepto el id")
+    @Operation(summary = "Actualizar campos")
     @PutMapping("/{idCliente}")
-    public ResponseEntity<String> updateClienteDirecto(
+    public ResponseEntity<Integer> updateClienteDirecto(
             @PathVariable(name = "idCliente") final Integer idCliente,
-            @RequestBody @Valid final ClienteDirectoActualizarDTO clienteDirectoDTO) {
+            @RequestBody @Valid final ClienteDirectoDTO clienteDirectoDTO) {
         clienteDirectoService.update(idCliente, clienteDirectoDTO);
-        return ResponseEntity.ok("Cliente actualizado correctamente con ID: " + idCliente);
+        return ResponseEntity.ok(idCliente);
     }
 
     @Operation(summary = "Obtener los clientes con su correo y estado")
