@@ -5,7 +5,6 @@ import com.debloopers.chibchaweb.dto.LoginRequestDTO;
 import com.debloopers.chibchaweb.dto.LoginResponseDTO;
 import com.debloopers.chibchaweb.repository.UsuarioRepository;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,20 +12,28 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private TokenVerificacionService tokenVerificacionService;
+    private final TokenVerificacionService tokenVerificacionService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private TokenListaNegraService tokenListaNegraService;
+    private final TokenListaNegraService tokenListaNegraService;
 
-    @Autowired
-    private JwtService jwtService;
+    private final JwtService jwtService;
+
+    public AuthService(final UsuarioRepository usuarioRepository,
+                       final TokenVerificacionService tokenVerificacionService,
+                       final PasswordEncoder passwordEncoder,
+                       final TokenListaNegraService tokenListaNegraService,
+                       final JwtService jwtService) {
+        this.usuarioRepository = usuarioRepository;
+        this.tokenVerificacionService = tokenVerificacionService;
+        this.passwordEncoder = passwordEncoder;
+        this.tokenListaNegraService = tokenListaNegraService;
+        this.jwtService = jwtService;
+    }
+
 
     public LoginResponseDTO login(LoginRequestDTO dto) {
         Usuario usuario = usuarioRepository.findByCorreoUsuario(dto.getCorreo());

@@ -4,9 +4,10 @@ package com.debloopers.chibchaweb.service;
 import com.debloopers.chibchaweb.dto.CategoriaDistribuidorDTO;
 import com.debloopers.chibchaweb.entity.CategoriaDistribuidor;
 import com.debloopers.chibchaweb.repository.CategoriaDistribuidorRepository;
-import com.debloopers.chibchaweb.repository.DistribuidorRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
+
 import java.util.List;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +16,10 @@ import org.springframework.stereotype.Service;
 public class CategoriaDistribuidorService {
 
     private final CategoriaDistribuidorRepository categoriaDistribuidorRepository;
-    private final DistribuidorRepository distribuidorRepository;
 
     public CategoriaDistribuidorService(
-            final CategoriaDistribuidorRepository categoriaDistribuidorRepository,
-            final DistribuidorRepository distribuidorRepository) {
+            final CategoriaDistribuidorRepository categoriaDistribuidorRepository) {
         this.categoriaDistribuidorRepository = categoriaDistribuidorRepository;
-        this.distribuidorRepository = distribuidorRepository;
     }
 
     public List<CategoriaDistribuidorDTO> findAll() {

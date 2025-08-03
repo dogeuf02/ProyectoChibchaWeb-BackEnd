@@ -8,7 +8,6 @@ import com.debloopers.chibchaweb.util.NotFoundException;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,19 +22,21 @@ public class UsuarioService {
     private final EmpleadoRepository empleadoRepository;
     private final DistribuidorRepository distribuidorRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+
+    private final PasswordEncoder passwordEncoder;
 
     public UsuarioService(final UsuarioRepository usuarioRepository,
                           final ClienteDirectoRepository clienteDirectoRepository,
                           final AdministradorRepository administradorRepository,
                           final EmpleadoRepository empleadoRepository,
-                          final DistribuidorRepository distribuidorRepository) {
+                          final DistribuidorRepository distribuidorRepository,
+                          final PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
         this.clienteDirectoRepository = clienteDirectoRepository;
         this.administradorRepository = administradorRepository;
         this.empleadoRepository = empleadoRepository;
         this.distribuidorRepository = distribuidorRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<UsuarioDTO> findAll() {

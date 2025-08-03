@@ -8,7 +8,6 @@ import com.debloopers.chibchaweb.util.ReferencedWarning;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,14 +26,14 @@ public class ClienteDirectoService {
     private final PerteneceDominioRepository perteneceDominioRepository;
     private final SolicitudTrasladoRepository solicitudTrasladoRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private TokenVerificacionService tokenService;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private EmailService emailService;
+
+    private final TokenVerificacionService tokenService;
+
+
+    private final EmailService emailService;
 
     public ClienteDirectoService(final ClienteDirectoRepository clienteDirectoRepository,
                                  final PlanClienteRepository planClienteRepository,
@@ -43,7 +42,10 @@ public class ClienteDirectoService {
                                  final MedioPagoRepository medioPagoRepository,
                                  final PlanAdquiridoRepository planAdquiridoRepository,
                                  final PerteneceDominioRepository perteneceDominioRepository,
-                                 final SolicitudTrasladoRepository solicitudTrasladoRepository) {
+                                 final SolicitudTrasladoRepository solicitudTrasladoRepository,
+                                 final PasswordEncoder passwordEncoder,
+                                 final TokenVerificacionService tokenService,
+                                 final EmailService emailService) {
         this.clienteDirectoRepository = clienteDirectoRepository;
         this.planClienteRepository = planClienteRepository;
         this.usuarioRepository = usuarioRepository;
@@ -53,6 +55,9 @@ public class ClienteDirectoService {
         this.planAdquiridoRepository = planAdquiridoRepository;
         this.perteneceDominioRepository = perteneceDominioRepository;
         this.solicitudTrasladoRepository = solicitudTrasladoRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.tokenService = tokenService;
+        this.emailService = emailService;
     }
 
     public List<ClienteDirectoDTO> findAll() {

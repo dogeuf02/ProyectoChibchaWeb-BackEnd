@@ -12,7 +12,6 @@ import com.debloopers.chibchaweb.util.ReferencedWarning;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,15 +26,15 @@ public class EmpleadoService {
     private final UsuarioRepository usuarioRepository;
     private final HistorialTicketRepository historialTicketRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public EmpleadoService(final EmpleadoRepository empleadoRepository,
                            final UsuarioRepository usuarioRepository,
-                           final HistorialTicketRepository historialTicketRepository) {
+                           final HistorialTicketRepository historialTicketRepository,final PasswordEncoder passwordEncoder) {
         this.empleadoRepository = empleadoRepository;
         this.usuarioRepository = usuarioRepository;
         this.historialTicketRepository = historialTicketRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<EmpleadoDTO> findAll() {
@@ -81,22 +80,10 @@ public class EmpleadoService {
         }
     }
 
-    public void update(final Integer idEmpleado, final EmpleadoActualizarDTO empleadoDTO) {
+    public void update(final Integer idEmpleado, final EmpleadoDTO empleadoDTO) {
         final Empleado empleado = empleadoRepository.findById(idEmpleado)
                 .orElseThrow(NotFoundException::new);
-
-        if (empleadoDTO.getNombreEmpleado() != null && !empleadoDTO.getNombreEmpleado().isBlank()) {
-            empleado.setNombreEmpleado(empleadoDTO.getNombreEmpleado().trim());
-        }
-
-        if (empleadoDTO.getApellidoEmpleado() != null && !empleadoDTO.getApellidoEmpleado().isBlank()) {
-            empleado.setApellidoEmpleado(empleadoDTO.getApellidoEmpleado().trim());
-        }
-
-        if (empleadoDTO.getCargoEmpleado() != null && !empleadoDTO.getCargoEmpleado().isBlank()) {
-            empleado.setCargoEmpleado(empleadoDTO.getCargoEmpleado().trim());
-        }
-
+        mapToEntity(empleadoDTO, empleado);
         empleadoRepository.save(empleado);
     }
 

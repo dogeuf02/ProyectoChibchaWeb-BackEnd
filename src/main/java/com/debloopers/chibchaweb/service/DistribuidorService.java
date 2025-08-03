@@ -8,7 +8,6 @@ import com.debloopers.chibchaweb.util.ReferencedWarning;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,11 +28,11 @@ public class DistribuidorService {
     private final PerteneceDominioRepository perteneceDominioRepository;
     private final SolicitudTrasladoRepository solicitudTrasladoRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
+
+
+    private final EmailService emailService;
 
     public DistribuidorService(final DistribuidorRepository distribuidorRepository,
                                final TipoDocumentoEmpRepository tipoDocumentoEmpRepository,
@@ -43,7 +42,9 @@ public class DistribuidorService {
                                final MedioPagoRepository medioPagoRepository,
                                final ComisionRepository comisionRepository,
                                final PerteneceDominioRepository perteneceDominioRepository,
-                               final SolicitudTrasladoRepository solicitudTrasladoRepository) {
+                               final SolicitudTrasladoRepository solicitudTrasladoRepository,
+                               final PasswordEncoder passwordEncoder,
+                               final EmailService emailService) {
         this.distribuidorRepository = distribuidorRepository;
         this.tipoDocumentoEmpRepository = tipoDocumentoEmpRepository;
         this.categoriaDistribuidorRepository = categoriaDistribuidorRepository;
@@ -54,6 +55,8 @@ public class DistribuidorService {
         this.comisionRepository = comisionRepository;
         this.perteneceDominioRepository = perteneceDominioRepository;
         this.solicitudTrasladoRepository = solicitudTrasladoRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
     }
 
     public List<DistribuidorDTO> findAll() {
@@ -108,33 +111,10 @@ public class DistribuidorService {
     }
 
 
-    public void update(final Integer idDistribuidor, final DistribuidorActualizarDTO distribuidorDTO) {
+    public void update(final Integer idDistribuidor, final DistribuidorDTO distribuidorDTO) {
         final Distribuidor distribuidor = distribuidorRepository.findById(idDistribuidor)
                 .orElseThrow(NotFoundException::new);
-
-        if (distribuidorDTO.getNumeroDocEmpresa() != null && !distribuidorDTO.getNumeroDocEmpresa().isBlank()) {
-            distribuidor.setNumeroDocEmpresa(distribuidorDTO.getNumeroDocEmpresa());
-        }
-
-        if (distribuidorDTO.getNombreEmpresa() != null && !distribuidorDTO.getNombreEmpresa().isBlank()) {
-            distribuidor.setNombreEmpresa(distribuidorDTO.getNombreEmpresa());
-        }
-
-        if (distribuidorDTO.getDireccionEmpresa() != null && !distribuidorDTO.getDireccionEmpresa().isBlank()) {
-            distribuidor.setDireccionEmpresa(distribuidorDTO.getDireccionEmpresa());
-        }
-
-        if (distribuidorDTO.getNombreTipoDoc() != null && !distribuidorDTO.getNombreTipoDoc().isBlank()) {
-            TipoDocumentoEmp tipoDocumento = tipoDocumentoEmpRepository
-                    .findByNombreTipoDoc(distribuidorDTO.getNombreTipoDoc());
-
-            if (tipoDocumento == null) {
-                throw new IllegalArgumentException("Document type not found: " + distribuidorDTO.getNombreTipoDoc());
-            }
-
-            distribuidor.setNombreTipoDoc(tipoDocumento);
-        }
-
+        mapToEntity(distribuidorDTO, distribuidor);
         distribuidorRepository.save(distribuidor);
     }
 

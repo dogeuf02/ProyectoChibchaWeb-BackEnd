@@ -14,7 +14,6 @@ import com.debloopers.chibchaweb.util.ReferencedWarning;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,17 +28,18 @@ public class AdministradorService {
     private final SolicitudDominioRepository solicitudDominioRepository;
     private final SolicitudTrasladoRepository solicitudTrasladoRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public AdministradorService(final AdministradorRepository administradorRepository,
                                 final UsuarioRepository usuarioRepository,
                                 final SolicitudDominioRepository solicitudDominioRepository,
-                                final SolicitudTrasladoRepository solicitudTrasladoRepository) {
+                                final SolicitudTrasladoRepository solicitudTrasladoRepository,
+                                final PasswordEncoder passwordEncoder) {
         this.administradorRepository = administradorRepository;
         this.usuarioRepository = usuarioRepository;
         this.solicitudDominioRepository = solicitudDominioRepository;
         this.solicitudTrasladoRepository = solicitudTrasladoRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<AdministradorDTO> findAll() {

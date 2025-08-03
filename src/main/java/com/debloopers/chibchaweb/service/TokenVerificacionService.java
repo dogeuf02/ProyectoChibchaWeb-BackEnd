@@ -17,8 +17,7 @@ import java.util.UUID;
 @Service
 public class TokenVerificacionService {
 
-    @Autowired
-    private TokenVerificacionRepository tokenVerificacionRepository;
+    private final TokenVerificacionRepository tokenVerificacionRepository;
 
     //
     private final UsuarioRepository usuarioRepository;
