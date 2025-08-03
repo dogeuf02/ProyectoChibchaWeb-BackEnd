@@ -3,6 +3,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+!src/main/resources/application-example.properties
 application-local.properties
 *.log
 .DS_Store
@@ -24,7 +25,6 @@ application-local.properties
 .settings
 .springBeans
 .sts4-cache
-.properties
 
 ## NetBeans
 /nbproject/private/
@@ -35,3 +35,4 @@ application-local.properties
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
+src/main/resources/application.properties
