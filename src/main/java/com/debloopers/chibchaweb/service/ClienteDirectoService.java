@@ -57,10 +57,10 @@ public class ClienteDirectoService {
     }
 
     @Transactional
-    public ClienteDirectoRegistroResponseDTO create(ClienteDirectoRegistroRequestDTO dto) {
+    public ResponseDTO create(ClienteDirectoRegistroRequestDTO dto) {
         try {
             if (usuarioRepository.findByCorreoUsuario(dto.getCorreoCliente()) != null) {
-                return new ClienteDirectoRegistroResponseDTO(false, "The email is already registered.");
+                return new ResponseDTO(false, "The email is already registered.");
             }
 
             ClienteDirecto cliente = new ClienteDirecto();
@@ -86,9 +86,9 @@ public class ClienteDirectoService {
                     tokenVerificacion.getToken()
             );
 
-            return new ClienteDirectoRegistroResponseDTO(true, "Customer registered. Please check your email to activate your account.");
+            return new ResponseDTO(true, "Customer registered. Please check your email to activate your account.");
         } catch (Exception e) {
-            return new ClienteDirectoRegistroResponseDTO(false, "Internal error when creating the client.");
+            return new ResponseDTO(false, "Internal error when creating the client.");
         }
     }
 

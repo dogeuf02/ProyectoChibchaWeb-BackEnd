@@ -45,12 +45,12 @@ public class AdministradorController {
     @Operation(summary = "Registrar un administrador")
     @PostMapping("/registroAdministrador")
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<AdministradorRegistroResponseDTO> createAdministrador(
+    public ResponseEntity<ResponseDTO> createAdministrador(
             @RequestBody @Valid final AdministradorRegistroRequestDTO administradorDTO) {
 
-        AdministradorRegistroResponseDTO respuesta = administradorService.create(administradorDTO);
+        ResponseDTO respuesta = administradorService.create(administradorDTO);
 
-        if (respuesta.isCreado()) {
+        if (respuesta.isExito()) {
             return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respuesta);

@@ -22,5 +22,4 @@ public class AdministradorDTO {
     private String apellidoAdmin;
 
     private LocalDate fechaNacimientoAdmin;
-
 }
