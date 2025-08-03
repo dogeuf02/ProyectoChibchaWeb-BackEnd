@@ -1,90 +1,125 @@
-/*insertar planes*/
-INSERT INTO PLAN (NOMBRE_PLAN, PRECIO) VALUES
-('Chibcha-Plata', 9.99),
-('Chibcha-Oro', 19.99),
-('Chibcha-Platino', 39.99);
-
-
-/*Insertar documentos distribuidor*/
 INSERT INTO TIPO_DOCUMENTO_EMP (NOMBRE_TIPO_DOC) VALUES
-('NIT'),
-('RUC'),
-('CUIT'),
-('RIF'),
-('CPF_CNPJ'),
-('TIN'),
-('PASSPORT'),
-('BUSINESS_ID'),
-('OTHER');
+('NIT'),('RUC'),('CUIT'),('RIF'),('CPF_CNPJ'),('TIN'),('PASSPORT'),('BUSINESS_ID'),('OTHER');
 
-
-INSERT INTO TLD (TLD) VALUES
-('.com'),
-('.net'),
-('.org'),
-('.info'),
-('.biz'),
-('.co'),
-('.io'),
-('.app'),
-('.dev'),
-('.tech');
-/*Insert Registradores*/
-INSERT INTO REGISTRADOR (NOMBRE_REGISTRADOR, CORREO_registrador) VALUES
-('GoDaddy', 'contacto@godaddy.com'),
-('Hostinger', 'soporte@hostinger.com'),
-('Namecheap', 'info@namecheap.com');
-/*insert administradores*/
-INSERT INTO ADMINISTRADOR (NOMBRE_ADMIN, APELLIDO_ADMIN, FECHA_NACIMIENTO_ADMIN) VALUES
-('William', 'Forero', NULL),
-('Vivian', 'Gonzales', NULL),
-('David', 'Muñoz', NULL);
-/*Insert cliente directo*/
-INSERT INTO CLIENTE_DIRECTO (ID_PLAN, NOMBRE_CLIENTE, APELLIDO_CLIENTE, TELEFONO, FECHA_NACIMIENTO_CLIENTE) VALUES
-(1, 'Laura', 'García', '+573001112233', '1992-06-15'),
-(2, 'Carlos', 'Martínez', '+573002223344', '1985-11-22'),
-(3, 'Ana', 'Rojas', '+573003334455', '1998-03-10'),
-(1, 'Sofía', 'López', '+573004445566', '2000-12-01'),
-(2, 'Diego', 'Pérez', '+573005556677', '1990-09-05'),
-(3, 'Camila', 'Ramírez', '+573006667788', '1993-08-14'),
-(1, 'Mateo', 'Torres', '+573007778899', '1987-07-30'),
-(2, 'Valentina', 'Gómez', '+573008889900', '1995-04-18'),
-(3, 'Sebastián', 'Castaño', '+573009990011', '1991-01-09'),
-(1, 'Isabella', 'Mejía', '+573010101112', '1999-05-25');
-
-/*Insert Usuario*/
-INSERT INTO USUARIO (ID_CLIENTE, CORREO_USUARIO, CONTRASENA, ROL, ESTADO) VALUES
-(1, 'laura.garcia@correo.com', 'clave123', 'Cliente', 'ACTIVO'),
-(2, 'carlos.martinez@correo.com', 'clave123', 'Cliente', 'ACTIVO'),
-(3, 'ana.rojas@correo.com', 'clave123', 'Cliente', 'ACTIVO'),
-(4, 'sofia.lopez@correo.com', 'clave123', 'Cliente', 'ACTIVO'),
-(5, 'diego.perez@correo.com', 'clave123', 'Cliente', 'ACTIVO'),
-(6, 'camila.ramirez@correo.com', 'clave123', 'Cliente', 'ACTIVO'),
-(7, 'mateo.torres@correo.com', 'clave123', 'Cliente', 'ACTIVO'),
-(8, 'valentina.gomez@correo.com', 'clave123', 'Cliente', 'ACTIVO'),
-(9, 'sebastian.castano@correo.com', 'clave123', 'Cliente', 'ACTIVO'),
-(10, 'isabella.mejia@correo.com', 'clave123', 'Cliente', 'ACTIVO');
-
-INSERT INTO USUARIO (ID_ADMIN, CORREO_USUARIO, CONTRASENA, ROL, ESTADO) VALUES
-(1, 'william.forero@chibchaweb.fun', 'admin123', 'Administrador', 'ACTIVO'),
-(2, 'vivian.gonzales@chibchaweb.fun', 'admin123', 'Administrador', 'ACTIVO'),
-(3, 'david.munoz@chibchaweb.fun', 'admin123', 'Administrador', 'ACTIVO');
-
-/*insert distribuidores*/
-INSERT INTO DISTRIBUIDOR (NOMBRE_TIPO_DOC, NUMERO_DOC_EMPRESA, NOMBRE_EMPRESA, DIRECCION_EMPRESA)
+INSERT INTO REGISTRADOR (NOMBRE_REGISTRADOR, CORREO_registrador)
 VALUES 
-('NIT', '900123456', 'Chibcha Hosting SAS', 'Cra 10 #20-30 Bogotá'),
-('NIT', '901234567', 'AndesCloud Ltda', 'Calle 45 #7-15 Medellín'),
-('NIT', '902345678', 'RedPuma Web Services', 'Av. 68 #45-50 Cali');
+('DonDominio', 'soporte@dondominio.com'),
+('Namecheap', 'contacto@namecheap.com'),
+('GoDaddy', 'admin@godaddy.com');
 
-/* Insertar usuarios asociados a los distribuidores*/
+
+
+INSERT INTO ADMINISTRADOR (NOMBRE_ADMIN, APELLIDO_ADMIN) VALUES
+('William', 'Forero'),
+('Vivian', 'Gonzales'),
+('David', 'Muñoz');
+
+INSERT INTO USUARIO (ID_ADMIN, CORREO_USUARIO, CONTRASENA, ROL, ESTADO)
+VALUES 
+(1, 'william.forero@admin.com', 'admin123', 'Administrador', 'ACTIVO'),
+(2, 'vivian.gonzales@admin.com', 'admin123', 'Administrador', 'ACTIVO'),
+(3, 'david.munoz@admin.com', 'admin123', 'Administrador', 'ACTIVO');
+
+
+INSERT INTO PLAN_CLIENTE (
+    NOMBRE_PLAN_CLIENTE, NUMERO_WEBS, NUMERO_BASE_DATOS, ALMACENAMIENTO_NVME,
+    NUMERO_CUENTAS_CORREO, CREADOR_WEB, NUMERO_CERTIFICADO_SSL_HTTPS, EMAIL_MARKETING
+)
+VALUES 
+('Chibcha-Platino', 10, 5, 100, 50, TRUE, 2, TRUE),
+('Chibcha-Plata', 5, 2, 50, 20, TRUE, 1, FALSE),
+('Chibcha-Oro', 1, 1, 20, 5, FALSE, 1, FALSE);
+
+INSERT INTO CATEGORIA_DISTRIBUIDOR (NOMBRE_CATEGORIA, PRECIO_CATEGORIA)
+VALUES 
+('BÁSICO', 500.00),
+('PREMIUM', 2000.00);
+
+INSERT INTO EMPLEADO (NOMBRE_EMPLEADO, APELLIDO_EMPLEADO, CARGO_EMPLEADO) VALUES
+/*TECNICOS*/
+('Carlos', 'Díaz', 'Tecnico nv 1'),('Luisa', 'Martínez', 'Tecnico nv 1'),
+('Marta', 'Reyes', 'Tecnico nv 2'),('Sergio', 'Valencia', 'Tecnico nv 2'),
+('Andrea', 'Pérez', 'Tecnico nv 3'),('Jorge', 'Romero', 'Tecnico nv 3'),
+/*COORDINADORES*/
+('Juan', 'Ortega', 'Coordinador nv 1'),('Laura', 'Mejía', 'Coordinador nv 2'),
+('Esteban', 'Salazar', 'Coordinador nv 3');
+
+INSERT INTO USUARIO (ID_EMPLEADO, CORREO_USUARIO, CONTRASENA, ROL, ESTADO)
+VALUES 
+(1, 'carlos.diaz@empresa.com', 'empleado123', 'Empleado', 'ACTIVO'),        
+(2, 'luisa.martinez@empresa.com', 'empleado123', 'Empleado', 'ACTIVO'),     
+(3, 'marta.reyes@empresa.com', 'empleado123', 'Empleado', 'ACTIVO'),        
+(4, 'sergio.valencia@empresa.com', 'empleado123', 'Empleado', 'ACTIVO'),    
+(5, 'andrea.perez@empresa.com', 'empleado123', 'Empleado', 'ACTIVO'),       
+(6, 'jorge.romero@empresa.com', 'empleado123', 'Empleado', 'ACTIVO'),       
+(7, 'juan.ortega@empresa.com', 'empleado123', 'Empleado', 'ACTIVO'),        
+(8, 'laura.mejia@empresa.com', 'empleado123', 'Empleado', 'ACTIVO'),        
+(9, 'esteban.salazar@empresa.com', 'empleado123', 'Empleado', 'ACTIVO');    
+
+
+INSERT INTO TLD (TLD, PRECIO_TLD)
+VALUES 
+('.com', 4.50),
+('.net', 4.00),
+('.org', 3.0);
+
+INSERT INTO CLIENTE_DIRECTO (
+   ID_PLAN_CLIENTE, NOMBRE_CLIENTE, APELLIDO_CLIENTE, TELEFONO, FECHA_NACIMIENTO_CLIENTE
+)
+VALUES 
+(1, 'Camila', 'Ramírez', '3014567890', '1992-07-15'),
+(2, 'Felipe', 'Castro', '3129876543', '1988-02-28');
+
+INSERT INTO USUARIO (ID_CLIENTE, CORREO_USUARIO, CONTRASENA, ROL, ESTADO)
+VALUES 
+(1, 'camila.ramirez@cliente.com', 'cliente123', 'Cliente', 'ACTIVO'),       
+(2, 'felipe.castro@cliente.com', 'cliente123', 'Cliente', 'ACTIVO');        
+
+
+INSERT INTO DISTRIBUIDOR (
+   NOMBRE_TIPO_DOC, NUMERO_DOC_EMPRESA, NOMBRE_EMPRESA, DIRECCION_EMPRESA, ID_CATEGORIA
+)
+VALUES 
+('RUC', '901111222', 'CloudNet', 'Calle 8 # 45-67, Cali', 1),
+('CUIT', '902333444', 'HostGlobal', 'Carrera 50 # 100-20, Barranquilla', 2);
+
 INSERT INTO USUARIO (ID_DISTRIBUIDOR, CORREO_USUARIO, CONTRASENA, ROL, ESTADO)
 VALUES 
-((SELECT ID_DISTRIBUIDOR FROM DISTRIBUIDOR WHERE NUMERO_DOC_EMPRESA = '900123456'),
- 'admin@chibchahost.com', '1234seguro!', 'Distribuidor', 'ACTIVO'),
+(1, 'contacto@cloudnet.com', 'dist123', 'Distribuidor', 'ACTIVO'),          
+(2, 'contacto@hostglobal.com', 'dist123', 'Distribuidor', 'ACTIVO');        
 
-((SELECT ID_DISTRIBUIDOR FROM DISTRIBUIDOR WHERE NUMERO_DOC_EMPRESA = '901234567'),
- 'contacto@andescloud.co', 'cloudpass456', 'Distribuidor', 'ACTIVO'),
 
-((SELECT ID_DISTRIBUIDOR FROM DISTRIBUIDOR WHERE NUMERO_DOC_EMPRESA = '902345678'),
- 'ventas@redpuma.com', 'redsecure789', 'Distribuidor', 'ACTIVO');
+INSERT INTO DOMINIO (TLD, NOMBRE_DOMINIO, PRECIO_DOMINIO, ESTADO)
+VALUES 
+('.com', 'tiendaonlinecamila', 45000, 'Reservado'),
+('.com', 'miempresaexpress', 50000, 'Disponible');
+
+INSERT INTO SOLICITUD_DOMINIO (
+   ID_CLIENTE, ID_DISTRIBUIDOR, ID_DOMINIO, ESTADO_SOLICITUD, FECHA_SOLICITUD
+)
+VALUES 
+(1, NULL, 3,'En Revisión', CURRENT_DATE),  
+(NULL, 1, 4,'En Revisión', CURRENT_DATE); 
+
+
+INSERT INTO PLAN_PAGO (INTERVALO_PAGO)
+VALUES ('Mensual'), ('Trimestral'), ('Anual');
+
+INSERT INTO PLAN_ADQUIRIDO (
+   ID_CLIENTE, ID_PLAN_CLIENTE, ID_PLAN_PAGO, ESTADO_PLAN, FECHA_COMPRA, FECHA_EXPIRACION, PRECIO_PLAN_ADQUIRIDO
+)
+VALUES 
+(1, 1, 1, 'Activo', CURRENT_DATE, CURRENT_DATE + INTERVAL '1 month', 120000);
+
+INSERT INTO BANCO (NOMBRE_BANCO)
+VALUES 
+('Bancolombia'), 
+('Davivienda'), 
+('Nequi');
+
+
+INSERT INTO MEDIO_PAGO (
+   ID_CLIENTE, TIPO_MEDIO_PAGO, NOMBRE_TITULAR, NUMERO_TARJETA_CUENTA, ID_BANCO
+)
+VALUES 
+(1, 'Credito', 'Camila Ramírez', '4111111111111111', 1);
