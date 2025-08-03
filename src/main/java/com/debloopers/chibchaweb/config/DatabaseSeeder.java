@@ -1,7 +1,7 @@
 package com.debloopers.chibchaweb.config;
 
 import com.debloopers.chibchaweb.dto.AdministradorRegistroRequestDTO;
-import com.debloopers.chibchaweb.dto.AdministradorRegistroResponseDTO;
+import com.debloopers.chibchaweb.dto.ResponseDTO;
 import com.debloopers.chibchaweb.dto.TipoDocumentoEmpDTO;
 import com.debloopers.chibchaweb.dto.TldDTO;
 import com.debloopers.chibchaweb.service.AdministradorService;
@@ -49,8 +49,8 @@ public class DatabaseSeeder {
             dto.setCorreoAdmin(correo);
             dto.setContrasenaAdmin(contrasena);
 
-            AdministradorRegistroResponseDTO response = service.create(dto);
-            if (response.isCreado()) {
+            ResponseDTO response = service.create(dto);
+            if (response.isExito()) {
                 System.out.println("🟢 Administrador por defecto creado: " + correo);
             } else {
                 System.out.println("🔴 Error al crear admin por defecto: " + response.getMensaje());
@@ -65,7 +65,6 @@ public class DatabaseSeeder {
         dto.setTld(tldString);
         service.create(dto);
         System.out.println("🟢 TLD insertado: " + tldString);
+        }
     }
-}
-
 }
