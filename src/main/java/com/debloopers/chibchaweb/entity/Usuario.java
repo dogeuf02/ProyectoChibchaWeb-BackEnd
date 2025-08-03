@@ -59,5 +59,4 @@ public class Usuario {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "distribuidor_id")
     private Distribuidor distribuidor;
-
 }

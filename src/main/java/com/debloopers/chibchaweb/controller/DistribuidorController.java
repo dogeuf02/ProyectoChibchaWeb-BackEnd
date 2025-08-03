@@ -46,10 +46,10 @@ public class DistribuidorController {
     @Operation(summary = "Registrar un distribuidor")
     @PostMapping("/registroDistribuidor")
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<DistribuidorRegistroResponseDTO> createDistribuidor(
+    public ResponseEntity<ResponseDTO> createDistribuidor(
             @RequestBody @Valid final DistribuidorRegistroRequestDTO distribuidorDTO) {
 
-        DistribuidorRegistroResponseDTO response = distribuidorService.create(distribuidorDTO);
+        ResponseDTO response = distribuidorService.create(distribuidorDTO);
 
         if (response.isExito()) {
             return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -84,5 +84,4 @@ public class DistribuidorController {
         distribuidorService.delete(idDistribuidor);
         return ResponseEntity.noContent().build();
     }
-
 }

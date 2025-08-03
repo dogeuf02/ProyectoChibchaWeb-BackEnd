@@ -45,8 +45,8 @@ public class ClienteDirectoController {
     @Operation(summary = "Registrar un cliente")
     @PostMapping("/registroCliente")
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<ClienteDirectoRegistroResponseDTO> create(@RequestBody @Valid ClienteDirectoRegistroRequestDTO clienteDirectoDTO) {
-        ClienteDirectoRegistroResponseDTO response = clienteDirectoService.create(clienteDirectoDTO);
+    public ResponseEntity<ResponseDTO> create(@RequestBody @Valid ClienteDirectoRegistroRequestDTO clienteDirectoDTO) {
+        ResponseDTO response = clienteDirectoService.create(clienteDirectoDTO);
 
         if (response.isExito()) {
             return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -81,5 +81,4 @@ public class ClienteDirectoController {
         clienteDirectoService.delete(idCliente);
         return ResponseEntity.noContent().build();
     }
-
 }

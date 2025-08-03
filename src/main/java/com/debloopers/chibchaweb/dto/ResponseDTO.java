@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class AdministradorRegistroResponseDTO {
-    private boolean creado;
+public class ResponseDTO {
+    private boolean exito;
     private String mensaje;
 }

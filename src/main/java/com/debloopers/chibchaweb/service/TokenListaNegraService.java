@@ -1,28 +1,31 @@
 package com.debloopers.chibchaweb.service;
 
-import com.debloopers.chibchaweb.entity.TokenListaNegra;
-import com.debloopers.chibchaweb.entity.Usuario;
-import com.debloopers.chibchaweb.repository.TokenListaNegraRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class TokenListaNegraService {
 
     @Autowired
-    private TokenListaNegraRepository tokenListaNegraRepository;
+    private StringRedisTemplate redisTemplate;
 
-    public TokenListaNegra bloquearToken(String token, LocalDateTime expiracion, Usuario usuario) {
-        TokenListaNegra bloqueado = new TokenListaNegra();
-        bloqueado.setToken(token);
-        bloqueado.setFechaExpiracion(expiracion);
-        bloqueado.setUsuario(usuario);
-        return tokenListaNegraRepository.save(bloqueado);
+    @Autowired
+    private JwtService jwtService;
+
+    public boolean isTokenBlacklisted(String token) {
+        return redisTemplate.hasKey(token);
     }
 
-    public boolean estaBloqueado(String token) {
-        return tokenListaNegraRepository.existsByToken(token);
+    public void invalidarToken(String token) {
+        Date expiration = jwtService.extractExpiration(token);
+        long ttl = expiration.getTime() - System.currentTimeMillis();
+
+        if (ttl > 0) {
+            redisTemplate.opsForValue().set(token, "blacklisted", ttl, TimeUnit.MILLISECONDS);
+        }
     }
 }

@@ -51,12 +51,12 @@ public class EmpleadoController {
 
     @PostMapping("/registroEmpleado")
     @Operation(summary = "Registro de un nuevo empleado")
-    public ResponseEntity<EmpleadoRegistroResponseDTO> createEmpleado(
+    public ResponseEntity<ResponseDTO> createEmpleado(
             @RequestBody @Valid final EmpleadoRegistroRequestDTO dto) {
 
-        EmpleadoRegistroResponseDTO response = empleadoService.create(dto);
+        ResponseDTO response = empleadoService.create(dto);
 
-        if (response.isSuccess()) {
+        if (response.isExito()) {
             return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -83,5 +83,4 @@ public class EmpleadoController {
         empleadoService.delete(idEmpleado);
         return ResponseEntity.noContent().build();
     }
-
 }

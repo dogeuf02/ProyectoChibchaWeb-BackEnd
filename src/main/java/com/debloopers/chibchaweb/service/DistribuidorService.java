@@ -51,15 +51,15 @@ public class DistribuidorService {
     }
 
     @Transactional
-    public DistribuidorRegistroResponseDTO create(DistribuidorRegistroRequestDTO dto) {
+    public ResponseDTO create(DistribuidorRegistroRequestDTO dto) {
         try {
             if (usuarioRepository.findByCorreoUsuario(dto.getCorreoDistrbuidor()) != null) {
-                return new DistribuidorRegistroResponseDTO(false, "The email is already registered.");
+                return new ResponseDTO(false, "The email is already registered.");
             }
 
             TipoDocumentoEmp tipoDoc = tipoDocumentoEmpRepository.findByNombreTipoDoc(dto.getNombreTipoDoc());
             if (tipoDoc == null) {
-                return new DistribuidorRegistroResponseDTO(false, "The document type does not exist.");
+                return new ResponseDTO(false, "The document type does not exist.");
             }
 
             Distribuidor distribuidor = new Distribuidor();
@@ -77,9 +77,9 @@ public class DistribuidorService {
             usuario.setDistribuidor(distribuidor);
             usuarioRepository.save(usuario);
 
-            return new DistribuidorRegistroResponseDTO(true, "Distributor successfully created.");
+            return new ResponseDTO(true, "Distributor successfully created.");
         } catch (Exception e) {
-            return new DistribuidorRegistroResponseDTO(false, "Internal error creating the distributor.");
+            return new ResponseDTO(false, "Internal error creating the distributor.");
         }
     }
 

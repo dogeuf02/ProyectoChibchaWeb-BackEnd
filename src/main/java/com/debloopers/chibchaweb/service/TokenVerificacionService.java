@@ -55,7 +55,7 @@ public class TokenVerificacionService {
             throw new RuntimeException("The token has expired.");
         }
 
-        if(encontrado.getEstado() == false) {
+        if(encontrado.getEstado() == true) {
             throw new RuntimeException("The token has already been used.");
         }
 

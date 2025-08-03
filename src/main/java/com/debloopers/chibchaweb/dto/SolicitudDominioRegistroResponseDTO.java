@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class SolicitudDominioRegistroResponseDTO {
-    private boolean Exito;
+    private boolean exito;
     private String message;
     private Integer idSolicitud;
 }

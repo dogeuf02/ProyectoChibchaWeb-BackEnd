@@ -4,10 +4,16 @@ import com.debloopers.chibchaweb.entity.Usuario;
 import com.debloopers.chibchaweb.dto.LoginRequestDTO;
 import com.debloopers.chibchaweb.dto.LoginResponseDTO;
 import com.debloopers.chibchaweb.repository.UsuarioRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.token.TokenService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class AuthService {
@@ -21,37 +27,50 @@ public class AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private TokenListaNegraService tokenListaNegraService;
+
+    @Autowired
+    private JwtService jwtService;
+
     public LoginResponseDTO login(LoginRequestDTO dto) {
         Usuario usuario = usuarioRepository.findByCorreoUsuario(dto.getCorreo());
+
         if (usuario == null) {
-            return new LoginResponseDTO(false, "Unregistered email", null, null, null);
+            return new LoginResponseDTO(false, "Unregistered email", null);
         }
 
         if ("INACTIVO".equalsIgnoreCase(usuario.getEstado())) {
-            return new LoginResponseDTO(false, "The user is inactive.", null, null, null);
+            return new LoginResponseDTO(false, "The user is inactive.", null);
         }
 
         if ("PENDIENTE".equalsIgnoreCase(usuario.getEstado())) {
-            return new LoginResponseDTO(false, "Account pending from approval.", null, null, null);
+            return new LoginResponseDTO(false, "Account pending from approval.", null);
         }
 
         boolean coincide = passwordEncoder.matches(dto.getContrasena(), usuario.getContrasena());
         if (!coincide) {
-            return new LoginResponseDTO(false, "Incorrect password", null, null, null);
+            return new LoginResponseDTO(false, "Incorrect password", null);
         }
 
-        Integer idRelacionado = null;
-        if (usuario.getAdmin() != null) {
-            idRelacionado = usuario.getAdmin().getIdAdmin();
-        } else if (usuario.getCliente() != null) {
-            idRelacionado = usuario.getCliente().getIdCliente();
-        } else if (usuario.getEmpleado() != null) {
-            idRelacionado = usuario.getEmpleado().getIdEmpleado();
-        } else if (usuario.getDistribuidor() != null) {
-            idRelacionado = usuario.getDistribuidor().getIdDistribuidor();
+        String token = jwtService.generateToken(usuario);
+
+        return new LoginResponseDTO(
+                true,
+                "Login successful",
+                token
+        );
+    }
+
+    public void logoutUsuario(HttpServletRequest request) {
+        final String authHeader = request.getHeader("Authorization");
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new IllegalArgumentException("The Bearer token was not found in the header.");
         }
 
-        return new LoginResponseDTO(true, "Login successful", usuario.getRol(), usuario.getIdUsuario(),idRelacionado );
+        final String token = authHeader.substring(7);
+        tokenListaNegraService.invalidarToken(token);
     }
 
     public ResponseEntity<String> activarCuentaConToken(String token) {
