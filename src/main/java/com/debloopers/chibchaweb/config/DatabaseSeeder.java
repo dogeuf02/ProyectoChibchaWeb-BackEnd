@@ -8,6 +8,7 @@ import com.debloopers.chibchaweb.service.AdministradorService;
 import com.debloopers.chibchaweb.service.TipoDocumentoEmpService;
 import com.debloopers.chibchaweb.service.TldService;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.springframework.boot.CommandLineRunner;
@@ -24,7 +25,7 @@ public class DatabaseSeeder {
         return args -> {
             insertarTipo(tipoDocumentoEmpService, "NIT");
             insertarAdministradorPorDefecto(administradorService);
-            insertarTld(tldService, ".sapa");
+            insertarTld(tldService, ".sapa", BigDecimal.valueOf(500));
         };
     }
 
@@ -59,10 +60,11 @@ public class DatabaseSeeder {
     }
 
 
-    private void insertarTld(TldService service, String tldString) {
+    private void insertarTld(TldService service, String tldString, BigDecimal precio) {
     if (!service.tldExists(tldString)) {
         TldDTO dto = new TldDTO();
         dto.setTld(tldString);
+        dto.setPrecioTld(precio);
         service.create(dto);
         System.out.println("🟢 TLD insertado: " + tldString);
         }

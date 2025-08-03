@@ -9,6 +9,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @Service
 public class EmailService {
@@ -17,30 +19,24 @@ public class EmailService {
     private JavaMailSender javaMailSender;
 
 
-    public void enviarCorreoActivacion(String to, String subject, String token) throws MessagingException {
+    public void enviarCorreoActivacion(String to, String subject, String token) throws MessagingException, IOException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
         helper.setTo(to);
         helper.setSubject(subject);
 
-        String htmlContent = """
-    <html>
-        <body>
-            <h2>Bienvenido a ChibchaWeb</h2>
-            <p>Gracias por registrarte. Para comenzar a disfrutar de nuestros servicios, necesitas activar tu cuenta.</p>
-            <p>Haz clic <a href='http://localhost:8080/api/auth/activar?token=%s'>aquí</a> para verificar tu correo y activar tu cuenta.</p>
-            <p>Si no has solicitado esta cuenta, puedes ignorar este mensaje.</p>
-            <br/>
-            <p>¡Gracias por confiar en nosotros!</p>
-            <img src='cid:logo' alt='Logo' width='200'/>
-        </body>
-    </html>
-    """.formatted(token);
+
+        String htmlTemplate = new String(
+                getClass().getClassLoader().getResourceAsStream("template/correo_activacion_es.html").readAllBytes(),
+                StandardCharsets.UTF_8
+        );
+
+        String htmlContent = htmlTemplate.replace("{{token}}", token);
 
         helper.setText(htmlContent, true);
 
-        FileSystemResource image = new FileSystemResource(new File("src/main/java/com/debloopers/chibchaweb/util/Logo_ChibchaWeb.png"));
+        FileSystemResource image = new FileSystemResource(new File("src/main/resources/image/Logo_ChibchaWeb.png"));
         helper.addInline("logo", image, "image/png");
 
         javaMailSender.send(message);

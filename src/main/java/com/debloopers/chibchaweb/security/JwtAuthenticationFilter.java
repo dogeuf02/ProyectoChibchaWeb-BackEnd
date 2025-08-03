@@ -41,13 +41,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String jwt = authHeader.substring(7);
 
-        if (tokenListaNegraService.isTokenBlacklisted(jwt)) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write("{\"error\": \"The token has been revoked or is invalid.\"}");
-            return;
-        }
+//        if (tokenListaNegraService.isTokenBlacklisted(jwt)) {
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            response.setContentType("application/json");
+//            response.setCharacterEncoding("UTF-8");
+//            response.getWriter().write("{\"error\": \"The token has been revoked or is invalid.\"}");
+//            return;
+//        }
 
         final String username;
         try {
@@ -72,4 +72,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
-    }}
+    }
+}
