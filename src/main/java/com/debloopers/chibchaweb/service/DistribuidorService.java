@@ -8,6 +8,7 @@ import com.debloopers.chibchaweb.util.ReferencedWarning;
 
 import java.util.List;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -111,6 +112,7 @@ public class DistribuidorService {
     }
 
 
+    @Transactional
     public void update(final Integer idDistribuidor, final DistribuidorDTO distribuidorDTO) {
         final Distribuidor distribuidor = distribuidorRepository.findById(idDistribuidor)
                 .orElseThrow(NotFoundException::new);
@@ -137,6 +139,19 @@ public class DistribuidorService {
         }).toList();
     }
 
+    @Transactional
+    public void cambiarEstadoDistribuidor(Integer idDistribuidor, boolean activar) {
+        Distribuidor distribuidor = distribuidorRepository.findById(idDistribuidor)
+                .orElseThrow(() -> new EntityNotFoundException("Distribuidor no encontrado"));
+
+        String nuevoEstado = activar ? "ACTIVO" : "INACTIVO";
+
+        for (Usuario usuario : distribuidor.getDistribuidorUsuarios()) {
+            usuario.setEstado(nuevoEstado);
+        }
+
+        usuarioRepository.saveAll(distribuidor.getDistribuidorUsuarios());
+    }
 
     public void delete(final Integer idDistribuidor) {
         distribuidorRepository.deleteById(idDistribuidor);

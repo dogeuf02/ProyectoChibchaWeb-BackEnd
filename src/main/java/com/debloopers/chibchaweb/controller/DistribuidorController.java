@@ -11,14 +11,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -60,17 +53,27 @@ public class DistribuidorController {
 
     @Operation(summary = "Actualizar campos excepto el id")
     @PutMapping("/{idDistribuidor}")
-    public ResponseEntity<String> updateDistribuidor(
+    public ResponseEntity<Integer> updateDistribuidor(
             @PathVariable(name = "idDistribuidor") final Integer idDistribuidor,
-            @RequestBody @Valid final DistribuidorActualizarDTO distribuidorDTO) {
+            @RequestBody @Valid final DistribuidorDTO distribuidorDTO) {
         distribuidorService.update(idDistribuidor, distribuidorDTO);
-        return ResponseEntity.ok("Distributor successfully updated with ID: " + idDistribuidor);
+        return ResponseEntity.ok(idDistribuidor);
     }
 
     @Operation(summary = "Obtener los distribuidores con su correo y estado")
     @GetMapping("/obtenerDistribuidores")
     public ResponseEntity<List<DistribuidorConCorreoDTO>> getAllDistribuidoresConCorreo() {
         return ResponseEntity.ok(distribuidorService.findAllWithCorreo());
+    }
+
+    @PutMapping("gestionarSolicitudRegistro/{idDistribuidor}")
+    public ResponseEntity<String> cambiarEstadoDistribuidor(
+            @PathVariable Integer idDistribuidor,
+            @RequestParam boolean activar
+    ) {
+        distribuidorService.cambiarEstadoDistribuidor(idDistribuidor, activar);
+        String estado = activar ? "ACTIVO" : "INACTIVO";
+        return ResponseEntity.ok("Estado de los usuarios del distribuidor cambiado a: " + estado);
     }
 
     @DeleteMapping("/{idDistribuidor}")
