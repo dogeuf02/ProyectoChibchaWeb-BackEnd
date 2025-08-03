@@ -28,31 +28,20 @@ public class AuthService {
         Usuario usuario = usuarioRepository.findByCorreoUsuario(dto.getCorreo());
 
         if (usuario == null) {
-            return new LoginResponseDTO(false, "Unregistered email", null, null, null, null);
+            return new LoginResponseDTO(false, "Unregistered email", null);
         }
 
         if ("INACTIVO".equalsIgnoreCase(usuario.getEstado())) {
-            return new LoginResponseDTO(false, "The user is inactive.", null, null, null, null);
+            return new LoginResponseDTO(false, "The user is inactive.", null);
         }
 
         if ("PENDIENTE".equalsIgnoreCase(usuario.getEstado())) {
-            return new LoginResponseDTO(false, "Account pending from approval.", null, null, null, null);
+            return new LoginResponseDTO(false, "Account pending from approval.", null);
         }
 
         boolean coincide = passwordEncoder.matches(dto.getContrasena(), usuario.getContrasena());
         if (!coincide) {
-            return new LoginResponseDTO(false, "Incorrect password", null, null, null, null);
-        }
-
-        Integer idRelacionado = null;
-        if (usuario.getAdmin() != null) {
-            idRelacionado = usuario.getAdmin().getIdAdmin();
-        } else if (usuario.getCliente() != null) {
-            idRelacionado = usuario.getCliente().getIdCliente();
-        } else if (usuario.getEmpleado() != null) {
-            idRelacionado = usuario.getEmpleado().getIdEmpleado();
-        } else if (usuario.getDistribuidor() != null) {
-            idRelacionado = usuario.getDistribuidor().getIdDistribuidor();
+            return new LoginResponseDTO(false, "Incorrect password", null);
         }
 
         String token = jwtService.generateToken(usuario);
@@ -60,9 +49,6 @@ public class AuthService {
         return new LoginResponseDTO(
                 true,
                 "Login successful",
-                usuario.getRol(),
-                usuario.getIdUsuario(),
-                idRelacionado,
                 token
         );
     }

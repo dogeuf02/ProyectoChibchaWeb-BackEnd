@@ -2,14 +2,12 @@ package com.debloopers.chibchaweb.service;
 
 import com.debloopers.chibchaweb.entity.Usuario;
 import com.debloopers.chibchaweb.repository.UsuarioRepository;
+import com.debloopers.chibchaweb.security.UsuarioDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class UsuarioDetailsService implements UserDetailsService {
@@ -22,10 +20,6 @@ public class UsuarioDetailsService implements UserDetailsService {
         Usuario usuario = usuarioRepo.findOptionalByCorreoUsuario(correo)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found."));
 
-        return new org.springframework.security.core.userdetails.User(
-                usuario.getCorreoUsuario(),
-                usuario.getContrasena(),
-                List.of(new SimpleGrantedAuthority(usuario.getRol()))
-        );
+        return new UsuarioDetails(usuario);
     }
 }

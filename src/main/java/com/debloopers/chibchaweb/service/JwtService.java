@@ -22,21 +22,32 @@ public class JwtService {
     public String generateToken(Usuario usuario) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("rol", usuario.getRol());
+        claims.put("idUsuario", usuario.getIdUsuario());
+
+        Integer idRelacionado = null;
+        if (usuario.getAdmin() != null) {
+            idRelacionado = usuario.getAdmin().getIdAdmin();
+        } else if (usuario.getCliente() != null) {
+            idRelacionado = usuario.getCliente().getIdCliente();
+        } else if (usuario.getEmpleado() != null) {
+            idRelacionado = usuario.getEmpleado().getIdEmpleado();
+        } else if (usuario.getDistribuidor() != null) {
+            idRelacionado = usuario.getDistribuidor().getIdDistribuidor();
+        }
+
+        claims.put("idRelacionado", idRelacionado);
+
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(usuario.getCorreoUsuario()) // o ID
+                .setSubject(usuario.getCorreoUsuario())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public String extractUsername(String token) {
         return extractClaims(token).getSubject();
-    }
-
-    public String extractRol(String token) {
-        return extractClaims(token).get("rol", String.class);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {

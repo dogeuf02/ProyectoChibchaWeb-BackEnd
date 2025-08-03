@@ -31,12 +31,14 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/admin/**").hasAuthority("Administrador")
-                        .requestMatchers("/api/cliente/**").hasAuthority("Cliente")
-                        .requestMatchers("/api/empleado/**").hasAuthority("Empleado")
-                        .requestMatchers("/api/distribuidor/**").hasAuthority("Distribuidor")
-                        .anyRequest().authenticated()
+//                        .requestMatchers("/api/auth/**","/swagger-ui/**","/v3/api-docs/**","/proxy/**").permitAll()
+//                        .requestMatchers("/api/clienteDirecto/**").hasAnyAuthority("Cliente", "Administrador")
+//                        .requestMatchers("/api/empleado/**").hasAuthority("Empleado")
+//                        .requestMatchers("/api/distribuidor/**").hasAuthority("Distribuidor")
+//                        .requestMatchers("/api/**").hasAuthority("Administrador")
+//                        .anyRequest().authenticated()
+
+                          .anyRequest().permitAll()
                 )
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
