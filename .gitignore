@@ -24,6 +24,7 @@ application-local.properties
 .settings
 .springBeans
 .sts4-cache
+.properties
 
 ## NetBeans
 /nbproject/private/
