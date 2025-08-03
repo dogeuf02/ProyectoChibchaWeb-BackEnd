@@ -9,10 +9,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDate;
 
 
 @Entity
@@ -35,12 +34,6 @@ public class SolicitudDominio {
     private Integer idSolicitud;
 
     @Column(nullable = false)
-    private String nombreDominio;
-
-    @Column
-    private String estadoDominio;
-
-    @Column(nullable = false)
     private String estadoSolicitud;
 
     @Column(nullable = false)
@@ -58,10 +51,11 @@ public class SolicitudDominio {
     private Distribuidor distribuidor;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tld_id", nullable = false)
-    private Tld tld;
+    @JoinColumn(name = "dominio_id", nullable = false)
+    private Dominio dominio;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id")
     private Administrador admin;
+
 }

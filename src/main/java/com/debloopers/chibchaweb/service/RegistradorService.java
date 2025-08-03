@@ -6,9 +6,9 @@ import com.debloopers.chibchaweb.repository.RegistradorRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
 
 import java.util.List;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 
 @Service
 public class RegistradorService {
@@ -63,5 +63,4 @@ public class RegistradorService {
         registrador.setCorreoRegistrador(registradorDTO.getCorreoRegistrador());
         return registrador;
     }
-
 }

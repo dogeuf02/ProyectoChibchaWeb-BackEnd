@@ -27,6 +27,6 @@ public class ClienteDirectoDTO {
 
     private LocalDate fechaNacimientoCliente;
 
-    private Integer plan;
+    private Integer planCliente;
 
 }

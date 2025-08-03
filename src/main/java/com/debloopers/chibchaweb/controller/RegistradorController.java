@@ -62,5 +62,4 @@ public class RegistradorController {
         registradorService.delete(idRegistrador);
         return ResponseEntity.noContent().build();
     }
-
 }

@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import java.util.HashSet;
@@ -45,9 +44,10 @@ public class Empleado {
     @OneToMany(mappedBy = "empleado")
     private Set<Usuario> empleadoUsuarios = new HashSet<>();
 
-    @OneToMany(mappedBy = "empleado")
-    private Set<Ticket> empleadoTickets = new HashSet<>();
+    @OneToMany(mappedBy = "empleadoRealizador")
+    private Set<HistorialTicket> empleadoRealizadorHistorialTickets = new HashSet<>();
 
-    @ManyToMany(mappedBy = "historialTicketUsuarioEmpleadoes")
-    private Set<Ticket> historialTicketUsuarioTickets = new HashSet<>();
+    @OneToMany(mappedBy = "empleadoReceptor")
+    private Set<HistorialTicket> empleadoReceptorHistorialTickets = new HashSet<>();
+
 }

@@ -54,7 +54,7 @@ public class UsuarioController {
             @PathVariable(name = "correoUsuario") final String correoUsuario,
             @RequestBody @Valid final UsuarioActualizarDTO usuarioDTO) {
 
-        usuarioService.update(correoUsuario, usuarioDTO);
+        usuarioService.updateByCorreo(correoUsuario, usuarioDTO);
         return ResponseEntity.ok(correoUsuario);
     }
 
@@ -75,5 +75,4 @@ public class UsuarioController {
         usuarioService.delete(idUsuario);
         return ResponseEntity.noContent().build();
     }
-
 }

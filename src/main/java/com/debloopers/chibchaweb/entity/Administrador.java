@@ -48,4 +48,7 @@ public class Administrador {
 
     @OneToMany(mappedBy = "admin")
     private Set<SolicitudDominio> adminSolicitudDominios = new HashSet<>();
+
+    @OneToMany(mappedBy = "admin")
+    private Set<SolicitudTraslado> adminSolicitudTrasladoes = new HashSet<>();
 }

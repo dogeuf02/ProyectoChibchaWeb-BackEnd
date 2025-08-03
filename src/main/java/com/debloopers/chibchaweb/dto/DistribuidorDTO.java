@@ -28,4 +28,6 @@ public class DistribuidorDTO {
     @Size(max = 20)
     private String nombreTipoDoc;
 
+    private Integer categoria;
+
 }

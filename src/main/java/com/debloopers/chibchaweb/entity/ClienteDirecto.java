@@ -49,16 +49,28 @@ public class ClienteDirecto {
     private LocalDate fechaNacimientoCliente;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "plan_id")
-    private Plan plan;
+    @JoinColumn(name = "plan_cliente_id")
+    private PlanCliente planCliente;
 
     @OneToMany(mappedBy = "cliente")
     private Set<Usuario> clienteUsuarios = new HashSet<>();
 
     @OneToMany(mappedBy = "cliente")
+    private Set<Ticket> clienteTickets = new HashSet<>();
+
+    @OneToMany(mappedBy = "cliente")
     private Set<SolicitudDominio> clienteSolicitudDominios = new HashSet<>();
 
     @OneToMany(mappedBy = "cliente")
-    private Set<Ticket> clienteTickets = new HashSet<>();
+    private Set<MedioPago> clienteMedioPagoes = new HashSet<>();
+
+    @OneToMany(mappedBy = "cliente")
+    private Set<PlanAdquirido> clientePlanAdquiridoes = new HashSet<>();
+
+    @OneToMany(mappedBy = "cliente")
+    private Set<PerteneceDominio> clientePerteneceDominios = new HashSet<>();
+
+    @OneToMany(mappedBy = "cliente")
+    private Set<SolicitudTraslado> clienteSolicitudTrasladoes = new HashSet<>();
 
 }

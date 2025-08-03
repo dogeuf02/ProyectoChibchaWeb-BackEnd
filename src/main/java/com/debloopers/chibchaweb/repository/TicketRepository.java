@@ -16,8 +16,6 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 
     Ticket findFirstByEmpleado(Empleado empleado);
 
-    Ticket findFirstByHistorialTicketUsuarioEmpleadoes(Empleado empleado);
-
     List<Ticket> findAllByHistorialTicketUsuarioEmpleadoes(Empleado empleado);
 
     boolean existsByIdTicketIgnoreCase(String idTicket);

@@ -5,6 +5,7 @@ import com.debloopers.chibchaweb.dto.*;
 import com.debloopers.chibchaweb.repository.*;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,22 +20,37 @@ public class DistribuidorService {
 
     private final DistribuidorRepository distribuidorRepository;
     private final TipoDocumentoEmpRepository tipoDocumentoEmpRepository;
+    private final CategoriaDistribuidorRepository categoriaDistribuidorRepository;
     private final UsuarioRepository usuarioRepository;
-    private final SolicitudDominioRepository solicitudDominioRepository;
     private final TicketRepository ticketRepository;
+    private final SolicitudDominioRepository solicitudDominioRepository;
+    private final MedioPagoRepository medioPagoRepository;
+    private final ComisionRepository comisionRepository;
+    private final PerteneceDominioRepository perteneceDominioRepository;
+    private final SolicitudTrasladoRepository solicitudTrasladoRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     public DistribuidorService(final DistribuidorRepository distribuidorRepository,
                                final TipoDocumentoEmpRepository tipoDocumentoEmpRepository,
+                               final CategoriaDistribuidorRepository categoriaDistribuidorRepository,
                                final UsuarioRepository usuarioRepository, final TicketRepository ticketRepository,
-                               final SolicitudDominioRepository solicitudDominioRepository) {
+                               final SolicitudDominioRepository solicitudDominioRepository,
+                               final MedioPagoRepository medioPagoRepository,
+                               final ComisionRepository comisionRepository,
+                               final PerteneceDominioRepository perteneceDominioRepository,
+                               final SolicitudTrasladoRepository solicitudTrasladoRepository) {
         this.distribuidorRepository = distribuidorRepository;
         this.tipoDocumentoEmpRepository = tipoDocumentoEmpRepository;
+        this.categoriaDistribuidorRepository = categoriaDistribuidorRepository;
         this.usuarioRepository = usuarioRepository;
         this.ticketRepository = ticketRepository;
         this.solicitudDominioRepository = solicitudDominioRepository;
+        this.medioPagoRepository = medioPagoRepository;
+        this.comisionRepository = comisionRepository;
+        this.perteneceDominioRepository = perteneceDominioRepository;
+        this.solicitudTrasladoRepository = solicitudTrasladoRepository;
     }
 
     public List<DistribuidorDTO> findAll() {
@@ -139,23 +155,27 @@ public class DistribuidorService {
     }
 
     private DistribuidorDTO mapToDTO(final Distribuidor distribuidor,
-            final DistribuidorDTO distribuidorDTO) {
+                                     final DistribuidorDTO distribuidorDTO) {
         distribuidorDTO.setIdDistribuidor(distribuidor.getIdDistribuidor());
         distribuidorDTO.setNumeroDocEmpresa(distribuidor.getNumeroDocEmpresa());
         distribuidorDTO.setNombreEmpresa(distribuidor.getNombreEmpresa());
         distribuidorDTO.setDireccionEmpresa(distribuidor.getDireccionEmpresa());
         distribuidorDTO.setNombreTipoDoc(distribuidor.getNombreTipoDoc() == null ? null : distribuidor.getNombreTipoDoc().getNombreTipoDoc());
+        distribuidorDTO.setCategoria(distribuidor.getCategoria() == null ? null : distribuidor.getCategoria().getIdCategoria());
         return distribuidorDTO;
     }
 
     private Distribuidor mapToEntity(final DistribuidorDTO distribuidorDTO,
-            final Distribuidor distribuidor) {
+                                     final Distribuidor distribuidor) {
         distribuidor.setNumeroDocEmpresa(distribuidorDTO.getNumeroDocEmpresa());
         distribuidor.setNombreEmpresa(distribuidorDTO.getNombreEmpresa());
         distribuidor.setDireccionEmpresa(distribuidorDTO.getDireccionEmpresa());
         final TipoDocumentoEmp nombreTipoDoc = distribuidorDTO.getNombreTipoDoc() == null ? null : tipoDocumentoEmpRepository.findById(distribuidorDTO.getNombreTipoDoc())
                 .orElseThrow(() -> new NotFoundException("nombreTipoDoc not found"));
         distribuidor.setNombreTipoDoc(nombreTipoDoc);
+        final CategoriaDistribuidor categoria = distribuidorDTO.getCategoria() == null ? null : categoriaDistribuidorRepository.findById(distribuidorDTO.getCategoria())
+                .orElseThrow(() -> new NotFoundException("categoria not found"));
+        distribuidor.setCategoria(categoria);
         return distribuidor;
     }
 
@@ -179,6 +199,30 @@ public class DistribuidorService {
         if (distribuidorSolicitudDominio != null) {
             referencedWarning.setKey("distribuidor.solicitudDominio.distribuidor.referenced");
             referencedWarning.addParam(distribuidorSolicitudDominio.getIdSolicitud());
+            return referencedWarning;
+        }
+        final MedioPago distribuidorMedioPago = medioPagoRepository.findFirstByDistribuidor(distribuidor);
+        if (distribuidorMedioPago != null) {
+            referencedWarning.setKey("distribuidor.medioPago.distribuidor.referenced");
+            referencedWarning.addParam(distribuidorMedioPago.getIdMedioPago());
+            return referencedWarning;
+        }
+        final Comision distribuidorComision = comisionRepository.findFirstByDistribuidor(distribuidor);
+        if (distribuidorComision != null) {
+            referencedWarning.setKey("distribuidor.comision.distribuidor.referenced");
+            referencedWarning.addParam(distribuidorComision.getIdComision());
+            return referencedWarning;
+        }
+        final PerteneceDominio distribuidorPerteneceDominio = perteneceDominioRepository.findFirstByDistribuidor(distribuidor);
+        if (distribuidorPerteneceDominio != null) {
+            referencedWarning.setKey("distribuidor.perteneceDominio.distribuidor.referenced");
+            referencedWarning.addParam(distribuidorPerteneceDominio.getIdPertenece());
+            return referencedWarning;
+        }
+        final SolicitudTraslado distribuidorSolicitudTraslado = solicitudTrasladoRepository.findFirstByDistribuidor(distribuidor);
+        if (distribuidorSolicitudTraslado != null) {
+            referencedWarning.setKey("distribuidor.solicitudTraslado.distribuidor.referenced");
+            referencedWarning.addParam(distribuidorSolicitudTraslado.getIdSolicitudTraslado());
             return referencedWarning;
         }
         return null;

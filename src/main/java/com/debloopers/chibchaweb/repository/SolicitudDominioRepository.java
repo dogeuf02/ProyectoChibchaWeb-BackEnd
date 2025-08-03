@@ -13,6 +13,8 @@ public interface SolicitudDominioRepository extends JpaRepository<SolicitudDomin
 
     SolicitudDominio findFirstByTld(Tld tld);
 
+    SolicitudDominio findFirstByDominio(Dominio dominio);
+
     SolicitudDominio findFirstByAdmin(Administrador administrador);
 
 }

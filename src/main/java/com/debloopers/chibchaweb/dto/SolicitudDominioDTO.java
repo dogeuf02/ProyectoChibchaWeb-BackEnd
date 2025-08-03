@@ -2,23 +2,16 @@ package com.debloopers.chibchaweb.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 
 @Getter
 @Setter
 public class SolicitudDominioDTO {
 
     private Integer idSolicitud;
-
-    @NotNull
-    @Size(max = 255)
-    private String nombreDominio;
-
-    @Size(max = 255)
-    private String estadoDominio;
 
     @NotNull
     @Size(max = 255)
@@ -34,8 +27,8 @@ public class SolicitudDominioDTO {
     private Integer distribuidor;
 
     @NotNull
-    @Size(max = 63)
-    private String tld;
+    private Integer dominio;
 
     private Integer admin;
+
 }
