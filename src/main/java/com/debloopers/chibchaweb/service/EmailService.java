@@ -29,7 +29,7 @@ public class EmailService {
         <body>
             <h2>Bienvenido a ChibchaWeb</h2>
             <p>Gracias por registrarte. Para comenzar a disfrutar de nuestros servicios, necesitas activar tu cuenta.</p>
-            <p>Haz clic <a href='http://localhost:8080/api/auth/activar?token=%s'>aquí</a> para verificar tu correo y activar tu cuenta.</p>
+            <p>Haz clic <a href='http://localhost:5173/activate?token=%s'>aquí</a> para verificar tu correo y activar tu cuenta.</p>
             <p>Si no has solicitado esta cuenta, puedes ignorar este mensaje.</p>
             <br/>
             <p>¡Gracias por confiar en nosotros!</p>
