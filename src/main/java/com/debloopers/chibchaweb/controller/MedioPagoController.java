@@ -4,6 +4,7 @@ import com.debloopers.chibchaweb.dto.MedioPagoDTO;
 import com.debloopers.chibchaweb.service.MedioPagoService;
 import com.debloopers.chibchaweb.util.ReferencedException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -39,6 +40,18 @@ public class MedioPagoController {
     public ResponseEntity<MedioPagoDTO> getMedioPago(
             @PathVariable(name = "idMedioPago") final Integer idMedioPago) {
         return ResponseEntity.ok(medioPagoService.get(idMedioPago));
+    }
+
+    @Operation(summary = "Obtener medios de pago de un cliente")
+    @GetMapping("/cliente/{idCliente}")
+    public ResponseEntity<List<MedioPagoDTO>> getMediosPorCliente(@PathVariable Integer idCliente) {
+        return ResponseEntity.ok(medioPagoService.findAllByCliente(idCliente));
+    }
+
+    @Operation(summary = "Obtener medios de pago de un distribuidor")
+    @GetMapping("/distribuidor/{idDistribuidor}")
+    public ResponseEntity<List<MedioPagoDTO>> getMediosPorDistribuidor(@PathVariable Integer idDistribuidor) {
+        return ResponseEntity.ok(medioPagoService.findAllByDistribuidor(idDistribuidor));
     }
 
     @PostMapping

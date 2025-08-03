@@ -6,6 +6,8 @@ import com.debloopers.chibchaweb.entity.Distribuidor;
 import com.debloopers.chibchaweb.entity.MedioPago;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface MedioPagoRepository extends JpaRepository<MedioPago, Integer> {
 
     MedioPago findFirstByCliente(ClienteDirecto clienteDirecto);
@@ -13,5 +15,9 @@ public interface MedioPagoRepository extends JpaRepository<MedioPago, Integer> {
     MedioPago findFirstByDistribuidor(Distribuidor distribuidor);
 
     MedioPago findFirstByBanco(Banco banco);
+
+    List<MedioPago> findByCliente(ClienteDirecto cliente);
+
+    List<MedioPago> findByDistribuidor(Distribuidor distribuidor);
 
 }

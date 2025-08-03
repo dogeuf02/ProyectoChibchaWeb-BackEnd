@@ -47,6 +47,28 @@ public class MedioPagoService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    public List<MedioPagoDTO> findAllByCliente(Integer idCliente) {
+        ClienteDirecto cliente = clienteDirectoRepository.findById(idCliente)
+                .orElseThrow(() -> new NotFoundException("cliente not found"));
+
+        List<MedioPago> medios = medioPagoRepository.findByCliente(cliente);
+
+        return medios.stream()
+                .map(medio -> mapToDTO(medio, new MedioPagoDTO()))
+                .toList();
+    }
+
+    public List<MedioPagoDTO> findAllByDistribuidor(Integer idDistribuidor) {
+        Distribuidor distribuidor = distribuidorRepository.findById(idDistribuidor)
+                .orElseThrow(() -> new NotFoundException("distribuidor not found"));
+
+        List<MedioPago> medios = medioPagoRepository.findByDistribuidor(distribuidor);
+
+        return medios.stream()
+                .map(medio -> mapToDTO(medio, new MedioPagoDTO()))
+                .toList();
+    }
+
     public Integer create(final MedioPagoDTO medioPagoDTO) {
         final MedioPago medioPago = new MedioPago();
         mapToEntity(medioPagoDTO, medioPago);
