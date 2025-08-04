@@ -1,9 +1,11 @@
 package com.debloopers.chibchaweb.controller;
 
 import com.debloopers.chibchaweb.dto.PlanClienteDTO;
+import com.debloopers.chibchaweb.dto.PrecioPlanInfoDTO;
 import com.debloopers.chibchaweb.service.PlanClienteService;
 import com.debloopers.chibchaweb.util.ReferencedException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -39,6 +41,12 @@ public class PlanClienteController {
     public ResponseEntity<PlanClienteDTO> getPlanCliente(
             @PathVariable(name = "idPlanCliente") final Integer idPlanCliente) {
         return ResponseEntity.ok(planClienteService.get(idPlanCliente));
+    }
+
+    @Operation(summary = "Obtener todos los planes con sus intervalos y precios")
+    @GetMapping("/infoPlanes")
+    public ResponseEntity<List<PrecioPlanInfoDTO>> getAllPrecioPlansFull() {
+        return ResponseEntity.ok(planClienteService.findAllPlanCliente());
     }
 
     @PostMapping
