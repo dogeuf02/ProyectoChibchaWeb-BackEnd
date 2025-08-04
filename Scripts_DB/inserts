@@ -1,26 +1,16 @@
+-- inserts basicos --
+/*insertar tipo de documentos para distribuidores*/
 INSERT INTO TIPO_DOCUMENTO_EMP (NOMBRE_TIPO_DOC) VALUES
 ('NIT'),('RUC'),('CUIT'),('RIF'),('CPF_CNPJ'),('TIN'),('PASSPORT'),('BUSINESS_ID'),('OTHER');
 
+/*insertar registradores*/
 INSERT INTO REGISTRADOR (NOMBRE_REGISTRADOR, CORREO_registrador)
 VALUES 
 ('DonDominio', 'soporte@dondominio.com'),
 ('Namecheap', 'contacto@namecheap.com'),
 ('GoDaddy', 'admin@godaddy.com');
 
-
-
-INSERT INTO ADMINISTRADOR (NOMBRE_ADMIN, APELLIDO_ADMIN) VALUES
-('William', 'Forero'),
-('Vivian', 'Gonzales'),
-('David', 'Muñoz');
-
-INSERT INTO USUARIO (ID_ADMIN, CORREO_USUARIO, CONTRASENA, ROL, ESTADO)
-VALUES 
-(1, 'william.forero@admin.com', 'admin123', 'Administrador', 'ACTIVO'),
-(2, 'vivian.gonzales@admin.com', 'admin123', 'Administrador', 'ACTIVO'),
-(3, 'david.munoz@admin.com', 'admin123', 'Administrador', 'ACTIVO');
-
-
+/*insertar los planes de cliente*/
 INSERT INTO PLAN_CLIENTE (
     NOMBRE_PLAN_CLIENTE, NUMERO_WEBS, NUMERO_BASE_DATOS, ALMACENAMIENTO_NVME,
     NUMERO_CUENTAS_CORREO, CREADOR_WEB, NUMERO_CERTIFICADO_SSL_HTTPS, EMAIL_MARKETING
@@ -30,11 +20,32 @@ VALUES
 ('Chibcha-Plata', 5, 2, 50, 20, TRUE, 1, FALSE),
 ('Chibcha-Oro', 1, 1, 20, 5, FALSE, 1, FALSE);
 
+/*insertar categoria distribuidor*/
 INSERT INTO CATEGORIA_DISTRIBUIDOR (NOMBRE_CATEGORIA, PRECIO_CATEGORIA)
 VALUES 
 ('BÁSICO', 500.00),
 ('PREMIUM', 2000.00);
 
+/* insert tld comercializados */
+INSERT INTO TLD (TLD, PRECIO_TLD)
+VALUES 
+('.com', 4.50),
+('.net', 4.00),
+('.org', 3.0);
+
+/*insertar usuarios-administradores*/
+INSERT INTO ADMINISTRADOR (NOMBRE_ADMIN, APELLIDO_ADMIN) VALUES
+('William', 'Forero'),
+('Vivian', 'Gonzales'),
+('David', 'Muñoz');
+
+INSERT INTO USUARIO (ADMIN_ID, CORREO_USUARIO, CONTRASENA, ROL, ESTADO)
+VALUES 
+(1, 'william.forero@admin.com', 'admin123', 'Administrador', 'ACTIVO'),
+(2, 'vivian.gonzales@admin.com', 'admin123', 'Administrador', 'ACTIVO'),
+(3, 'david.munoz@admin.com', 'admin123', 'Administrador', 'ACTIVO');
+
+/*inserts usuarios-empleado*/
 INSERT INTO EMPLEADO (NOMBRE_EMPLEADO, APELLIDO_EMPLEADO, CARGO_EMPLEADO) VALUES
 /*TECNICOS*/
 ('Carlos', 'Díaz', 'Tecnico nv 1'),('Luisa', 'Martínez', 'Tecnico nv 1'),
@@ -44,7 +55,7 @@ INSERT INTO EMPLEADO (NOMBRE_EMPLEADO, APELLIDO_EMPLEADO, CARGO_EMPLEADO) VALUES
 ('Juan', 'Ortega', 'Coordinador nv 1'),('Laura', 'Mejía', 'Coordinador nv 2'),
 ('Esteban', 'Salazar', 'Coordinador nv 3');
 
-INSERT INTO USUARIO (ID_EMPLEADO, CORREO_USUARIO, CONTRASENA, ROL, ESTADO)
+INSERT INTO USUARIO (EMPLEADO_ID, CORREO_USUARIO, CONTRASENA, ROL, ESTADO)
 VALUES 
 (1, 'carlos.diaz@empresa.com', 'empleado123', 'Empleado', 'ACTIVO'),        
 (2, 'luisa.martinez@empresa.com', 'empleado123', 'Empleado', 'ACTIVO'),     
@@ -54,71 +65,49 @@ VALUES
 (6, 'jorge.romero@empresa.com', 'empleado123', 'Empleado', 'ACTIVO'),       
 (7, 'juan.ortega@empresa.com', 'empleado123', 'Empleado', 'ACTIVO'),        
 (8, 'laura.mejia@empresa.com', 'empleado123', 'Empleado', 'ACTIVO'),        
-(9, 'esteban.salazar@empresa.com', 'empleado123', 'Empleado', 'ACTIVO');    
+(9, 'esteban.salazar@empresa.com', 'empleado123', 'Empleado', 'ACTIVO');
 
-
-INSERT INTO TLD (TLD, PRECIO_TLD)
-VALUES 
-('.com', 4.50),
-('.net', 4.00),
-('.org', 3.0);
-
-INSERT INTO CLIENTE_DIRECTO (
-   ID_PLAN_CLIENTE, NOMBRE_CLIENTE, APELLIDO_CLIENTE, TELEFONO, FECHA_NACIMIENTO_CLIENTE
-)
-VALUES 
-(1, 'Camila', 'Ramírez', '3014567890', '1992-07-15'),
-(2, 'Felipe', 'Castro', '3129876543', '1988-02-28');
-
-INSERT INTO USUARIO (ID_CLIENTE, CORREO_USUARIO, CONTRASENA, ROL, ESTADO)
-VALUES 
-(1, 'camila.ramirez@cliente.com', 'cliente123', 'Cliente', 'ACTIVO'),       
-(2, 'felipe.castro@cliente.com', 'cliente123', 'Cliente', 'ACTIVO');        
-
-
-INSERT INTO DISTRIBUIDOR (
-   NOMBRE_TIPO_DOC, NUMERO_DOC_EMPRESA, NOMBRE_EMPRESA, DIRECCION_EMPRESA, ID_CATEGORIA
-)
-VALUES 
-('RUC', '901111222', 'CloudNet', 'Calle 8 # 45-67, Cali', 1),
-('CUIT', '902333444', 'HostGlobal', 'Carrera 50 # 100-20, Barranquilla', 2);
-
-INSERT INTO USUARIO (ID_DISTRIBUIDOR, CORREO_USUARIO, CONTRASENA, ROL, ESTADO)
-VALUES 
-(1, 'contacto@cloudnet.com', 'dist123', 'Distribuidor', 'ACTIVO'),          
-(2, 'contacto@hostglobal.com', 'dist123', 'Distribuidor', 'ACTIVO');        
-
-
-INSERT INTO DOMINIO (TLD, NOMBRE_DOMINIO, PRECIO_DOMINIO, ESTADO)
-VALUES 
-('.com', 'tiendaonlinecamila', 45000, 'Reservado'),
-('.com', 'miempresaexpress', 50000, 'Disponible');
-
-INSERT INTO SOLICITUD_DOMINIO (
-   ID_CLIENTE, ID_DISTRIBUIDOR, ID_DOMINIO, ESTADO_SOLICITUD, FECHA_SOLICITUD
-)
-VALUES 
-(1, NULL, 1,'En Revisión', CURRENT_DATE),  
-(NULL, 1, 2,'En Revisión', CURRENT_DATE); 
-
-INSERT INTO PLAN_PAGO (INTERVALO_PAGO)
-VALUES ('Mensual'), ('Trimestral'), ('Anual');
-
-INSERT INTO PLAN_ADQUIRIDO (
-   ID_CLIENTE, ID_PLAN_CLIENTE, ID_PLAN_PAGO, ESTADO_PLAN, FECHA_COMPRA, FECHA_EXPIRACION, PRECIO_PLAN_ADQUIRIDO
-)
-VALUES 
-(1, 1, 1, 'Activo', CURRENT_DATE, CURRENT_DATE + INTERVAL '1 month', 120000);
-
+/*insertar bancos*/
 INSERT INTO BANCO (NOMBRE_BANCO)
-VALUES 
-('Bancolombia'), 
-('Davivienda'), 
-('Nequi');
+VALUES ('Bancolombia')
 
 
-INSERT INTO MEDIO_PAGO (
-   ID_CLIENTE, TIPO_MEDIO_PAGO, NOMBRE_TITULAR, NUMERO_TARJETA_CUENTA, ID_BANCO
-)
+/*insertar plan pago*/
+INSERT INTO PLAN_PAGO (INTERVALO_PAGO)
 VALUES 
-(1, 'Credito', 'Camila Ramírez', '4111111111111111', 1);
+('Mensual'),
+('Semestral'),
+('Anual');
+--- insert cliente directo ---
+/*insertar cliente*/
+INSERT INTO CLIENTE_DIRECTO (NOMBRE_CLIENTE,APELLIDO_CLIENTE,TELEFONO,FECHA_NACIMIENTO_CLIENTE) 
+VALUES ('Carlos','Ramírez','3001234567','1995-08-15');
+
+/*configurar usuario*/
+INSERT INTO USUARIO (CLIENTE_ID,CORREO_USUARIO,CONTRASENA,ROL,ESTADO) 
+VALUES (1,'carlos.ramirez@example.com','contrasena_segura_123','Cliente','ACTIVO');
+
+/* insertar medio de pago */
+INSERT INTO MEDIO_PAGO (CLIENTE_ID,TIPO_MEDIO_PAGO,NOMBRE_TITULAR,NUMERO_TARJETA_CUENTA,BANCO_ID) 
+VALUES (1,'Credito','Carlos Ramírez','1234567890123456',1);
+
+/*insert adquirir plan*/
+INSERT INTO PLAN_ADQUIRIDO (CLIENTE_ID,PLAN_CLIENTE_ID,PLAN_PAGO_ID,ESTADO_PLAN,FECHA_COMPRA,FECHA_EXPIRACION,
+PRECIO_PLAN_ADQUIRIDO)
+VALUES (1,1,1,'Activo','2025-08-03','2025-09-03',8.00);
+
+/*factura*/
+INSERT INTO FACTURA (PLAN_ADQUIRIDO_ID,MEDIO_PAGO_ID,TOTAL,ESTADO_PAGO)
+VALUES (1,1,8.00,'Pagado');
+
+/*dominio*/
+INSERT INTO DOMINIO (TLD_ID,NOMBRE_DOMINIO,PRECIO_DOMINIO,ESTADO)
+VALUES ('.com','carlosramirez',15.00,'Disponible');
+
+/*solicitar dominio */
+INSERT INTO SOLICITUD_DOMINIO (CLIENTE_ID,DOMINIO_ID,ADMIN_ID,FECHA_SOLICITUD)
+VALUES (1,1,1,'2025-08-03');
+
+/*pertenece dominio */
+INSERT INTO PERTENECE_DOMINIO (CLIENTE_ID,DOMINIO_ID)
+VALUES (1,1);
