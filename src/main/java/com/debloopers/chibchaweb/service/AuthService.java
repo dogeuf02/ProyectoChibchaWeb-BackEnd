@@ -1,5 +1,6 @@
 package com.debloopers.chibchaweb.service;
 
+import com.debloopers.chibchaweb.dto.ResponseDTO;
 import com.debloopers.chibchaweb.entity.Usuario;
 import com.debloopers.chibchaweb.dto.LoginRequestDTO;
 import com.debloopers.chibchaweb.dto.LoginResponseDTO;
@@ -16,26 +17,42 @@ public class AuthService {
 
     private final TokenVerificacionService tokenVerificacionService;
 
-    private final PasswordEncoder passwordEncoder;
-
     private final TokenListaNegraService tokenListaNegraService;
 
     private final JwtService jwtService;
+
+    private final PasswordEncoder passwordEncoder;
+
+    private final CaptchaService captchaService;
 
     public AuthService(final UsuarioRepository usuarioRepository,
                        final TokenVerificacionService tokenVerificacionService,
                        final PasswordEncoder passwordEncoder,
                        final TokenListaNegraService tokenListaNegraService,
-                       final JwtService jwtService) {
+                       final JwtService jwtService,
+                       final CaptchaService captchaService) {
         this.usuarioRepository = usuarioRepository;
         this.tokenVerificacionService = tokenVerificacionService;
         this.passwordEncoder = passwordEncoder;
         this.tokenListaNegraService = tokenListaNegraService;
         this.jwtService = jwtService;
+        this.captchaService = captchaService;
     }
 
 
     public LoginResponseDTO login(LoginRequestDTO dto) {
+
+        boolean captchaOk;
+        try {
+            captchaOk = captchaService.verifyCaptcha(dto.getCaptchaToken());
+        } catch (Exception recaptchaEx) {
+            return new LoginResponseDTO(false, "The captcha could not be verified. Please try again later.",null);
+        }
+
+        if (!captchaOk) {
+            return new LoginResponseDTO(false, "Invalid captcha. Please try again.",null);
+        }
+
         Usuario usuario = usuarioRepository.findByCorreoUsuario(dto.getCorreo());
 
         if (usuario == null) {

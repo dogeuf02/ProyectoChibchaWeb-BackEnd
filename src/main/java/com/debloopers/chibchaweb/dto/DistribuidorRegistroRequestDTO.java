@@ -36,4 +36,6 @@ public class DistribuidorRegistroRequestDTO {
     @Size(max = 20)
     private String nombreTipoDoc;
 
+    @NotNull(message = "Captcha token is required")
+    private String captchaToken;
 }

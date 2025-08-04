@@ -29,6 +29,8 @@ public class ClienteDirectoService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final CaptchaService captchaService;
+
 
     private final TokenVerificacionService tokenService;
 
@@ -44,6 +46,7 @@ public class ClienteDirectoService {
                                  final PerteneceDominioRepository perteneceDominioRepository,
                                  final SolicitudTrasladoRepository solicitudTrasladoRepository,
                                  final PasswordEncoder passwordEncoder,
+                                 final CaptchaService captchaService,
                                  final TokenVerificacionService tokenService,
                                  final EmailService emailService) {
         this.clienteDirectoRepository = clienteDirectoRepository;
@@ -56,6 +59,7 @@ public class ClienteDirectoService {
         this.perteneceDominioRepository = perteneceDominioRepository;
         this.solicitudTrasladoRepository = solicitudTrasladoRepository;
         this.passwordEncoder = passwordEncoder;
+        this.captchaService = captchaService;
         this.tokenService = tokenService;
         this.emailService = emailService;
     }
@@ -75,7 +79,20 @@ public class ClienteDirectoService {
 
     @Transactional
     public ResponseDTO create(ClienteDirectoRegistroRequestDTO dto) {
+
         try {
+
+            boolean captchaOk;
+            try {
+                captchaOk = captchaService.verifyCaptcha(dto.getCaptchaToken());
+            } catch (Exception recaptchaEx) {
+                return new ResponseDTO(false, "The captcha could not be verified. Please try again later.");
+            }
+
+            if (!captchaOk) {
+                return new ResponseDTO(false, "Invalid captcha. Please try again..");
+            }
+
             if (usuarioRepository.findByCorreoUsuario(dto.getCorreoCliente()) != null) {
                 return new ResponseDTO(false, "The email is already registered.");
             }

@@ -5,6 +5,7 @@ import com.debloopers.chibchaweb.dto.LoginResponseDTO;
 import com.debloopers.chibchaweb.service.AuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +19,13 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO dto) {
+    public ResponseEntity<LoginResponseDTO> login(
+            @RequestBody @Valid LoginRequestDTO dto) {
         LoginResponseDTO respuesta = authService.login(dto);
         if (!respuesta.isAutenticado()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(respuesta);
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(respuesta);
         }
         return ResponseEntity.ok(respuesta);
     }

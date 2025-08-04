@@ -35,4 +35,7 @@ public class ClienteDirectoRegistroRequestDTO {
     private String telefono;
 
     private LocalDate fechaNacimientoCliente;
+
+    @NotNull(message = "Captcha token is required")
+    private String captchaToken;
 }

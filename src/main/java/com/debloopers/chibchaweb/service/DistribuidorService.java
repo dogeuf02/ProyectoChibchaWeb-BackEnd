@@ -29,11 +29,11 @@ public class DistribuidorService {
     private final PerteneceDominioRepository perteneceDominioRepository;
     private final SolicitudTrasladoRepository solicitudTrasladoRepository;
 
-
     private final PasswordEncoder passwordEncoder;
 
-
     private final EmailService emailService;
+
+    private final CaptchaService captchaService;
 
     public DistribuidorService(final DistribuidorRepository distribuidorRepository,
                                final TipoDocumentoEmpRepository tipoDocumentoEmpRepository,
@@ -45,7 +45,8 @@ public class DistribuidorService {
                                final PerteneceDominioRepository perteneceDominioRepository,
                                final SolicitudTrasladoRepository solicitudTrasladoRepository,
                                final PasswordEncoder passwordEncoder,
-                               final EmailService emailService) {
+                               final EmailService emailService,
+                               final CaptchaService captchaService) {
         this.distribuidorRepository = distribuidorRepository;
         this.tipoDocumentoEmpRepository = tipoDocumentoEmpRepository;
         this.categoriaDistribuidorRepository = categoriaDistribuidorRepository;
@@ -58,6 +59,7 @@ public class DistribuidorService {
         this.solicitudTrasladoRepository = solicitudTrasladoRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
+        this.captchaService = captchaService;
     }
 
     public List<DistribuidorDTO> findAll() {
@@ -75,7 +77,20 @@ public class DistribuidorService {
 
     @Transactional
     public ResponseDTO create(DistribuidorRegistroRequestDTO dto) {
+
         try {
+
+            boolean captchaOk;
+            try {
+                captchaOk = captchaService.verifyCaptcha(dto.getCaptchaToken());
+            } catch (Exception recaptchaEx) {
+                return new ResponseDTO(false, "The captcha could not be verified. Please try again later.");
+            }
+
+            if (!captchaOk) {
+                return new ResponseDTO(false, "Invalid captcha. Please try again..");
+            }
+
             if (usuarioRepository.findByCorreoUsuario(dto.getCorreoDistrbuidor()) != null) {
                 return new ResponseDTO(false, "The email is already registered.");
             }
@@ -110,7 +125,6 @@ public class DistribuidorService {
             return new ResponseDTO(false, "Internal error creating the distributor.");
         }
     }
-
 
     @Transactional
     public void update(final Integer idDistribuidor, final DistribuidorDTO distribuidorDTO) {
