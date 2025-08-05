@@ -1,9 +1,7 @@
 package com.debloopers.chibchaweb.controller;
 
 import com.debloopers.chibchaweb.dto.HistorialTicketDTO;
-import com.debloopers.chibchaweb.entity.HistorialTicket;
 import com.debloopers.chibchaweb.service.HistorialTicketService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -39,13 +37,6 @@ public class HistorialTicketController {
     public ResponseEntity<HistorialTicketDTO> getHistorialTicket(
             @PathVariable(name = "idHistorialTicket") final Integer idHistorialTicket) {
         return ResponseEntity.ok(historialTicketService.get(idHistorialTicket));
-    }
-
-    @Operation(summary = "Obtener todo el historial de un ticket mediante su ID")
-    @GetMapping("/obtenerHistorial/{idTicket}")
-    public ResponseEntity<List<HistorialTicket>> obtenerPorTicket(@PathVariable String idTicket) {
-        List<HistorialTicket> historial = historialTicketService.obtenerHistorialPorIdTicket(idTicket);
-        return ResponseEntity.ok(historial);
     }
 
     @PostMapping

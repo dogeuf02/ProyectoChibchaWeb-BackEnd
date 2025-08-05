@@ -1,6 +1,7 @@
 package com.debloopers.chibchaweb.service;
 
 import com.debloopers.chibchaweb.dto.HistorialTicketDTO;
+import com.debloopers.chibchaweb.dto.TicketConHistorialDTO;
 import com.debloopers.chibchaweb.entity.Empleado;
 import com.debloopers.chibchaweb.entity.HistorialTicket;
 import com.debloopers.chibchaweb.entity.Ticket;
@@ -40,10 +41,6 @@ public class HistorialTicketService {
         return historialTicketRepository.findById(idHistorialTicket)
                 .map(historialTicket -> mapToDTO(historialTicket, new HistorialTicketDTO()))
                 .orElseThrow(NotFoundException::new);
-    }
-
-    public List<HistorialTicket> obtenerHistorialPorIdTicket(String idTicket) {
-        return historialTicketRepository.findByTicket_IdTicket(idTicket);
     }
 
     public Integer create(final HistorialTicketDTO historialTicketDTO) {

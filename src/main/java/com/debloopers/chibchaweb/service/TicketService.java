@@ -1,5 +1,7 @@
 package com.debloopers.chibchaweb.service;
 
+import com.debloopers.chibchaweb.dto.HistorialTicketDTO;
+import com.debloopers.chibchaweb.dto.TicketConHistorialDTO;
 import com.debloopers.chibchaweb.entity.*;
 import com.debloopers.chibchaweb.dto.TicketDTO;
 import com.debloopers.chibchaweb.repository.*;
@@ -41,6 +43,38 @@ public class TicketService {
         return ticketRepository.findById(idTicket)
                 .map(ticket -> mapToDTO(ticket, new TicketDTO()))
                 .orElseThrow(NotFoundException::new);
+    }
+
+    public TicketConHistorialDTO obtenerTicketConHistorial(String idTicket) {
+        Ticket ticket = ticketRepository.findById(idTicket)
+                .orElseThrow(() -> new NotFoundException("Ticket no encontrado"));
+
+        TicketConHistorialDTO dto = new TicketConHistorialDTO();
+        dto.setIdTicket(ticket.getIdTicket());
+        dto.setAsunto(ticket.getAsunto());
+        dto.setDescripcion(ticket.getDescripcion());
+        dto.setNivelComplejidad(ticket.getNivelComplejidad());
+        dto.setEstado(ticket.getEstado());
+        dto.setFechaCreacion(ticket.getFechaCreacion());
+        dto.setFechaCierre(ticket.getFechaCierre());
+        dto.setDistribuidor(ticket.getDistribuidor() != null ? ticket.getDistribuidor().getIdDistribuidor() : null);
+        dto.setCliente(ticket.getCliente() != null ? ticket.getCliente().getIdCliente() : null);
+
+        List<HistorialTicketDTO> historialDTOs = ticket.getTicketHistorialTickets().stream().map(h -> {
+            HistorialTicketDTO histDTO = new HistorialTicketDTO();
+            histDTO.setIdHistorialTicket(h.getIdHistorialTicket());
+            histDTO.setAccionTicket(h.getAccionTicket());
+            histDTO.setComentarios(h.getComentarios());
+            histDTO.setFechaAccion(h.getFechaAccion());
+            histDTO.setTicket(h.getTicket().getIdTicket());
+            histDTO.setEmpleadoRealizador(h.getEmpleadoRealizador() != null ? h.getEmpleadoRealizador().getIdEmpleado() : null);
+            histDTO.setEmpleadoReceptor(h.getEmpleadoReceptor() != null ? h.getEmpleadoReceptor().getIdEmpleado() : null);
+            return histDTO;
+        }).toList();
+
+        dto.setHistorial(historialDTOs);
+
+        return dto;
     }
 
     public String create(final TicketDTO ticketDTO) {
