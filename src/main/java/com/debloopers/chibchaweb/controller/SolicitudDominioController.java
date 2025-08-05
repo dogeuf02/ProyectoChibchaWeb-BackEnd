@@ -1,7 +1,9 @@
 package com.debloopers.chibchaweb.controller;
 
 import com.debloopers.chibchaweb.dto.SolicitudDominioDTO;
+import com.debloopers.chibchaweb.entity.SolicitudDominio;
 import com.debloopers.chibchaweb.service.SolicitudDominioService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -37,6 +39,12 @@ public class SolicitudDominioController {
     public ResponseEntity<SolicitudDominioDTO> getSolicitudDominio(
             @PathVariable(name = "idSolicitud") final Integer idSolicitud) {
         return ResponseEntity.ok(solicitudDominioService.get(idSolicitud));
+    }
+
+    @Operation(summary = "Obtener todas las solicitudes de dominio realizadas por un cliente")
+    @GetMapping("/cliente/{idCliente}")
+    public List<SolicitudDominioDTO> getSolicitudesPorCliente(@PathVariable Integer idCliente) {
+        return solicitudDominioService.obtenerSolicitudesPorCliente(idCliente);
     }
 
     @PostMapping

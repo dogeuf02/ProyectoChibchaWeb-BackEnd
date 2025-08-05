@@ -8,6 +8,7 @@ import com.debloopers.chibchaweb.repository.*;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -43,6 +44,15 @@ public class SolicitudDominioService {
                 .map(solicitudDominio -> mapToDTO(solicitudDominio, new SolicitudDominioDTO()))
                 .orElseThrow(NotFoundException::new);
     }
+
+    @Transactional
+    public List<SolicitudDominioDTO> obtenerSolicitudesPorCliente(Integer idCliente) {
+        List<SolicitudDominio> solicitudes = solicitudDominioRepository.findByCliente_IdCliente(idCliente);
+        return solicitudes.stream()
+                .map(s -> mapToDTO(s, new SolicitudDominioDTO()))
+                .toList();
+    }
+
 
     public Integer create(final SolicitudDominioDTO solicitudDominioDTO) {
         final SolicitudDominio solicitudDominio = new SolicitudDominio();

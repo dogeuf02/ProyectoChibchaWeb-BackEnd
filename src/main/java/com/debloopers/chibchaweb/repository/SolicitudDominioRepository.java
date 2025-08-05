@@ -3,6 +3,7 @@ package com.debloopers.chibchaweb.repository;
 
 import com.debloopers.chibchaweb.entity.*;
 import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
 
 public interface SolicitudDominioRepository extends JpaRepository<SolicitudDominio, Integer> {
@@ -14,5 +15,7 @@ public interface SolicitudDominioRepository extends JpaRepository<SolicitudDomin
     SolicitudDominio findFirstByDominio(Dominio dominio);
 
     SolicitudDominio findFirstByAdmin(Administrador administrador);
+
+    List<SolicitudDominio> findByCliente_IdCliente(Integer idCliente);
 
 }
