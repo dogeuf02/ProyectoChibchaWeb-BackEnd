@@ -1,5 +1,6 @@
 package com.debloopers.chibchaweb.service;
 
+import com.debloopers.chibchaweb.dto.DominioConNombreTldDTO;
 import com.debloopers.chibchaweb.dto.DominioDTO;
 import com.debloopers.chibchaweb.entity.Dominio;
 import com.debloopers.chibchaweb.entity.PerteneceDominio;
@@ -12,7 +13,11 @@ import com.debloopers.chibchaweb.repository.TldRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -51,6 +56,17 @@ public class DominioService {
         final Dominio dominio = new Dominio();
         mapToEntity(dominioDTO, dominio);
         return dominioRepository.save(dominio).getIdDominio();
+    }
+
+    public DominioDTO obtenerDominioPorDTO(DominioConNombreTldDTO dominioInfo) {
+        Dominio dominio = dominioRepository
+                .findByNombreDominioAndTld_Tld(
+                        dominioInfo.getNombreDominio(),
+                        dominioInfo.getTldId()
+                )
+                .orElseThrow(() -> new NotFoundException("Domain not found."));
+
+        return mapToDTO(dominio, new DominioDTO());
     }
 
     public void update(final Integer idDominio, final DominioDTO dominioDTO) {

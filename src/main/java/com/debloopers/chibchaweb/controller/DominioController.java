@@ -1,23 +1,19 @@
 package com.debloopers.chibchaweb.controller;
 
+import com.debloopers.chibchaweb.dto.DominioConNombreTldDTO;
 import com.debloopers.chibchaweb.dto.DominioDTO;
+import com.debloopers.chibchaweb.entity.Dominio;
 import com.debloopers.chibchaweb.service.DominioService;
 import com.debloopers.chibchaweb.util.ReferencedException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -41,6 +37,12 @@ public class DominioController {
         return ResponseEntity.ok(dominioService.get(idDominio));
     }
 
+    @Operation(summary = "Buscar dominio por nombre y tld")
+    @PostMapping("/buscar")
+    public ResponseEntity<DominioDTO> obtenerDominioPorDTO(@RequestBody DominioConNombreTldDTO dominioInfo) {
+        DominioDTO dto = dominioService.obtenerDominioPorDTO(dominioInfo);
+        return ResponseEntity.ok(dto);
+    }
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Integer> createDominio(@RequestBody @Valid final DominioDTO dominioDTO) {
