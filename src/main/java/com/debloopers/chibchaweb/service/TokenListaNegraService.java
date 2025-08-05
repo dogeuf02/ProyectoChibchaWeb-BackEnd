@@ -16,10 +16,6 @@ public class TokenListaNegraService {
     @Autowired
     private JwtService jwtService;
 
-    public boolean isTokenBlacklisted(String token) {
-        return redisTemplate.hasKey(token);
-    }
-
     public void invalidarToken(String token) {
         Date expiration = jwtService.extractExpiration(token);
         long ttl = expiration.getTime() - System.currentTimeMillis();

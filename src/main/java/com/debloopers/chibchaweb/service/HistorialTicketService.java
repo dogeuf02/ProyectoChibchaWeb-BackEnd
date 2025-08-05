@@ -1,6 +1,7 @@
 package com.debloopers.chibchaweb.service;
 
 import com.debloopers.chibchaweb.dto.HistorialTicketDTO;
+import com.debloopers.chibchaweb.dto.TicketConHistorialDTO;
 import com.debloopers.chibchaweb.entity.Empleado;
 import com.debloopers.chibchaweb.entity.HistorialTicket;
 import com.debloopers.chibchaweb.entity.Ticket;
