@@ -12,6 +12,7 @@ import java.util.List;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -45,6 +46,7 @@ public class TicketService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    @Transactional
     public TicketConHistorialDTO obtenerTicketConHistorial(String idTicket) {
         Ticket ticket = ticketRepository.findById(idTicket)
                 .orElseThrow(() -> new NotFoundException("Ticket no encontrado"));
