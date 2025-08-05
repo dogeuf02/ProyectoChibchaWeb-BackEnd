@@ -4,6 +4,7 @@ import com.debloopers.chibchaweb.dto.PerteneceDominioDTO;
 import com.debloopers.chibchaweb.service.PerteneceDominioService;
 import com.debloopers.chibchaweb.util.ReferencedException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -39,6 +40,18 @@ public class PerteneceDominioController {
     public ResponseEntity<PerteneceDominioDTO> getPerteneceDominio(
             @PathVariable(name = "idPertenece") final Integer idPertenece) {
         return ResponseEntity.ok(perteneceDominioService.get(idPertenece));
+    }
+
+    @Operation(summary = "Obtener registros por cliente")
+    @GetMapping("/cliente/{idCliente}")
+    public List<PerteneceDominioDTO> obtenerPorIdCliente(@PathVariable Integer idCliente) {
+        return perteneceDominioService.obtenerPorIdCliente(idCliente);
+    }
+
+    @Operation(summary = "Obtener registros por distribuidor")
+    @GetMapping("/distribuidor/{idDistribuidor}")
+    public List<PerteneceDominioDTO> obtenerPorIdDistribuidor(@PathVariable Integer idDistribuidor) {
+        return perteneceDominioService.obtenerPorIdDistribuidor(idDistribuidor);
     }
 
     @PostMapping

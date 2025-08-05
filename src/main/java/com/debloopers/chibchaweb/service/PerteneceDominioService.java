@@ -46,6 +46,20 @@ public class PerteneceDominioService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    public List<PerteneceDominioDTO> obtenerPorIdCliente(Integer idCliente) {
+        List<PerteneceDominio> registros = perteneceDominioRepository.findByCliente_IdCliente(idCliente);
+        return registros.stream()
+                .map(p -> mapToDTO(p, new PerteneceDominioDTO()))
+                .toList();
+    }
+
+    public List<PerteneceDominioDTO> obtenerPorIdDistribuidor(Integer idDistribuidor) {
+        List<PerteneceDominio> registros = perteneceDominioRepository.findByDistribuidor_IdDistribuidor(idDistribuidor);
+        return registros.stream()
+                .map(p -> mapToDTO(p, new PerteneceDominioDTO()))
+                .toList();
+    }
+
     public Integer create(final PerteneceDominioDTO perteneceDominioDTO) {
         final PerteneceDominio perteneceDominio = new PerteneceDominio();
         mapToEntity(perteneceDominioDTO, perteneceDominio);
