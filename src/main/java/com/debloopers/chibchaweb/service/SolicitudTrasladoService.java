@@ -45,6 +45,20 @@ public class SolicitudTrasladoService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    public List<SolicitudTrasladoDTO> obtenerPorIdCliente(Integer idCliente) {
+        List<SolicitudTraslado> solicitudes = solicitudTrasladoRepository.findByCliente_IdCliente(idCliente);
+        return solicitudes.stream()
+                .map(s -> mapToDTO(s, new SolicitudTrasladoDTO()))
+                .toList();
+    }
+
+    public List<SolicitudTrasladoDTO> obtenerPorIdDistribuidor(Integer idDistribuidor) {
+        List<SolicitudTraslado> solicitudes = solicitudTrasladoRepository.findByDistribuidor_IdDistribuidor(idDistribuidor);
+        return solicitudes.stream()
+                .map(s -> mapToDTO(s, new SolicitudTrasladoDTO()))
+                .toList();
+    }
+
     public Integer create(final SolicitudTrasladoDTO solicitudTrasladoDTO) {
         final SolicitudTraslado solicitudTraslado = new SolicitudTraslado();
         mapToEntity(solicitudTrasladoDTO, solicitudTraslado);
