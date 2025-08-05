@@ -90,10 +90,6 @@ public class TicketService {
         return ticket;
     }
 
-    public boolean idTicketExists(final String idTicket) {
-        return ticketRepository.existsByIdTicketIgnoreCase(idTicket);
-    }
-
     public ReferencedWarning getReferencedWarning(final String idTicket) {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final Ticket ticket = ticketRepository.findById(idTicket)

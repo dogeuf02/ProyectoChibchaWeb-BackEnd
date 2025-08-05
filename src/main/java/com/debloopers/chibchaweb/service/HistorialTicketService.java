@@ -42,6 +42,10 @@ public class HistorialTicketService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    public List<HistorialTicket> obtenerHistorialPorIdTicket(String idTicket) {
+        return historialTicketRepository.findByTicket_IdTicket(idTicket);
+    }
+
     public Integer create(final HistorialTicketDTO historialTicketDTO) {
         final HistorialTicket historialTicket = new HistorialTicket();
         mapToEntity(historialTicketDTO, historialTicket);
