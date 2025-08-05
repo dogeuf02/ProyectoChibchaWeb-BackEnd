@@ -43,8 +43,8 @@ public class TicketController {
 
     @Operation(summary = "Obtener todo el historial de un ticket mediante su ID")
     @GetMapping("/obtenerHistorial/{idTicket}")
-    public ResponseEntity<TicketConHistorialDTO> obtenerTicketConHistorial(@PathVariable String id) {
-        return ResponseEntity.ok(ticketService.obtenerTicketConHistorial(id));
+    public ResponseEntity<TicketConHistorialDTO> obtenerTicketConHistorial(@PathVariable String idTicket) {
+        return ResponseEntity.ok(ticketService.obtenerTicketConHistorial(idTicket));
     }
 
     @PostMapping
