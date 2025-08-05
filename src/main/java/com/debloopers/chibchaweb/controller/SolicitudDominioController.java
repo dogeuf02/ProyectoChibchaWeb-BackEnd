@@ -47,6 +47,12 @@ public class SolicitudDominioController {
         return solicitudDominioService.obtenerSolicitudesPorCliente(idCliente);
     }
 
+    @Operation(summary = "Obtener todas las solicitudes de dominio realizadas por un distribuidor")
+    @GetMapping("/distribuidor/{idDistribuidor}")
+    public List<SolicitudDominioDTO> getSolicitudesPorDistribuidor(@PathVariable Integer idDistribuidor) {
+        return solicitudDominioService.obtenerSolicitudesPorDistribuidor(idDistribuidor);
+    }
+
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Integer> createSolicitudDominio(

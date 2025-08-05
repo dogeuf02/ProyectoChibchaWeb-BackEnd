@@ -18,4 +18,6 @@ public interface SolicitudDominioRepository extends JpaRepository<SolicitudDomin
 
     List<SolicitudDominio> findByCliente_IdCliente(Integer idCliente);
 
+    List<SolicitudDominio> findByDistribuidor_IdDistribuidor(Integer idDistribuidor);
+
 }

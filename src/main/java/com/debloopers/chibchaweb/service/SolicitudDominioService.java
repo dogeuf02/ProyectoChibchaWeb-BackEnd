@@ -53,6 +53,13 @@ public class SolicitudDominioService {
                 .toList();
     }
 
+    @Transactional
+    public List<SolicitudDominioDTO> obtenerSolicitudesPorDistribuidor(Integer idDistribuidor) {
+        List<SolicitudDominio> solicitudes = solicitudDominioRepository.findByDistribuidor_IdDistribuidor(idDistribuidor);
+        return solicitudes.stream()
+                .map(s -> mapToDTO(s, new SolicitudDominioDTO()))
+                .toList();
+    }
 
     public Integer create(final SolicitudDominioDTO solicitudDominioDTO) {
         final SolicitudDominio solicitudDominio = new SolicitudDominio();
