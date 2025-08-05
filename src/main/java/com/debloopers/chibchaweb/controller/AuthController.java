@@ -2,14 +2,20 @@ package com.debloopers.chibchaweb.controller;
 
 import com.debloopers.chibchaweb.dto.LoginRequestDTO;
 import com.debloopers.chibchaweb.dto.LoginResponseDTO;
+import com.debloopers.chibchaweb.dto.RecuperarContrasenaDTO;
+import com.debloopers.chibchaweb.dto.ResponseDTO;
 import com.debloopers.chibchaweb.service.AuthService;
 
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -38,6 +44,12 @@ public class AuthController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @PostMapping("/recuperarContrasena")
+    public ResponseEntity <ResponseDTO> recuperarContraseña(@RequestBody RecuperarContrasenaDTO recuperarContrasenaDTO) throws MessagingException, IOException {
+        ResponseDTO respuesta = authService.recuperarContrasena(recuperarContrasenaDTO);
+        return ResponseEntity.ok(respuesta);
     }
 
     @GetMapping("/activar")

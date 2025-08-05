@@ -1,10 +1,9 @@
 package com.debloopers.chibchaweb.service;
 
 import com.debloopers.chibchaweb.dto.PlanClienteDTO;
-import com.debloopers.chibchaweb.entity.ClienteDirecto;
-import com.debloopers.chibchaweb.entity.PlanAdquirido;
-import com.debloopers.chibchaweb.entity.PlanCliente;
-import com.debloopers.chibchaweb.entity.PrecioPlan;
+import com.debloopers.chibchaweb.dto.PlanPagoDTO;
+import com.debloopers.chibchaweb.dto.PrecioPlanInfoDTO;
+import com.debloopers.chibchaweb.entity.*;
 import com.debloopers.chibchaweb.repository.ClienteDirectoRepository;
 import com.debloopers.chibchaweb.repository.PlanAdquiridoRepository;
 import com.debloopers.chibchaweb.repository.PlanClienteRepository;
@@ -16,6 +15,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -47,6 +47,41 @@ public class PlanClienteService {
         return planClienteRepository.findById(idPlanCliente)
                 .map(planCliente -> mapToDTO(planCliente, new PlanClienteDTO()))
                 .orElseThrow(NotFoundException::new);
+    }
+
+    @Transactional
+    public List<PrecioPlanInfoDTO> findAllPlanCliente() {
+        return precioPlanRepository.findAll(Sort.by("id"))
+                .stream()
+                .map(this::mapToPrecioPlanFullDTO)
+                .toList();
+    }
+
+    private PrecioPlanInfoDTO mapToPrecioPlanFullDTO(PrecioPlan pp) {
+        PrecioPlanInfoDTO dto = new PrecioPlanInfoDTO();
+        dto.setId(pp.getId());
+        dto.setPrecio(pp.getPrecio());
+
+        PlanCliente pc = pp.getPlanCliente();
+        PlanClienteDTO pcDto = new PlanClienteDTO();
+        pcDto.setIdPlanCliente(pc.getIdPlanCliente());
+        pcDto.setNombrePlanCliente(pc.getNombrePlanCliente());
+        pcDto.setNumeroWebs(pc.getNumeroWebs());
+        pcDto.setNumeroBaseDatos(pc.getNumeroBaseDatos());
+        pcDto.setAlmacenamientoNvme(pc.getAlmacenamientoNvme());
+        pcDto.setNumeroCuentasCorreo(pc.getNumeroCuentasCorreo());
+        pcDto.setCreadorWeb(pc.getCreadorWeb());
+        pcDto.setNumeroCertificadoSslHttps(pc.getNumeroCertificadoSslHttps());
+        pcDto.setEmailMarketing(pc.getEmailMarketing());
+        dto.setPlanCliente(pcDto);
+
+        PlanPago pago = pp.getPlanPago();
+        PlanPagoDTO pagoDto = new PlanPagoDTO();
+        pagoDto.setIdPlanPago(pago.getIdPlanPago());
+        pagoDto.setIntervaloPago(pago.getIntervaloPago());
+        dto.setPlanPago(pagoDto);
+
+        return dto;
     }
 
     public Integer create(final PlanClienteDTO planClienteDTO) {

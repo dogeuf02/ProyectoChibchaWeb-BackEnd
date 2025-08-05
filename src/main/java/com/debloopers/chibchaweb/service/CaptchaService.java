@@ -12,10 +12,15 @@ public class CaptchaService {
     @Value("${google.recaptcha.secret}")
     private String recaptchaSecret;
 
+    private final RestTemplate restTemplate;
+
     private final String VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify";
 
+    public CaptchaService(final RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
     public boolean verifyCaptcha(String token) {
-        RestTemplate restTemplate = new RestTemplate();
 
         String params = "?secret=" + recaptchaSecret + "&response=" + token;
         ResponseEntity<Map> response = restTemplate.postForEntity(VERIFY_URL + params, null, Map.class);
