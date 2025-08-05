@@ -100,4 +100,29 @@ public class EmailService {
 
         javaMailSender.send(message);
     }
+
+    public void enviarCorreoConPasswordTemporal(String to, String subject, String tempPassword)
+            throws MessagingException, IOException {
+
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        helper.setTo(to);
+        helper.setSubject(subject);
+
+        String htmlTemplate = new String(
+                getClass().getClassLoader()
+                        .getResourceAsStream("template/correo_temp_password_es.html").readAllBytes(),
+                StandardCharsets.UTF_8
+        );
+
+        String htmlContent = htmlTemplate.replace("{{tempPassword}}", tempPassword);
+
+        helper.setText(htmlContent, true);
+
+        FileSystemResource image = new FileSystemResource(new File("src/main/resources/image/Logo_ChibchaWeb.png"));
+        helper.addInline("logo", image, "image/png");
+
+        javaMailSender.send(message);
+    }
 }

@@ -1,14 +1,20 @@
 package com.debloopers.chibchaweb.service;
 
+import com.debloopers.chibchaweb.dto.RecuperarContrasenaDTO;
 import com.debloopers.chibchaweb.dto.ResponseDTO;
 import com.debloopers.chibchaweb.entity.Usuario;
 import com.debloopers.chibchaweb.dto.LoginRequestDTO;
 import com.debloopers.chibchaweb.dto.LoginResponseDTO;
 import com.debloopers.chibchaweb.repository.UsuarioRepository;
+import com.debloopers.chibchaweb.util.NotFoundException;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.util.UUID;
 
 @Service
 public class AuthService {
@@ -23,6 +29,8 @@ public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final EmailService emailService;
+
     private final CaptchaService captchaService;
 
     public AuthService(final UsuarioRepository usuarioRepository,
@@ -30,12 +38,14 @@ public class AuthService {
                        final PasswordEncoder passwordEncoder,
                        final TokenListaNegraService tokenListaNegraService,
                        final JwtService jwtService,
+                       final EmailService emailService,
                        final CaptchaService captchaService) {
         this.usuarioRepository = usuarioRepository;
         this.tokenVerificacionService = tokenVerificacionService;
         this.passwordEncoder = passwordEncoder;
         this.tokenListaNegraService = tokenListaNegraService;
         this.jwtService = jwtService;
+        this.emailService = emailService;
         this.captchaService = captchaService;
     }
 
@@ -90,6 +100,45 @@ public class AuthService {
 
         final String token = authHeader.substring(7);
         tokenListaNegraService.invalidarToken(token);
+    }
+
+    public ResponseDTO recuperarContrasena(RecuperarContrasenaDTO recuperarContrasenaDTO) throws MessagingException, IOException {
+
+        boolean captchaOk;
+        try {
+            captchaOk = captchaService.verifyCaptcha(recuperarContrasenaDTO.getCaptchaToken());
+        } catch (Exception recaptchaEx) {
+            return new ResponseDTO(false, "The captcha could not be verified. Please try again later.");
+        }
+
+        if (!captchaOk) {
+            return new ResponseDTO(false, "Invalid captcha. Please try again.");
+        }
+
+        Usuario user = usuarioRepository.findOptionalByCorreoUsuario(recuperarContrasenaDTO.getEmail())
+                .orElseThrow(() -> new NotFoundException("Unregistered user."));
+
+        String estado = user.getEstado();
+        if (!"ACTIVO".equalsIgnoreCase(estado)) {
+            throw new IllegalStateException("Only active users can change their password.");
+        }
+
+        String raw = UUID.randomUUID().toString().replace("-", "");
+
+        String tempPwd = raw.substring(0, 12);
+
+        tempPwd = tempPwd.toUpperCase();
+
+        user.setContrasena(passwordEncoder.encode(tempPwd));
+        usuarioRepository.save(user);
+
+        emailService.enviarCorreoConPasswordTemporal(
+                user.getCorreoUsuario(),
+                "Recuperación de contraseña",
+                tempPwd
+        );
+
+        return new ResponseDTO(true,"Your password has been reset. Please check your email.");
     }
 
     public ResponseEntity<String> activarCuentaConToken(String token) {
