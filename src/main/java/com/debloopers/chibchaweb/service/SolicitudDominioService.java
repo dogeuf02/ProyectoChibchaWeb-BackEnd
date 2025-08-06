@@ -85,19 +85,18 @@ public class SolicitudDominioService {
             return new ResponseDTO(false, "You must specify a customer or distributor.");
         }
 
-
-        boolean solicitudExiste = false;
+        boolean solicitudEnRevisionExiste = false;
 
         if (solicitudDominioDTO.getCliente() != null) {
-            solicitudExiste = solicitudDominioRepository.existsByCliente_IdClienteAndDominio_IdDominio(
+            solicitudEnRevisionExiste = solicitudDominioRepository.existsEnRevisionByCliente(
                     solicitudDominioDTO.getCliente(), solicitudDominioDTO.getDominio());
         } else if (solicitudDominioDTO.getDistribuidor() != null) {
-            solicitudExiste = solicitudDominioRepository.existsByDistribuidor_IdDistribuidorAndDominio_IdDominio(
+            solicitudEnRevisionExiste = solicitudDominioRepository.existsEnRevisionByDistribuidor(
                     solicitudDominioDTO.getDistribuidor(), solicitudDominioDTO.getDominio());
         }
 
-        if (solicitudExiste) {
-            return new ResponseDTO(false, "There is already a request for this domain by this customer or distributor.");
+        if (solicitudEnRevisionExiste) {
+            return new ResponseDTO(false, "There is already a pending request for this domain by this customer or distributor.");
         }
 
         final SolicitudDominio solicitudDominio = new SolicitudDominio();
