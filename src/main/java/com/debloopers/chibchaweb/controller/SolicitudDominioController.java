@@ -6,7 +6,12 @@ import com.debloopers.chibchaweb.service.SolicitudDominioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+
+import java.io.File;
 import java.util.List;
+
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -73,6 +78,17 @@ public class SolicitudDominioController {
             @RequestBody @Valid final SolicitudDominioDTO solicitudDominioDTO) {
         solicitudDominioService.update(idSolicitud, solicitudDominioDTO);
         return ResponseEntity.ok(idSolicitud);
+    }
+
+    @Operation(summary = "Generar archivo XML correspondiente a una solicitud de dominio")
+    @GetMapping("/generar-xml/{id}")
+    public ResponseEntity<FileSystemResource> descargarXML(@PathVariable Integer id) {
+        File archivoXML = solicitudDominioService.generarXMLSolicitudDominio(id);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + archivoXML.getName())
+                .contentType(MediaType.APPLICATION_XML)
+                .body(new FileSystemResource(archivoXML));
     }
 
     @DeleteMapping("/{idSolicitud}")
