@@ -49,7 +49,7 @@ public class TicketService {
     @Transactional
     public TicketConHistorialDTO obtenerTicketConHistorial(String idTicket) {
         Ticket ticket = ticketRepository.findById(idTicket)
-                .orElseThrow(() -> new NotFoundException("Ticket no encontrado"));
+                .orElseThrow(() -> new NotFoundException("Ticket not found."));
 
         TicketConHistorialDTO dto = new TicketConHistorialDTO();
         dto.setIdTicket(ticket.getIdTicket());
@@ -81,8 +81,21 @@ public class TicketService {
 
     public String create(final TicketDTO ticketDTO) {
         final Ticket ticket = new Ticket();
+
+        String lastId = ticketRepository.findLastTicketId();
+        int nextNumber = 1;
+        if (lastId != null && lastId.startsWith("TCK-")) {
+            try {
+                nextNumber = Integer.parseInt(lastId.substring(4)) + 1;
+            } catch (NumberFormatException e) {
+            }
+        }
+
+        String newId = "TCK-" + nextNumber;
+        ticket.setIdTicket(newId);
+
         mapToEntity(ticketDTO, ticket);
-        ticket.setIdTicket(ticketDTO.getIdTicket());
+
         return ticketRepository.save(ticket).getIdTicket();
     }
 
