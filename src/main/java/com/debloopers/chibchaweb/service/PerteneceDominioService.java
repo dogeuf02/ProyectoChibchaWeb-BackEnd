@@ -10,6 +10,7 @@ import com.debloopers.chibchaweb.util.ReferencedWarning;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -66,6 +67,16 @@ public class PerteneceDominioService {
     public Map<String, Long> contarPorDistribuidor(Integer idDistribuidor) {
         long total = perteneceDominioRepository.countByDistribuidor_IdDistribuidor(idDistribuidor);
         return Map.of("total", total);
+    }
+
+    public Integer obtenerIdPertenecePorDominio(Integer idDominio) {
+        Integer idPertenece = perteneceDominioRepository.findIdByDominioId(idDominio);
+
+        if (idPertenece == null) {
+            throw new EntityNotFoundException("No PerteneceDominio record was found for the domain with ID: " + idDominio);
+        }
+
+        return idPertenece;
     }
 
     public Integer create(final PerteneceDominioDTO perteneceDominioDTO) {

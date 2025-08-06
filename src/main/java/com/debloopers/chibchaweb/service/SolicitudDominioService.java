@@ -1,12 +1,18 @@
 package com.debloopers.chibchaweb.service;
 
+import java.io.File;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 import com.debloopers.chibchaweb.dto.ResponseDTO;
+import com.debloopers.chibchaweb.dto.SolicitudXML;
 import com.debloopers.chibchaweb.entity.*;
 import com.debloopers.chibchaweb.dto.SolicitudDominioDTO;
 import com.debloopers.chibchaweb.repository.*;
 import com.debloopers.chibchaweb.util.NotFoundException;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Marshaller;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -104,6 +110,45 @@ public class SolicitudDominioService {
         solicitudDominioRepository.save(solicitudDominio);
 
         return new ResponseDTO(true, "Request successfully created.");
+    }
+
+    @Transactional
+    public File generarXMLSolicitudDominio(Integer idSolicitud) {
+        Optional<SolicitudDominio> optSolicitud = solicitudDominioRepository.findById(idSolicitud);
+
+        if (optSolicitud.isEmpty()) {
+            throw new NotFoundException("Request not found");
+        }
+
+        SolicitudDominio solicitud = optSolicitud.get();
+
+        SolicitudXML solicitudXML = new SolicitudXML();
+        solicitudXML.setOrigen("Chibchaweb");
+        solicitudXML.setFechaSolicitud(solicitud.getFechaSolicitud().format(DateTimeFormatter.ISO_DATE));
+
+        if (solicitud.getCliente() != null) {
+            ClienteDirecto c = solicitud.getCliente();
+            solicitudXML.setSolicitante("Client: " + c.getNombreCliente() + " " + c.getApellidoCliente() + ", Tel: " + c.getTelefono());
+        } else if (solicitud.getDistribuidor() != null) {
+            Distribuidor d = solicitud.getDistribuidor();
+            solicitudXML.setSolicitante("Distributor: " + d.getNombreEmpresa() + ", Doc: " + d.getNumeroDocEmpresa());
+        }
+
+        Dominio dominio = solicitud.getDominio();
+        solicitudXML.setDominio("Domain: " + dominio.getNombreDominio()+dominio.getTld().getTld() + ", State: " + dominio.getEstado());
+
+        try {
+            JAXBContext context = JAXBContext.newInstance(SolicitudXML.class);
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+            File archivoXML = new File("solicitud_" + idSolicitud + ".xml");
+            marshaller.marshal(solicitudXML, archivoXML);
+            return archivoXML;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error generating XML: " + e.getMessage());
+        }
     }
 
     public void update(final Integer idSolicitud, final SolicitudDominioDTO solicitudDominioDTO) {
