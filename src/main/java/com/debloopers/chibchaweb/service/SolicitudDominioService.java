@@ -73,7 +73,7 @@ public class SolicitudDominioService {
         }
 
         String estadoDominio = dominio.getEstado();
-        if ("En uso".equalsIgnoreCase(estadoDominio) || "Reservado".equalsIgnoreCase(estadoDominio)) {
+        if ("En uso".equalsIgnoreCase(estadoDominio)) {
             return new ResponseDTO(false, "The domain is already in use or is reserved.");
         }
 
