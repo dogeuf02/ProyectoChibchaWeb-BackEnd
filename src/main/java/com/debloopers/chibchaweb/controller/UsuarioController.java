@@ -1,5 +1,6 @@
 package com.debloopers.chibchaweb.controller;
 
+import com.debloopers.chibchaweb.dto.ConsultaRolResponseDTO;
 import com.debloopers.chibchaweb.dto.UsuarioActualizarDTO;
 import com.debloopers.chibchaweb.dto.UsuarioDTO;
 import com.debloopers.chibchaweb.service.UsuarioService;
@@ -34,10 +35,14 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.get(idUsuario));
     }
 
-    @Operation(summary = "Validar si un correo electronico existe en la base de datos y si corresponde a un cliente o distribuidor")
-    @GetMapping("/es-solicitante")
-    public boolean esClienteODistribuidor(@RequestParam String correo) {
-        return usuarioService.esClienteODistribuidor(correo);
+    @Operation(summary = "Validar si un correo electronico existe en la base de datos y si corresponde a un cliente o distribuidor, retorna el rol con su ID correspondiente.")
+    @GetMapping("/IdentificarRol")
+    public ResponseEntity<ConsultaRolResponseDTO> obtenerRolSolicitante(@RequestParam String correo) {
+        ConsultaRolResponseDTO resultado = usuarioService.obtenerRolSolicitante(correo);
+        if (resultado == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(resultado);
     }
 
     @PostMapping
