@@ -52,6 +52,20 @@ public class UsuarioService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    public boolean esClienteODistribuidor(String correo) {
+        return usuarioRepository.findOptionalByCorreoUsuario(correo)
+                .map(usuario -> {
+                    if (usuario.getCliente() != null) {
+                        return true;
+                    }
+                    if (usuario.getDistribuidor() != null) {
+                        return true;
+                    }
+                    return false;
+                })
+                .orElse(false);
+    }
+
     public Integer create(final UsuarioDTO usuarioDTO) {
         final Usuario usuario = new Usuario();
         mapToEntity(usuarioDTO, usuario);
