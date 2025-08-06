@@ -79,6 +79,22 @@ public class TicketService {
         return dto;
     }
 
+    @Transactional
+    public List<TicketDTO> obtenerTicketsPorCliente(Integer idCliente) {
+        return ticketRepository.findByCliente_IdCliente(idCliente)
+                .stream()
+                .map(ticket -> mapToDTO(ticket, new TicketDTO()))
+                .toList();
+    }
+
+    @Transactional
+    public List<TicketDTO> obtenerTicketsPorDistribuidor(Integer idDistribuidor) {
+        return ticketRepository.findByDistribuidor_IdDistribuidor(idDistribuidor)
+                .stream()
+                .map(ticket -> mapToDTO(ticket, new TicketDTO()))
+                .toList();
+    }
+
     public String create(final TicketDTO ticketDTO) {
         final Ticket ticket = new Ticket();
 

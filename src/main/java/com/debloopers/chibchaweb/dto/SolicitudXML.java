@@ -8,7 +8,8 @@ public class SolicitudXML {
 
     private String origen;
     private String fechaSolicitud;
-    private String solicitante;
+    private ClienteXML cliente;
+    private DistribuidorXML distribuidor;
     private String dominio;
 
     @XmlElement(name = "Origin")
@@ -29,13 +30,22 @@ public class SolicitudXML {
         this.fechaSolicitud = fechaSolicitud;
     }
 
-    @XmlElement(name = "Applicant")
-    public String getSolicitante() {
-        return solicitante;
+    @XmlElement(name = "Client")
+    public ClienteXML getCliente() {
+        return cliente;
     }
 
-    public void setSolicitante(String solicitante) {
-        this.solicitante = solicitante;
+    public void setCliente(ClienteXML cliente) {
+        this.cliente = cliente;
+    }
+
+    @XmlElement(name = "Distributor")
+    public DistribuidorXML getDistribuidor() {
+        return distribuidor;
+    }
+
+    public void setDistribuidor(DistribuidorXML distribuidor) {
+        this.distribuidor = distribuidor;
     }
 
     @XmlElement(name = "Domain")

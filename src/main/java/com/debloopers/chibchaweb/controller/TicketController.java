@@ -47,6 +47,18 @@ public class TicketController {
         return ResponseEntity.ok(ticketService.obtenerTicketConHistorial(idTicket));
     }
 
+    @Operation(summary = "Obtener todos los tickets de un cliente mediante su ID")
+    @GetMapping("/cliente/{idCliente}")
+    public ResponseEntity<List<TicketDTO>> listarPorCliente(@PathVariable Integer idCliente) {
+        return ResponseEntity.ok(ticketService.obtenerTicketsPorCliente(idCliente));
+    }
+
+    @Operation(summary = "Obtener todos los tickets de un distribuidor mediante su ID")
+    @GetMapping("/distribuidor/{idDistribuidor}")
+    public ResponseEntity<List<TicketDTO>> listarPorDistribuidor(@PathVariable Integer idDistribuidor) {
+        return ResponseEntity.ok(ticketService.obtenerTicketsPorDistribuidor(idDistribuidor));
+    }
+
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<String> createTicket(@RequestBody @Valid final TicketDTO ticketDTO) {

@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -44,6 +45,18 @@ public class PlanAdquiridoService {
         return planAdquiridoRepository.findById(idPlanAdquirido)
                 .map(planAdquirido -> mapToDTO(planAdquirido, new PlanAdquiridoDTO()))
                 .orElseThrow(NotFoundException::new);
+    }
+
+    @Transactional
+    public List<PlanAdquiridoDTO> findByClienteId(final Integer idCliente) {
+        final ClienteDirecto cliente = clienteDirectoRepository.findById(idCliente)
+                .orElseThrow(() -> new NotFoundException("Cliente con ID " + idCliente + " no encontrado"));
+
+        final List<PlanAdquirido> planes = planAdquiridoRepository.findByCliente(cliente);
+
+        return planes.stream()
+                .map(plan -> mapToDTO(plan, new PlanAdquiridoDTO()))
+                .toList();
     }
 
     public Integer create(final PlanAdquiridoDTO planAdquiridoDTO) {
