@@ -135,7 +135,7 @@ public class SolicitudDominioService {
         }
 
         Dominio dominio = solicitud.getDominio();
-        solicitudXML.setDominio("Domain: " + dominio.getNombreDominio() + ", State: " + dominio.getEstado());
+        solicitudXML.setDominio("Domain: " + dominio.getNombreDominio()+dominio.getTld().getTld() + ", State: " + dominio.getEstado());
 
         try {
             JAXBContext context = JAXBContext.newInstance(SolicitudXML.class);
