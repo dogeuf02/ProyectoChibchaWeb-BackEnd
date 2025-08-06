@@ -1,6 +1,7 @@
 package com.debloopers.chibchaweb.service;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +10,7 @@ import com.debloopers.chibchaweb.dto.*;
 import com.debloopers.chibchaweb.entity.*;
 import com.debloopers.chibchaweb.repository.*;
 import com.debloopers.chibchaweb.util.NotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Marshaller;
 import org.springframework.data.domain.Sort;
@@ -25,19 +27,22 @@ public class SolicitudDominioService {
     private final DistribuidorRepository distribuidorRepository;
     private final DominioRepository dominioRepository;
     private final AdministradorRepository administradorRepository;
+    private final EmailService emailService;
 
     public SolicitudDominioService(final SolicitudDominioRepository solicitudDominioRepository,
                                    final UsuarioRepository usuarioRepository,
                                    final ClienteDirectoRepository clienteDirectoRepository,
                                    final DistribuidorRepository distribuidorRepository,
                                    final DominioRepository dominioRepository,
-                                   final AdministradorRepository administradorRepository) {
+                                   final AdministradorRepository administradorRepository,
+                                   final EmailService emailService) {
         this.solicitudDominioRepository = solicitudDominioRepository;
         this.usuarioRepository = usuarioRepository;
         this.clienteDirectoRepository = clienteDirectoRepository;
         this.distribuidorRepository = distribuidorRepository;
         this.dominioRepository = dominioRepository;
         this.administradorRepository = administradorRepository;
+        this.emailService = emailService;
     }
 
     public List<SolicitudDominioDTO> findAll() {
@@ -178,6 +183,61 @@ public class SolicitudDominioService {
                 .orElseThrow(NotFoundException::new);
         mapToEntity(solicitudDominioDTO, solicitudDominio);
         solicitudDominioRepository.save(solicitudDominio);
+    }
+
+    @Transactional
+    public ResponseDTO cambiarEstadoSolicitudDominio(Integer idSolicitud, boolean aprobar) {
+        SolicitudDominio solicitud = solicitudDominioRepository.findById(idSolicitud)
+                .orElseThrow(() -> new EntityNotFoundException("Domain request not found."));
+
+        String nuevoEstado = aprobar ? "Aprobada" : "Rechazada";
+
+        if (!nuevoEstado.equalsIgnoreCase(solicitud.getEstadoSolicitud())) {
+            solicitud.setEstadoSolicitud(nuevoEstado);
+            if (aprobar) {
+                solicitud.setFechaAprobacion(LocalDate.now());
+            } else {
+                solicitud.setFechaAprobacion(null);
+            }
+            solicitudDominioRepository.save(solicitud);
+
+            String descripcionSolicitante;
+            String correo;
+            if (solicitud.getCliente() != null) {
+                ClienteDirecto c = solicitud.getCliente();
+                descripcionSolicitante = c.getNombreCliente() + " " + c.getApellidoCliente();
+                correo = usuarioRepository
+                        .findByCliente_IdCliente(c.getIdCliente())
+                        .orElseThrow(() -> new EntityNotFoundException("User not found for client"))
+                        .getCorreoUsuario();
+            } else {
+                Distribuidor d = solicitud.getDistribuidor();
+                descripcionSolicitante = d.getNombreEmpresa() + " (NIT: " + d.getNumeroDocEmpresa() + ")";
+                correo = usuarioRepository
+                        .findByDistribuidor_IdDistribuidor(d.getIdDistribuidor())
+                        .orElseThrow(() -> new EntityNotFoundException("User not found for distributor"))
+                        .getCorreoUsuario();
+            }
+
+            String dominioNombre = solicitud.getDominio().getTld().getTld();
+            String tld = solicitud.getDominio().getTld().getTld();
+
+            try {
+                emailService.enviarCorreoCambioEstadoSolicitudDominio(
+                        correo,
+                        descripcionSolicitante,
+                        dominioNombre,
+                        tld,
+                        nuevoEstado
+                );
+            } catch (Exception e) {
+                System.err.println("Error sending email to " + correo + ": " + e.getMessage());
+            }
+
+            return new ResponseDTO(true, "The application has been " + (aprobar ? "approved" : "rejected") + " successfully.");
+        } else {
+            return new ResponseDTO(false, "The request is already " + nuevoEstado.toLowerCase() + ".");
+        }
     }
 
     public void delete(final Integer idSolicitud) {
