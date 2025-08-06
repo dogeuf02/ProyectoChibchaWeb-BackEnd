@@ -19,4 +19,6 @@ public interface PerteneceDominioRepository extends JpaRepository<PerteneceDomin
 
     List<PerteneceDominio> findByDistribuidor_IdDistribuidor(Integer idDistribuidor);
 
+    long countByDistribuidor_IdDistribuidor(Integer idDistribuidor);
+
 }

@@ -8,6 +8,7 @@ import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -60,6 +61,11 @@ public class PerteneceDominioService {
                 .map(p -> mapToDTO(p, new PerteneceDominioDTO()))
                 .toList();
         return new PerteneceDominioRespondeDTO(listaDTO.size(), listaDTO);
+    }
+
+    public Map<String, Long> contarPorDistribuidor(Integer idDistribuidor) {
+        long total = perteneceDominioRepository.countByDistribuidor_IdDistribuidor(idDistribuidor);
+        return Map.of("total", total);
     }
 
     public Integer create(final PerteneceDominioDTO perteneceDominioDTO) {
