@@ -112,6 +112,7 @@ public class SolicitudDominioService {
         return new ResponseDTO(true, "Request successfully created.");
     }
 
+    @Transactional
     public File generarXMLSolicitudDominio(Integer idSolicitud) {
         Optional<SolicitudDominio> optSolicitud = solicitudDominioRepository.findById(idSolicitud);
 
