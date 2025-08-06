@@ -10,7 +10,7 @@ public class SolicitudXML {
     private String fechaSolicitud;
     private ClienteXML cliente;
     private DistribuidorXML distribuidor;
-    private String dominio;
+    private DominioXML dominio;
 
     @XmlElement(name = "Origin")
     public String getOrigen() {
@@ -49,11 +49,11 @@ public class SolicitudXML {
     }
 
     @XmlElement(name = "Domain")
-    public String getDominio() {
+    public DominioXML getDominio() {
         return dominio;
     }
 
-    public void setDominio(String dominio) {
+    public void setDominio(DominioXML dominio) {
         this.dominio = dominio;
     }
 }

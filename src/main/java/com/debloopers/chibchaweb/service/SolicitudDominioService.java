@@ -157,7 +157,7 @@ public class SolicitudDominioService {
         dominioXML.setEstado(dominio.getEstado());
         dominioXML.setIdTld(dominio.getTld().getTld());
 
-        solicitudXML.setDominio(String.valueOf(dominioXML));
+        solicitudXML.setDominio(dominioXML);
 
         try {
             JAXBContext context = JAXBContext.newInstance(SolicitudXML.class);
