@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
-public class SolicitudDominioRegistroResponseDTO {
-    private boolean exito;
-    private String message;
-    private Integer idSolicitud;
+public class PerteneceDominioRespondeDTO {
+    private long total;
+    private List<PerteneceDominioDTO> registros;
 }

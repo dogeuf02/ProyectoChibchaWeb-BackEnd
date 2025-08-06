@@ -2,6 +2,7 @@ package com.debloopers.chibchaweb.controller;
 
 import com.debloopers.chibchaweb.dto.SolicitudTrasladoDTO;
 import com.debloopers.chibchaweb.service.SolicitudTrasladoService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -37,6 +38,18 @@ public class SolicitudTrasladoController {
     public ResponseEntity<SolicitudTrasladoDTO> getSolicitudTraslado(
             @PathVariable(name = "idSolicitudTraslado") final Integer idSolicitudTraslado) {
         return ResponseEntity.ok(solicitudTrasladoService.get(idSolicitudTraslado));
+    }
+
+    @Operation(summary = "Obtener todas las solicitudes de transferencia realizadas por un cliente")
+    @GetMapping("/cliente/{idCliente}")
+    public List<SolicitudTrasladoDTO> obtenerPorIdCliente(@PathVariable Integer idCliente) {
+        return solicitudTrasladoService.obtenerPorIdCliente(idCliente);
+    }
+
+    @Operation(summary = "Obtener todas las solicitudes de transferencia realizadas por un distribuidor")
+    @GetMapping("/distribuidor/{idDistribuidor}")
+    public List<SolicitudTrasladoDTO> obtenerPorIdDistribuidor(@PathVariable Integer idDistribuidor) {
+        return solicitudTrasladoService.obtenerPorIdDistribuidor(idDistribuidor);
     }
 
     @PostMapping

@@ -1,12 +1,14 @@
 package com.debloopers.chibchaweb.service;
 
 import com.debloopers.chibchaweb.dto.PerteneceDominioDTO;
+import com.debloopers.chibchaweb.dto.PerteneceDominioRespondeDTO;
 import com.debloopers.chibchaweb.entity.*;
 import com.debloopers.chibchaweb.repository.*;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,26 @@ public class PerteneceDominioService {
         return perteneceDominioRepository.findById(idPertenece)
                 .map(perteneceDominio -> mapToDTO(perteneceDominio, new PerteneceDominioDTO()))
                 .orElseThrow(NotFoundException::new);
+    }
+
+    public List<PerteneceDominioDTO> obtenerPorIdCliente(Integer idCliente) {
+        List<PerteneceDominio> registros = perteneceDominioRepository.findByCliente_IdCliente(idCliente);
+        return registros.stream()
+                .map(p -> mapToDTO(p, new PerteneceDominioDTO()))
+                .toList();
+    }
+
+    public PerteneceDominioRespondeDTO obtenerPorIdDistribuidor(Integer idDistribuidor) {
+        List<PerteneceDominio> registros = perteneceDominioRepository.findByDistribuidor_IdDistribuidor(idDistribuidor);
+        List<PerteneceDominioDTO> listaDTO = registros.stream()
+                .map(p -> mapToDTO(p, new PerteneceDominioDTO()))
+                .toList();
+        return new PerteneceDominioRespondeDTO(listaDTO.size(), listaDTO);
+    }
+
+    public Map<String, Long> contarPorDistribuidor(Integer idDistribuidor) {
+        long total = perteneceDominioRepository.countByDistribuidor_IdDistribuidor(idDistribuidor);
+        return Map.of("total", total);
     }
 
     public Integer create(final PerteneceDominioDTO perteneceDominioDTO) {

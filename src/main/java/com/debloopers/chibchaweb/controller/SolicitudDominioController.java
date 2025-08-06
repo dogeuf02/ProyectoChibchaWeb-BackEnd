@@ -1,7 +1,10 @@
 package com.debloopers.chibchaweb.controller;
 
+import com.debloopers.chibchaweb.dto.ResponseDTO;
 import com.debloopers.chibchaweb.dto.SolicitudDominioDTO;
+import com.debloopers.chibchaweb.entity.SolicitudDominio;
 import com.debloopers.chibchaweb.service.SolicitudDominioService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -39,12 +42,30 @@ public class SolicitudDominioController {
         return ResponseEntity.ok(solicitudDominioService.get(idSolicitud));
     }
 
+    @Operation(summary = "Obtener todas las solicitudes de dominio realizadas por un cliente")
+    @GetMapping("/cliente/{idCliente}")
+    public List<SolicitudDominioDTO> getSolicitudesPorCliente(@PathVariable Integer idCliente) {
+        return solicitudDominioService.obtenerSolicitudesPorCliente(idCliente);
+    }
+
+    @Operation(summary = "Obtener todas las solicitudes de dominio realizadas por un distribuidor")
+    @GetMapping("/distribuidor/{idDistribuidor}")
+    public List<SolicitudDominioDTO> getSolicitudesPorDistribuidor(@PathVariable Integer idDistribuidor) {
+        return solicitudDominioService.obtenerSolicitudesPorDistribuidor(idDistribuidor);
+    }
+
     @PostMapping
-    @ApiResponse(responseCode = "201")
-    public ResponseEntity<Integer> createSolicitudDominio(
+    @ApiResponse(responseCode = "200")
+    public ResponseEntity<ResponseDTO> createSolicitudDominio(
             @RequestBody @Valid final SolicitudDominioDTO solicitudDominioDTO) {
-        final Integer createdIdSolicitud = solicitudDominioService.create(solicitudDominioDTO);
-        return new ResponseEntity<>(createdIdSolicitud, HttpStatus.CREATED);
+
+        ResponseDTO response = solicitudDominioService.create(solicitudDominioDTO);
+
+        if (response.isExito()) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
 
     @PutMapping("/{idSolicitud}")

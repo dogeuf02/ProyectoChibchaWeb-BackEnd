@@ -1,12 +1,16 @@
 package com.debloopers.chibchaweb.controller;
 
 import com.debloopers.chibchaweb.dto.PerteneceDominioDTO;
+import com.debloopers.chibchaweb.dto.PerteneceDominioRespondeDTO;
 import com.debloopers.chibchaweb.service.PerteneceDominioService;
 import com.debloopers.chibchaweb.util.ReferencedException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +44,25 @@ public class PerteneceDominioController {
             @PathVariable(name = "idPertenece") final Integer idPertenece) {
         return ResponseEntity.ok(perteneceDominioService.get(idPertenece));
     }
+
+    @Operation(summary = "Obtener registros por cliente")
+    @GetMapping("/cliente/{idCliente}")
+    public List<PerteneceDominioDTO> obtenerPorIdCliente(@PathVariable Integer idCliente) {
+        return perteneceDominioService.obtenerPorIdCliente(idCliente);
+    }
+
+    @Operation(summary = "Obtener registros por distribuidor")
+    @GetMapping("/distribuidor/{idDistribuidor}")
+    public PerteneceDominioRespondeDTO obtenerPorIdDistribuidor(@PathVariable Integer idDistribuidor) {
+        return perteneceDominioService.obtenerPorIdDistribuidor(idDistribuidor);
+    }
+
+    @Operation(summary = "Obtener cantidad de dominios que tiene un distribuidor")
+    @GetMapping("/distribuidor/{idDistribuidor}/total")
+    public Map<String, Long> contarPorDistribuidor(@PathVariable Integer idDistribuidor) {
+        return perteneceDominioService.contarPorDistribuidor(idDistribuidor);
+    }
+
 
     @PostMapping
     @ApiResponse(responseCode = "201")

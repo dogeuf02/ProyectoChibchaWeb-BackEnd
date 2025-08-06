@@ -2,12 +2,14 @@ package com.debloopers.chibchaweb.service;
 
 import java.util.List;
 
+import com.debloopers.chibchaweb.dto.ResponseDTO;
 import com.debloopers.chibchaweb.entity.*;
 import com.debloopers.chibchaweb.dto.SolicitudDominioDTO;
 import com.debloopers.chibchaweb.repository.*;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -44,10 +46,64 @@ public class SolicitudDominioService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public Integer create(final SolicitudDominioDTO solicitudDominioDTO) {
+    @Transactional
+    public List<SolicitudDominioDTO> obtenerSolicitudesPorCliente(Integer idCliente) {
+        List<SolicitudDominio> solicitudes = solicitudDominioRepository.findByCliente_IdCliente(idCliente);
+        return solicitudes.stream()
+                .map(s -> mapToDTO(s, new SolicitudDominioDTO()))
+                .toList();
+    }
+
+    @Transactional
+    public List<SolicitudDominioDTO> obtenerSolicitudesPorDistribuidor(Integer idDistribuidor) {
+        List<SolicitudDominio> solicitudes = solicitudDominioRepository.findByDistribuidor_IdDistribuidor(idDistribuidor);
+        return solicitudes.stream()
+                .map(s -> mapToDTO(s, new SolicitudDominioDTO()))
+                .toList();
+    }
+
+    @Transactional
+    public ResponseDTO create(final SolicitudDominioDTO solicitudDominioDTO) {
+
+        final Dominio dominio = dominioRepository.findById(solicitudDominioDTO.getDominio())
+                .orElse(null);
+
+        if (dominio == null) {
+            return new ResponseDTO(false, "The specified domain does not exist.");
+        }
+
+        String estadoDominio = dominio.getEstado();
+        if ("En uso".equalsIgnoreCase(estadoDominio)) {
+            return new ResponseDTO(false, "The domain is already in use or is reserved.");
+        }
+
+        if (solicitudDominioDTO.getCliente() != null && solicitudDominioDTO.getDistribuidor() != null) {
+            return new ResponseDTO(false, "Only specify customer or distributor, not both.");
+        }
+
+        if (solicitudDominioDTO.getCliente() == null && solicitudDominioDTO.getDistribuidor() == null) {
+            return new ResponseDTO(false, "You must specify a customer or distributor.");
+        }
+
+        boolean solicitudEnRevisionExiste = false;
+
+        if (solicitudDominioDTO.getCliente() != null) {
+            solicitudEnRevisionExiste = solicitudDominioRepository.existsEnRevisionByCliente(
+                    solicitudDominioDTO.getCliente(), solicitudDominioDTO.getDominio());
+        } else if (solicitudDominioDTO.getDistribuidor() != null) {
+            solicitudEnRevisionExiste = solicitudDominioRepository.existsEnRevisionByDistribuidor(
+                    solicitudDominioDTO.getDistribuidor(), solicitudDominioDTO.getDominio());
+        }
+
+        if (solicitudEnRevisionExiste) {
+            return new ResponseDTO(false, "There is already a pending request for this domain by this customer or distributor.");
+        }
+
         final SolicitudDominio solicitudDominio = new SolicitudDominio();
         mapToEntity(solicitudDominioDTO, solicitudDominio);
-        return solicitudDominioRepository.save(solicitudDominio).getIdSolicitud();
+        solicitudDominioRepository.save(solicitudDominio);
+
+        return new ResponseDTO(true, "Request successfully created.");
     }
 
     public void update(final Integer idSolicitud, final SolicitudDominioDTO solicitudDominioDTO) {
