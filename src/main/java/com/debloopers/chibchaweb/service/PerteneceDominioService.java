@@ -1,6 +1,7 @@
 package com.debloopers.chibchaweb.service;
 
 import com.debloopers.chibchaweb.dto.PerteneceDominioDTO;
+import com.debloopers.chibchaweb.dto.PerteneceDominioRespondeDTO;
 import com.debloopers.chibchaweb.entity.*;
 import com.debloopers.chibchaweb.repository.*;
 import com.debloopers.chibchaweb.util.NotFoundException;
@@ -53,11 +54,12 @@ public class PerteneceDominioService {
                 .toList();
     }
 
-    public List<PerteneceDominioDTO> obtenerPorIdDistribuidor(Integer idDistribuidor) {
+    public PerteneceDominioRespondeDTO obtenerPorIdDistribuidor(Integer idDistribuidor) {
         List<PerteneceDominio> registros = perteneceDominioRepository.findByDistribuidor_IdDistribuidor(idDistribuidor);
-        return registros.stream()
+        List<PerteneceDominioDTO> listaDTO = registros.stream()
                 .map(p -> mapToDTO(p, new PerteneceDominioDTO()))
                 .toList();
+        return new PerteneceDominioRespondeDTO(listaDTO.size(), listaDTO);
     }
 
     public Integer create(final PerteneceDominioDTO perteneceDominioDTO) {
