@@ -5,6 +5,7 @@ import com.debloopers.chibchaweb.entity.PlanAdquirido;
 import com.debloopers.chibchaweb.entity.PlanCliente;
 import com.debloopers.chibchaweb.entity.PlanPago;
 import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
 public interface PlanAdquiridoRepository extends JpaRepository<PlanAdquirido, Integer> {
 
@@ -13,5 +14,7 @@ public interface PlanAdquiridoRepository extends JpaRepository<PlanAdquirido, In
     PlanAdquirido findFirstByPlanCliente(PlanCliente planCliente);
 
     PlanAdquirido findFirstByPlanPago(PlanPago planPago);
+
+    List<PlanAdquirido> findByCliente(ClienteDirecto cliente);
 
 }

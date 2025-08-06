@@ -4,6 +4,7 @@ import com.debloopers.chibchaweb.dto.PlanAdquiridoDTO;
 import com.debloopers.chibchaweb.service.PlanAdquiridoService;
 import com.debloopers.chibchaweb.util.ReferencedException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -39,6 +40,12 @@ public class PlanAdquiridoController {
     public ResponseEntity<PlanAdquiridoDTO> getPlanAdquirido(
             @PathVariable(name = "idPlanAdquirido") final Integer idPlanAdquirido) {
         return ResponseEntity.ok(planAdquiridoService.get(idPlanAdquirido));
+    }
+
+    @Operation(summary = "Obtener los planes adquiridos mediante el id del cliente")
+    @GetMapping("/by-cliente/{idCliente}")
+    public ResponseEntity<List<PlanAdquiridoDTO>> getByCliente(@PathVariable Integer idCliente) {
+        return ResponseEntity.ok(planAdquiridoService.findByClienteId(idCliente));
     }
 
     @PostMapping
