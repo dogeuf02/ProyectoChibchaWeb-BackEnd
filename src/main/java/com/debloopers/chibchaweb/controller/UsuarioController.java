@@ -36,7 +36,7 @@ public class UsuarioController {
     }
 
     @Operation(summary = "Validar si un correo electronico existe en la base de datos y si corresponde a un cliente o distribuidor, retorna el rol con su ID correspondiente.")
-    @GetMapping("/IdentificarRol")
+    @GetMapping("/identificarRol")
     public ResponseEntity<ConsultaRolResponseDTO> obtenerRolSolicitante(@RequestParam String correo) {
         ConsultaRolResponseDTO resultado = usuarioService.obtenerRolSolicitante(correo);
         if (resultado == null) {
