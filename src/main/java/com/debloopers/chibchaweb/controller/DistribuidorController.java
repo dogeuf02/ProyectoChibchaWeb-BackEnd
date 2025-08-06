@@ -51,7 +51,7 @@ public class DistribuidorController {
         }
     }
 
-    @Operation(summary = "Actualizar campos excepto el id")
+    @Operation(summary = "Actualizar campos distribuidor")
     @PutMapping("/{idDistribuidor}")
     public ResponseEntity<Integer> updateDistribuidor(
             @PathVariable(name = "idDistribuidor") final Integer idDistribuidor,
@@ -66,6 +66,7 @@ public class DistribuidorController {
         return ResponseEntity.ok(distribuidorService.findAllWithCorreo());
     }
 
+    @Operation(summary = "Aprobar o rechazar una solicitud de registro de distribuidor")
     @PutMapping("gestionarSolicitudRegistro/{idDistribuidor}")
     public ResponseEntity<String> cambiarEstadoDistribuidor(
             @PathVariable Integer idDistribuidor,

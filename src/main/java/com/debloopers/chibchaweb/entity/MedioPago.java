@@ -42,7 +42,7 @@ public class MedioPago {
     @Column(nullable = false, length = 100)
     private String nombreTitular;
 
-    @Column(length = 20)
+    @Column(length = 100)
     private String numeroTarjetaCuenta;
 
     @Column(length = 100)

@@ -1,5 +1,6 @@
 package com.debloopers.chibchaweb.service;
 
+import com.debloopers.chibchaweb.dto.ConsultaRolResponseDTO;
 import com.debloopers.chibchaweb.entity.*;
 import com.debloopers.chibchaweb.dto.UsuarioActualizarDTO;
 import com.debloopers.chibchaweb.dto.UsuarioDTO;
@@ -50,6 +51,20 @@ public class UsuarioService {
         return usuarioRepository.findById(idUsuario)
                 .map(usuario -> mapToDTO(usuario, new UsuarioDTO()))
                 .orElseThrow(NotFoundException::new);
+    }
+
+    public ConsultaRolResponseDTO obtenerRolSolicitante(String correo) {
+        return usuarioRepository.findOptionalByCorreoUsuario(correo)
+                .map(usuario -> {
+                    if (usuario.getCliente() != null) {
+                        return new ConsultaRolResponseDTO("Cliente", usuario.getCliente().getIdCliente());
+                    }
+                    if (usuario.getDistribuidor() != null) {
+                        return new ConsultaRolResponseDTO("Distribuidor", usuario.getDistribuidor().getIdDistribuidor());
+                    }
+                    return null;
+                })
+                .orElse(null);
     }
 
     public Integer create(final UsuarioDTO usuarioDTO) {

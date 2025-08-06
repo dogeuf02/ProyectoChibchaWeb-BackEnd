@@ -1,5 +1,6 @@
 package com.debloopers.chibchaweb.controller;
 
+import com.debloopers.chibchaweb.dto.ConsultaRolResponseDTO;
 import com.debloopers.chibchaweb.dto.UsuarioActualizarDTO;
 import com.debloopers.chibchaweb.dto.UsuarioDTO;
 import com.debloopers.chibchaweb.service.UsuarioService;
@@ -10,14 +11,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -39,6 +33,16 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDTO> getUsuario(
             @PathVariable(name = "idUsuario") final Integer idUsuario) {
         return ResponseEntity.ok(usuarioService.get(idUsuario));
+    }
+
+    @Operation(summary = "Validar si un correo electronico existe en la base de datos y si corresponde a un cliente o distribuidor, retorna el rol con su ID correspondiente.")
+    @GetMapping("/identificarRol")
+    public ResponseEntity<ConsultaRolResponseDTO> obtenerRolSolicitante(@RequestParam String correo) {
+        ConsultaRolResponseDTO resultado = usuarioService.obtenerRolSolicitante(correo);
+        if (resultado == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(resultado);
     }
 
     @PostMapping

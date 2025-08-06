@@ -27,7 +27,7 @@ public class DistribuidorXML {
         this.numeroDocumento = numeroDocumento;
     }
 
-    @XmlElement(name = "Address")
+    @XmlElement(name = "CompanyAddress")
     public String getDireccionEmpresa() {
         return direccionEmpresa;
     }
