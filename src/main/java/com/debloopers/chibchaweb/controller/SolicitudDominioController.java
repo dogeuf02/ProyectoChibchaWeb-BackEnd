@@ -8,8 +8,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -82,13 +85,19 @@ public class SolicitudDominioController {
 
     @Operation(summary = "Generar archivo XML correspondiente a una solicitud de dominio")
     @GetMapping("/generar-xml/{id}")
-    public ResponseEntity<FileSystemResource> descargarXML(@PathVariable Integer id) {
+    public ResponseEntity<ByteArrayResource> descargarXML(@PathVariable Integer id) throws IOException {
         File archivoXML = solicitudDominioService.generarXMLSolicitudDominio(id);
+
+        byte[] contenido = Files.readAllBytes(archivoXML.toPath());
+        ByteArrayResource recurso = new ByteArrayResource(contenido);
+
+        archivoXML.delete();
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + archivoXML.getName())
+                .contentLength(contenido.length)
                 .contentType(MediaType.APPLICATION_XML)
-                .body(new FileSystemResource(archivoXML));
+                .body(recurso);
     }
 
     @DeleteMapping("/{idSolicitud}")

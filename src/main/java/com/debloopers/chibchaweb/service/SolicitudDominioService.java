@@ -5,10 +5,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
-import com.debloopers.chibchaweb.dto.ResponseDTO;
-import com.debloopers.chibchaweb.dto.SolicitudXML;
+import com.debloopers.chibchaweb.dto.*;
 import com.debloopers.chibchaweb.entity.*;
-import com.debloopers.chibchaweb.dto.SolicitudDominioDTO;
 import com.debloopers.chibchaweb.repository.*;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import jakarta.xml.bind.JAXBContext;
@@ -22,17 +20,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class SolicitudDominioService {
 
     private final SolicitudDominioRepository solicitudDominioRepository;
+    private final UsuarioRepository usuarioRepository;
     private final ClienteDirectoRepository clienteDirectoRepository;
     private final DistribuidorRepository distribuidorRepository;
     private final DominioRepository dominioRepository;
     private final AdministradorRepository administradorRepository;
 
     public SolicitudDominioService(final SolicitudDominioRepository solicitudDominioRepository,
+                                   final UsuarioRepository usuarioRepository,
                                    final ClienteDirectoRepository clienteDirectoRepository,
                                    final DistribuidorRepository distribuidorRepository,
                                    final DominioRepository dominioRepository,
                                    final AdministradorRepository administradorRepository) {
         this.solicitudDominioRepository = solicitudDominioRepository;
+        this.usuarioRepository = usuarioRepository;
         this.clienteDirectoRepository = clienteDirectoRepository;
         this.distribuidorRepository = distribuidorRepository;
         this.dominioRepository = dominioRepository;
@@ -114,13 +115,8 @@ public class SolicitudDominioService {
 
     @Transactional
     public File generarXMLSolicitudDominio(Integer idSolicitud) {
-        Optional<SolicitudDominio> optSolicitud = solicitudDominioRepository.findById(idSolicitud);
-
-        if (optSolicitud.isEmpty()) {
-            throw new NotFoundException("Request not found");
-        }
-
-        SolicitudDominio solicitud = optSolicitud.get();
+        SolicitudDominio solicitud = solicitudDominioRepository.findById(idSolicitud)
+                .orElseThrow(() -> new NotFoundException("Request not found"));
 
         SolicitudXML solicitudXML = new SolicitudXML();
         solicitudXML.setOrigen("Chibchaweb");
@@ -128,21 +124,42 @@ public class SolicitudDominioService {
 
         if (solicitud.getCliente() != null) {
             ClienteDirecto c = solicitud.getCliente();
-            solicitudXML.setSolicitante("Client: " + c.getNombreCliente() + " " + c.getApellidoCliente() + ", Tel: " + c.getTelefono());
-        } else if (solicitud.getDistribuidor() != null) {
+            ClienteXML cxml = new ClienteXML();
+            cxml.setNombre(c.getNombreCliente());
+            cxml.setApellido(c.getApellidoCliente());
+            cxml.setTelefono(c.getTelefono());
+            cxml.setFechaNacimiento(
+                    c.getFechaNacimientoCliente() != null ? c.getFechaNacimientoCliente().toString() : null
+            );
+
+            Optional<Usuario> usuario = usuarioRepository.findByCliente_IdCliente(c.getIdCliente());
+            usuario.ifPresent(u -> cxml.setCorreo(u.getCorreoUsuario()));
+
+            solicitudXML.setCliente(cxml);
+        }
+
+        if (solicitud.getDistribuidor() != null) {
             Distribuidor d = solicitud.getDistribuidor();
-            solicitudXML.setSolicitante("Distributor: " + d.getNombreEmpresa() + ", Doc: " + d.getNumeroDocEmpresa());
+            DistribuidorXML dxml = new DistribuidorXML();
+            dxml.setNombreEmpresa(d.getNombreEmpresa());
+            dxml.setNumeroDocumento(d.getNumeroDocEmpresa());
+            dxml.setDireccionEmpresa(d.getDireccionEmpresa());
+
+            Optional<Usuario> usuario = usuarioRepository.findByDistribuidor_IdDistribuidor(d.getIdDistribuidor());
+            usuario.ifPresent(u -> dxml.setCorreo(u.getCorreoUsuario()));
+
+            solicitudXML.setDistribuidor(dxml);
         }
 
         Dominio dominio = solicitud.getDominio();
-        solicitudXML.setDominio("Domain: " + dominio.getNombreDominio()+dominio.getTld().getTld() + ", State: " + dominio.getEstado());
+        solicitudXML.setDominio("Domain: " + dominio.getNombreDominio() + dominio.getTld().getTld() + ", State: " + dominio.getEstado());
 
         try {
             JAXBContext context = JAXBContext.newInstance(SolicitudXML.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-            File archivoXML = new File("solicitud_" + idSolicitud + ".xml");
+            File archivoXML = new File("Request_" + idSolicitud + ".xml");
             marshaller.marshal(solicitudXML, archivoXML);
             return archivoXML;
 

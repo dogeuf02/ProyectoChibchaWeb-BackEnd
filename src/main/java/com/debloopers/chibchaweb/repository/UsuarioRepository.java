@@ -26,4 +26,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     Optional<Usuario> findByDistribuidor_IdDistribuidor(Integer idDistribuidor);
 
+    Optional<Usuario> findByCliente_IdCliente(Integer idCliente);
+
 }
