@@ -3,6 +3,7 @@ package com.debloopers.chibchaweb.service;
 import com.debloopers.chibchaweb.dto.MedioPagoDTO;
 import com.debloopers.chibchaweb.entity.*;
 import com.debloopers.chibchaweb.repository.*;
+import com.debloopers.chibchaweb.util.EncryptionUtils;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
 
@@ -90,30 +91,53 @@ public class MedioPagoService {
         medioPagoDTO.setIdMedioPago(medioPago.getIdMedioPago());
         medioPagoDTO.setTipoMedioPago(medioPago.getTipoMedioPago());
         medioPagoDTO.setNombreTitular(medioPago.getNombreTitular());
-        medioPagoDTO.setNumeroTarjetaCuenta(medioPago.getNumeroTarjetaCuenta());
+
+        if (medioPago.getNumeroTarjetaCuenta() != null) {
+            try {
+                String decrypted = EncryptionUtils.decrypt(medioPago.getNumeroTarjetaCuenta());
+                medioPagoDTO.setNumeroTarjetaCuenta(EncryptionUtils.maskCard(decrypted));
+            } catch (Exception e) {
+                medioPagoDTO.setNumeroTarjetaCuenta("****");
+            }
+        }
+
         medioPagoDTO.setCorreoPse(medioPago.getCorreoPse());
         medioPagoDTO.setFechaRegistro(medioPago.getFechaRegistro());
         medioPagoDTO.setCliente(medioPago.getCliente() == null ? null : medioPago.getCliente().getIdCliente());
         medioPagoDTO.setDistribuidor(medioPago.getDistribuidor() == null ? null : medioPago.getDistribuidor().getIdDistribuidor());
         medioPagoDTO.setBanco(medioPago.getBanco() == null ? null : medioPago.getBanco().getIdBanco());
+
         return medioPagoDTO;
     }
 
     private MedioPago mapToEntity(final MedioPagoDTO medioPagoDTO, final MedioPago medioPago) {
         medioPago.setTipoMedioPago(medioPagoDTO.getTipoMedioPago());
         medioPago.setNombreTitular(medioPagoDTO.getNombreTitular());
-        medioPago.setNumeroTarjetaCuenta(medioPagoDTO.getNumeroTarjetaCuenta());
+
+        if (medioPagoDTO.getNumeroTarjetaCuenta() != null) {
+            medioPago.setNumeroTarjetaCuenta(
+                    EncryptionUtils.encrypt(medioPagoDTO.getNumeroTarjetaCuenta())
+            );
+        }
+
         medioPago.setCorreoPse(medioPagoDTO.getCorreoPse());
         medioPago.setFechaRegistro(medioPagoDTO.getFechaRegistro());
-        final ClienteDirecto cliente = medioPagoDTO.getCliente() == null ? null : clienteDirectoRepository.findById(medioPagoDTO.getCliente())
-                .orElseThrow(() -> new NotFoundException("cliente not found"));
+
+        final ClienteDirecto cliente = medioPagoDTO.getCliente() == null ? null :
+                clienteDirectoRepository.findById(medioPagoDTO.getCliente())
+                        .orElseThrow(() -> new NotFoundException("cliente not found"));
         medioPago.setCliente(cliente);
-        final Distribuidor distribuidor = medioPagoDTO.getDistribuidor() == null ? null : distribuidorRepository.findById(medioPagoDTO.getDistribuidor())
-                .orElseThrow(() -> new NotFoundException("distribuidor not found"));
+
+        final Distribuidor distribuidor = medioPagoDTO.getDistribuidor() == null ? null :
+                distribuidorRepository.findById(medioPagoDTO.getDistribuidor())
+                        .orElseThrow(() -> new NotFoundException("distribuidor not found"));
         medioPago.setDistribuidor(distribuidor);
-        final Banco banco = medioPagoDTO.getBanco() == null ? null : bancoRepository.findById(medioPagoDTO.getBanco())
-                .orElseThrow(() -> new NotFoundException("banco not found"));
+
+        final Banco banco = medioPagoDTO.getBanco() == null ? null :
+                bancoRepository.findById(medioPagoDTO.getBanco())
+                        .orElseThrow(() -> new NotFoundException("banco not found"));
         medioPago.setBanco(banco);
+
         return medioPago;
     }
 
