@@ -153,7 +153,7 @@ public class SolicitudDominioService {
 
         Dominio dominio = solicitud.getDominio();
         DominioXML dominioXML = new DominioXML();
-        dominioXML.setNombreCompleto(dominio.getNombreDominio() + dominio.getTld().getTld());
+        dominioXML.setNombreCompleto(dominio.getNombreDominio());
         dominioXML.setEstado(dominio.getEstado());
         dominioXML.setIdTld(dominio.getTld().getTld());
 

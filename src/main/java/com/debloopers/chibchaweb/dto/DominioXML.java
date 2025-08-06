@@ -26,7 +26,7 @@ public class DominioXML {
         this.estado = estado;
     }
 
-    @XmlElement(name = "TldId")
+    @XmlElement(name = "Tld")
     public String getIdTld() {
         return idTld;
     }
