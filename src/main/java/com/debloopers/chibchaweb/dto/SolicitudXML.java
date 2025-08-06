@@ -3,7 +3,7 @@ package com.debloopers.chibchaweb.dto;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "Solicitud")
+@XmlRootElement(name = "Application")
 public class SolicitudXML {
 
     private String origen;
@@ -11,7 +11,7 @@ public class SolicitudXML {
     private String solicitante;
     private String dominio;
 
-    @XmlElement(name = "Origen")
+    @XmlElement(name = "Origin")
     public String getOrigen() {
         return origen;
     }
@@ -20,7 +20,7 @@ public class SolicitudXML {
         this.origen = origen;
     }
 
-    @XmlElement(name = "FechaSolicitud")
+    @XmlElement(name = "DateApplication")
     public String getFechaSolicitud() {
         return fechaSolicitud;
     }
@@ -29,7 +29,7 @@ public class SolicitudXML {
         this.fechaSolicitud = fechaSolicitud;
     }
 
-    @XmlElement(name = "Solicitante")
+    @XmlElement(name = "Applicant")
     public String getSolicitante() {
         return solicitante;
     }
@@ -38,7 +38,7 @@ public class SolicitudXML {
         this.solicitante = solicitante;
     }
 
-    @XmlElement(name = "Dominio")
+    @XmlElement(name = "Domain")
     public String getDominio() {
         return dominio;
     }
