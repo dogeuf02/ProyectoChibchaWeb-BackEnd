@@ -63,6 +63,12 @@ public class PerteneceDominioController {
         return perteneceDominioService.contarPorDistribuidor(idDistribuidor);
     }
 
+    @Operation(summary = "Obtener el ID del registro de PerteneceDominio correspondiente a un dominio mediante el ID del dominio")
+    @GetMapping("/dominio/{idDominio}")
+    public ResponseEntity<Integer> obtenerIdPertenecePorDominio(@PathVariable Integer idDominio) {
+        Integer idPertenece = perteneceDominioService.obtenerIdPertenecePorDominio(idDominio);
+        return ResponseEntity.ok(idPertenece);
+    }
 
     @PostMapping
     @ApiResponse(responseCode = "201")

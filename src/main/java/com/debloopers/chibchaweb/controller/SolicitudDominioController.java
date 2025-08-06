@@ -2,7 +2,6 @@ package com.debloopers.chibchaweb.controller;
 
 import com.debloopers.chibchaweb.dto.ResponseDTO;
 import com.debloopers.chibchaweb.dto.SolicitudDominioDTO;
-import com.debloopers.chibchaweb.entity.SolicitudDominio;
 import com.debloopers.chibchaweb.service.SolicitudDominioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
