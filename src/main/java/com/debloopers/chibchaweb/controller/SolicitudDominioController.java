@@ -1,5 +1,6 @@
 package com.debloopers.chibchaweb.controller;
 
+import com.debloopers.chibchaweb.dto.ResponseDTO;
 import com.debloopers.chibchaweb.dto.SolicitudDominioDTO;
 import com.debloopers.chibchaweb.entity.SolicitudDominio;
 import com.debloopers.chibchaweb.service.SolicitudDominioService;
@@ -54,11 +55,17 @@ public class SolicitudDominioController {
     }
 
     @PostMapping
-    @ApiResponse(responseCode = "201")
-    public ResponseEntity<Integer> createSolicitudDominio(
+    @ApiResponse(responseCode = "200")
+    public ResponseEntity<ResponseDTO> createSolicitudDominio(
             @RequestBody @Valid final SolicitudDominioDTO solicitudDominioDTO) {
-        final Integer createdIdSolicitud = solicitudDominioService.create(solicitudDominioDTO);
-        return new ResponseEntity<>(createdIdSolicitud, HttpStatus.CREATED);
+
+        ResponseDTO response = solicitudDominioService.create(solicitudDominioDTO);
+
+        if (response.isExito()) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
 
     @PutMapping("/{idSolicitud}")

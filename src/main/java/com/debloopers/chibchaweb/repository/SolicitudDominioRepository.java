@@ -20,4 +20,7 @@ public interface SolicitudDominioRepository extends JpaRepository<SolicitudDomin
 
     List<SolicitudDominio> findByDistribuidor_IdDistribuidor(Integer idDistribuidor);
 
+    boolean existsByCliente_IdClienteAndDominio_IdDominio(Integer clienteId, Integer dominioId);
+
+    boolean existsByDistribuidor_IdDistribuidorAndDominio_IdDominio(Integer distribuidorId, Integer dominioId);
 }
