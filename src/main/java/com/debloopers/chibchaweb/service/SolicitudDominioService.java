@@ -219,7 +219,7 @@ public class SolicitudDominioService {
                         .getCorreoUsuario();
             }
 
-            String dominioNombre = solicitud.getDominio().getTld().getTld();
+            String dominioNombre = solicitud.getDominio().getNombreDominio();
             String tld = solicitud.getDominio().getTld().getTld();
 
             try {
