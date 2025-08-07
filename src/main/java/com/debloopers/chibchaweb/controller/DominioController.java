@@ -2,7 +2,6 @@ package com.debloopers.chibchaweb.controller;
 
 import com.debloopers.chibchaweb.dto.DominioConNombreTldDTO;
 import com.debloopers.chibchaweb.dto.DominioDTO;
-import com.debloopers.chibchaweb.entity.Dominio;
 import com.debloopers.chibchaweb.service.DominioService;
 import com.debloopers.chibchaweb.util.ReferencedException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
