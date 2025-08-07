@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,23 +32,27 @@ public class PlanAdquiridoController {
         this.planAdquiridoService = planAdquiridoService;
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @GetMapping
     public ResponseEntity<List<PlanAdquiridoDTO>> getAllPlanAdquiridos() {
         return ResponseEntity.ok(planAdquiridoService.findAll());
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Empleado','Cliente')")
     @GetMapping("/{idPlanAdquirido}")
     public ResponseEntity<PlanAdquiridoDTO> getPlanAdquirido(
             @PathVariable(name = "idPlanAdquirido") final Integer idPlanAdquirido) {
         return ResponseEntity.ok(planAdquiridoService.get(idPlanAdquirido));
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Empleado','Cliente')")
     @Operation(summary = "Obtener los planes adquiridos mediante el id del cliente")
     @GetMapping("/by-cliente/{idCliente}")
     public ResponseEntity<List<PlanAdquiridoDTO>> getByCliente(@PathVariable Integer idCliente) {
         return ResponseEntity.ok(planAdquiridoService.findByClienteId(idCliente));
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Empleado','Cliente')")
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Integer> createPlanAdquirido(
@@ -56,6 +61,7 @@ public class PlanAdquiridoController {
         return new ResponseEntity<>(createdIdPlanAdquirido, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Empleado','Cliente')")
     @PutMapping("/{idPlanAdquirido}")
     public ResponseEntity<Integer> updatePlanAdquirido(
             @PathVariable(name = "idPlanAdquirido") final Integer idPlanAdquirido,
@@ -64,6 +70,7 @@ public class PlanAdquiridoController {
         return ResponseEntity.ok(idPlanAdquirido);
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador')")
     @DeleteMapping("/{idPlanAdquirido}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deletePlanAdquirido(

@@ -1,6 +1,7 @@
 package com.debloopers.chibchaweb.service;
 
 import com.debloopers.chibchaweb.entity.Usuario;
+import com.debloopers.chibchaweb.security.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -16,8 +17,6 @@ import java.util.Map;
 
 @Service
 public class JwtService {
-
-    private static final String SECRET_KEY = "55c73d9ce26056726f9285c52d5a62490c383037ce0ec7456035302363daccbc";
 
     public String generateToken(Usuario usuario) {
         Map<String, Object> claims = new HashMap<>();
@@ -72,7 +71,12 @@ public class JwtService {
     }
 
     private Key getKey() {
-        byte[] keyBytes = SECRET_KEY.getBytes(StandardCharsets.UTF_8);
+        String secret = JwtProperties.SECRET_KEY;
+        if (secret == null) {
+            throw new IllegalStateException("The secret JWT key has not been loaded.");
+        }
+        byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
 }

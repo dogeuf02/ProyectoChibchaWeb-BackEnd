@@ -186,7 +186,7 @@ public class SolicitudDominioService {
     }
 
     @Transactional
-    public ResponseDTO cambiarEstadoSolicitudDominio(Integer idSolicitud, boolean aprobar) {
+    public ResponseDTO cambiarEstadoSolicitudDominio(Integer idSolicitud, boolean aprobar, Integer idAdministrador) {
         SolicitudDominio solicitud = solicitudDominioRepository.findById(idSolicitud)
                 .orElseThrow(() -> new EntityNotFoundException("Domain request not found."));
 
@@ -194,11 +194,17 @@ public class SolicitudDominioService {
 
         if (!nuevoEstado.equalsIgnoreCase(solicitud.getEstadoSolicitud())) {
             solicitud.setEstadoSolicitud(nuevoEstado);
+
             if (aprobar) {
                 solicitud.setFechaAprobacion(LocalDate.now());
             } else {
                 solicitud.setFechaAprobacion(null);
             }
+
+            Administrador administrador = administradorRepository.findById(idAdministrador)
+                    .orElseThrow(() -> new EntityNotFoundException("Administrator not found."));
+            solicitud.setAdmin(administrador);
+
             solicitudDominioRepository.save(solicitud);
 
             String descripcionSolicitante;
@@ -219,7 +225,7 @@ public class SolicitudDominioService {
                         .getCorreoUsuario();
             }
 
-            String dominioNombre = solicitud.getDominio().getTld().getTld();
+            String dominioNombre = solicitud.getDominio().getNombreDominio();
             String tld = solicitud.getDominio().getTld().getTld();
 
             try {

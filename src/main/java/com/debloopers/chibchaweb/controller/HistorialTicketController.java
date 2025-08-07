@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,17 +29,20 @@ public class HistorialTicketController {
         this.historialTicketService = historialTicketService;
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Empleado')")
     @GetMapping
     public ResponseEntity<List<HistorialTicketDTO>> getAllHistorialTickets() {
         return ResponseEntity.ok(historialTicketService.findAll());
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{idHistorialTicket}")
     public ResponseEntity<HistorialTicketDTO> getHistorialTicket(
             @PathVariable(name = "idHistorialTicket") final Integer idHistorialTicket) {
         return ResponseEntity.ok(historialTicketService.get(idHistorialTicket));
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Integer> createHistorialTicket(
@@ -47,6 +51,7 @@ public class HistorialTicketController {
         return new ResponseEntity<>(createdIdHistorialTicket, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Empleado')")
     @PutMapping("/{idHistorialTicket}")
     public ResponseEntity<Integer> updateHistorialTicket(
             @PathVariable(name = "idHistorialTicket") final Integer idHistorialTicket,
@@ -55,6 +60,7 @@ public class HistorialTicketController {
         return ResponseEntity.ok(idHistorialTicket);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @DeleteMapping("/{idHistorialTicket}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteHistorialTicket(

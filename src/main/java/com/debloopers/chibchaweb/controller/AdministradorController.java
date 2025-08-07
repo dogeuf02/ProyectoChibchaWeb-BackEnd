@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,17 +32,20 @@ public class AdministradorController {
         this.administradorService = administradorService;
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @GetMapping
     public ResponseEntity<List<AdministradorDTO>> getAllAdministradors() {
         return ResponseEntity.ok(administradorService.findAll());
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @GetMapping("/{idAdmin}")
     public ResponseEntity<AdministradorDTO> getAdministrador(
             @PathVariable(name = "idAdmin") final Integer idAdmin) {
         return ResponseEntity.ok(administradorService.get(idAdmin));
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @Operation(summary = "Registrar un administrador")
     @PostMapping("/registroAdministrador")
     @ApiResponse(responseCode = "201")
@@ -57,6 +61,7 @@ public class AdministradorController {
         }
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @Operation(summary = "Actualizar un administrador")
     @PutMapping("/{idAdmin}")
     public ResponseEntity<Integer> updateAdministrador(
@@ -66,6 +71,7 @@ public class AdministradorController {
         return ResponseEntity.ok(idAdmin);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @Operation(summary = "Obtener todos los administradores con su correo y estado")
     @GetMapping("/obtenerAdministradores")
     public ResponseEntity<List<AdministradorConCorreoDTO>> getAllAdministradoresConCorreo() {
@@ -73,6 +79,7 @@ public class AdministradorController {
         return ResponseEntity.ok(administradores);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @DeleteMapping("/{idAdmin}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteAdministrador(

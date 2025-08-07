@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,17 +29,20 @@ public class FacturaController {
         this.facturaService = facturaService;
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @GetMapping
     public ResponseEntity<List<FacturaDTO>> getAllFacturas() {
         return ResponseEntity.ok(facturaService.findAll());
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Empleado','Cliente')")
     @GetMapping("/{idFactura}")
     public ResponseEntity<FacturaDTO> getFactura(
             @PathVariable(name = "idFactura") final Integer idFactura) {
         return ResponseEntity.ok(facturaService.get(idFactura));
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Distribuidor','Cliente')")
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Integer> createFactura(@RequestBody @Valid final FacturaDTO facturaDTO) {
@@ -46,6 +50,7 @@ public class FacturaController {
         return new ResponseEntity<>(createdIdFactura, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PutMapping("/{idFactura}")
     public ResponseEntity<Integer> updateFactura(
             @PathVariable(name = "idFactura") final Integer idFactura,
@@ -54,6 +59,7 @@ public class FacturaController {
         return ResponseEntity.ok(idFactura);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @DeleteMapping("/{idFactura}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteFactura(

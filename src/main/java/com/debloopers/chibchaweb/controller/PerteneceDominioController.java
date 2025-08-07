@@ -14,6 +14,7 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,35 +35,41 @@ public class PerteneceDominioController {
         this.perteneceDominioService = perteneceDominioService;
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping
     public ResponseEntity<List<PerteneceDominioDTO>> getAllPerteneceDominios() {
         return ResponseEntity.ok(perteneceDominioService.findAll());
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{idPertenece}")
     public ResponseEntity<PerteneceDominioDTO> getPerteneceDominio(
             @PathVariable(name = "idPertenece") final Integer idPertenece) {
         return ResponseEntity.ok(perteneceDominioService.get(idPertenece));
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Empleado','Cliente')")
     @Operation(summary = "Obtener registros por cliente")
     @GetMapping("/cliente/{idCliente}")
     public List<PerteneceDominioDTO> obtenerPorIdCliente(@PathVariable Integer idCliente) {
         return perteneceDominioService.obtenerPorIdCliente(idCliente);
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Empleado','Distribuidor')")
     @Operation(summary = "Obtener registros por distribuidor")
     @GetMapping("/distribuidor/{idDistribuidor}")
     public PerteneceDominioRespondeDTO obtenerPorIdDistribuidor(@PathVariable Integer idDistribuidor) {
         return perteneceDominioService.obtenerPorIdDistribuidor(idDistribuidor);
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Empleado','Distribuidor')")
     @Operation(summary = "Obtener cantidad de dominios que tiene un distribuidor")
     @GetMapping("/distribuidor/{idDistribuidor}/total")
     public Map<String, Long> contarPorDistribuidor(@PathVariable Integer idDistribuidor) {
         return perteneceDominioService.contarPorDistribuidor(idDistribuidor);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @Operation(summary = "Obtener el ID del registro de PerteneceDominio correspondiente a un dominio mediante el ID del dominio")
     @GetMapping("/dominio/{idDominio}")
     public ResponseEntity<Integer> obtenerIdPertenecePorDominio(@PathVariable Integer idDominio) {
@@ -70,6 +77,7 @@ public class PerteneceDominioController {
         return ResponseEntity.ok(idPertenece);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Integer> createPerteneceDominio(
@@ -78,6 +86,7 @@ public class PerteneceDominioController {
         return new ResponseEntity<>(createdIdPertenece, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PutMapping("/{idPertenece}")
     public ResponseEntity<Integer> updatePerteneceDominio(
             @PathVariable(name = "idPertenece") final Integer idPertenece,
@@ -86,6 +95,7 @@ public class PerteneceDominioController {
         return ResponseEntity.ok(idPertenece);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @DeleteMapping("/{idPertenece}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deletePerteneceDominio(

@@ -41,7 +41,7 @@ public class UsuarioDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return !"BLOQUEADO".equalsIgnoreCase(usuario.getEstado());
+        return !"INACTIVO".equalsIgnoreCase(usuario.getEstado());
     }
 
     @Override

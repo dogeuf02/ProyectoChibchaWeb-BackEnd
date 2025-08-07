@@ -10,11 +10,13 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class TokenListaNegraService {
 
-    @Autowired
-    private StringRedisTemplate redisTemplate;
+    private final StringRedisTemplate redisTemplate;
+    private final JwtService jwtService;
 
-    @Autowired
-    private JwtService jwtService;
+    public TokenListaNegraService(StringRedisTemplate redisTemplate, JwtService jwtService) {
+        this.redisTemplate = redisTemplate;
+        this.jwtService = jwtService;
+    }
 
     public void invalidarToken(String token) {
         Date expiration = jwtService.extractExpiration(token);
@@ -23,5 +25,9 @@ public class TokenListaNegraService {
         if (ttl > 0) {
             redisTemplate.opsForValue().set(token, "blacklisted", ttl, TimeUnit.MILLISECONDS);
         }
+    }
+
+    public boolean isTokenBlacklisted(String token) {
+        return redisTemplate.hasKey(token);
     }
 }

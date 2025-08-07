@@ -99,7 +99,7 @@ public class UsuarioService {
 
     public void updateById(final Integer idUsuario, final UsuarioActualizarDTO usuarioDTO) {
         final Usuario usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new NotFoundException("Usuario con ID no encontrado: " + idUsuario));
+                .orElseThrow(() -> new NotFoundException("User with ID not found: " + idUsuario));
 
         if (usuarioDTO.getContrasena() != null && !usuarioDTO.getContrasena().isBlank()) {
             usuario.setContrasena(passwordEncoder.encode(usuarioDTO.getContrasena().trim()));
@@ -111,7 +111,7 @@ public class UsuarioService {
             if (estadosValidos.contains(estadoNormalizado)) {
                 usuario.setEstado(estadoNormalizado);
             } else {
-                throw new IllegalArgumentException("Estado inválido: " + usuarioDTO.getEstado());
+                throw new IllegalArgumentException("Invalid State");
             }
         }
         usuarioRepository.save(usuario);

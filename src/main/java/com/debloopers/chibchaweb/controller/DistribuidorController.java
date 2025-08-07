@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -24,17 +25,18 @@ public class DistribuidorController {
         this.distribuidorService = distribuidorService;
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Distribuidor','Empleado')")
     @GetMapping
     public ResponseEntity<List<DistribuidorDTO>> getAllDistribuidors() {
         return ResponseEntity.ok(distribuidorService.findAll());
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Distribuidor','Empleado')")
     @GetMapping("/{idDistribuidor}")
     public ResponseEntity<DistribuidorDTO> getDistribuidor(
             @PathVariable(name = "idDistribuidor") final Integer idDistribuidor) {
         return ResponseEntity.ok(distribuidorService.get(idDistribuidor));
     }
-
 
     @Operation(summary = "Registrar un distribuidor")
     @PostMapping("/registroDistribuidor")
@@ -51,6 +53,7 @@ public class DistribuidorController {
         }
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Distribuidor')")
     @Operation(summary = "Actualizar campos distribuidor")
     @PutMapping("/{idDistribuidor}")
     public ResponseEntity<Integer> updateDistribuidor(
@@ -60,12 +63,14 @@ public class DistribuidorController {
         return ResponseEntity.ok(idDistribuidor);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @Operation(summary = "Obtener los distribuidores con su correo y estado")
     @GetMapping("/obtenerDistribuidores")
     public ResponseEntity<List<DistribuidorConCorreoDTO>> getAllDistribuidoresConCorreo() {
         return ResponseEntity.ok(distribuidorService.findAllWithCorreo());
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @Operation(summary = "Aprobar o rechazar una solicitud de registro de distribuidor")
     @PutMapping("gestionarSolicitudRegistro/{idDistribuidor}")
     public ResponseEntity<String> cambiarEstadoDistribuidor(
@@ -77,6 +82,7 @@ public class DistribuidorController {
         return ResponseEntity.ok("Distributor status updated as of: " + estado);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @DeleteMapping("/{idDistribuidor}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteDistribuidor(

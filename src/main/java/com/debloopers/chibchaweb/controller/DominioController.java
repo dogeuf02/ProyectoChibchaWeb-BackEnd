@@ -13,6 +13,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -43,6 +44,8 @@ public class DominioController {
         DominioDTO dto = dominioService.obtenerDominioPorDTO(dominioInfo);
         return ResponseEntity.ok(dto);
     }
+
+    @PreAuthorize("hasAnyAuthority('Administrador','Distribuidor','Cliente')")
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Integer> createDominio(@RequestBody @Valid final DominioDTO dominioDTO) {
@@ -50,6 +53,7 @@ public class DominioController {
         return new ResponseEntity<>(createdIdDominio, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PutMapping("/{idDominio}")
     public ResponseEntity<Integer> updateDominio(
             @PathVariable(name = "idDominio") final Integer idDominio,
@@ -58,6 +62,7 @@ public class DominioController {
         return ResponseEntity.ok(idDominio);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @DeleteMapping("/{idDominio}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteDominio(

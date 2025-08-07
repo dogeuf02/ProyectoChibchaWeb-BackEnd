@@ -6,27 +6,23 @@
 </head>
 <body style="font-family: Arial, sans-serif; color: #333; padding: 20px;">
 <h2 style="color: #2c3e50;">Respuesta a Solicitud de Dominio</h2>
-
 <p>
     Estimado/a <strong>{{descripcionSolicitante}}</strong>,
 </p>
-
 <p>
     Su solicitud para el dominio
-    <strong>{{dominio}}.{{tld}}</strong>
+    <strong>{{dominio}}{{tld}}</strong>
     ha sido <strong>{{nuevoEstado}}</strong>.
+    <br>
+    <br>{{razon}}</br>
 </p>
-
-<p>
-    {{#if aprobado}}
-    ¡Felicidades! Ya puede comenzar a usar su dominio.
-    {{else}}
-    Lamentamos los inconvenientes. Por favor contáctenos si necesita ayuda.
-    {{/if}}
+<p style="margin-top: 20px;">
+    Si tiene alguna duda, no dude en contactarnos. <br>
+    <br>
+    <strong>Equipo ChibchaWeb</strong>
 </p>
-
-<div style="text-align:center; margin-top:30px;">
-    <img src="cid:logo" alt="Logo ChibchaWeb" width="150" style="display:block; margin:0 auto;">
+<div style="margin-top: 30px; text-align: left;">
+    <img src="cid:logo" alt="Logo ChibchaWeb" width="150" style="margin: 0;">
 </div>
 </body>
 </html>

@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,17 +32,20 @@ public class EmpleadoController {
         this.empleadoService = empleadoService;
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Empleado')")
     @GetMapping
     public ResponseEntity<List<EmpleadoDTO>> getAllEmpleados() {
         return ResponseEntity.ok(empleadoService.findAll());
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Empleado')")
     @GetMapping("/{idEmpleado}")
     public ResponseEntity<EmpleadoDTO> getEmpleado(
             @PathVariable(name = "idEmpleado") final Integer idEmpleado) {
         return ResponseEntity.ok(empleadoService.get(idEmpleado));
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @GetMapping("/obtenerEmpleados")
     @Operation(summary = "Obtener empleados junto con su correo eletronico")
     public ResponseEntity<List<EmpleadoConCorreoDTO>> getEmpleadosConCorreo() {
@@ -49,6 +53,7 @@ public class EmpleadoController {
         return ResponseEntity.ok(empleados);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PostMapping("/registroEmpleado")
     @Operation(summary = "Registro de un nuevo empleado")
     public ResponseEntity<ResponseDTO> createEmpleado(
@@ -63,6 +68,7 @@ public class EmpleadoController {
         }
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Empleado')")
     @Operation(summary = "Actualizar un empleado")
     @PutMapping("/{idEmpleado}")
     public ResponseEntity<Integer> updateEmpleado(
@@ -72,6 +78,7 @@ public class EmpleadoController {
         return ResponseEntity.ok(idEmpleado);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @DeleteMapping("/{idEmpleado}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteEmpleado(

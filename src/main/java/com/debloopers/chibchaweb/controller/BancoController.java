@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,17 +31,20 @@ public class BancoController {
         this.bancoService = bancoService;
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Cliente','Distribuidor')")
     @GetMapping
     public ResponseEntity<List<BancoDTO>> getAllBancos() {
         return ResponseEntity.ok(bancoService.findAll());
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Cliente','Distribuidor')")
     @GetMapping("/{idBanco}")
     public ResponseEntity<BancoDTO> getBanco(
             @PathVariable(name = "idBanco") final Integer idBanco) {
         return ResponseEntity.ok(bancoService.get(idBanco));
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Integer> createBanco(@RequestBody @Valid final BancoDTO bancoDTO) {
@@ -48,6 +52,7 @@ public class BancoController {
         return new ResponseEntity<>(createdIdBanco, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PutMapping("/{idBanco}")
     public ResponseEntity<Integer> updateBanco(
             @PathVariable(name = "idBanco") final Integer idBanco,
@@ -56,6 +61,7 @@ public class BancoController {
         return ResponseEntity.ok(idBanco);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @DeleteMapping("/{idBanco}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteBanco(@PathVariable(name = "idBanco") final Integer idBanco) {

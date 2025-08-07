@@ -9,7 +9,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 
@@ -101,50 +103,41 @@ public class EmailService {
         javaMailSender.send(message);
     }
 
-    public void enviarCorreoCambioEstadoSolicitudDominio(
-            String to,
-            String descripcionSolicitante,
-            String dominio,
-            String tld,
-            String nuevoEstado
-    ) throws MessagingException, IOException {
+    public void enviarCorreoCambioEstadoSolicitudDominio(String to, String descripcionSolicitante,
+                                                         String dominio, String tld, String nuevoEstado)
+            throws MessagingException, IOException {
+
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
         helper.setTo(to);
-        helper.setSubject("Respuesta a solicitud de dominio");
+        helper.setSubject("Estado de tu solicitud de dominio");
 
-        String template = new String(
-                getClass().getClassLoader()
-                        .getResourceAsStream("template/cambio_estado_solicitud_dominio_es.html")
-                        .readAllBytes(),
-                StandardCharsets.UTF_8
-        );
+        InputStream templateStream = getClass().getClassLoader()
+                .getResourceAsStream("template/cambio_estado_solicitud_dominio_es.html");
 
-        String razon;
-        boolean aprobado = "Aprobada".equalsIgnoreCase(nuevoEstado);
-        if (aprobado) {
-            razon = "¡Felicidades! Ya puede comenzar a usar su dominio.";
-        } else {
-            razon = "Lamentamos los inconvenientes. Por favor contáctenos si necesita ayuda.";
+        if (templateStream == null) {
+            throw new FileNotFoundException("No se encontró la plantilla HTML para el correo");
         }
+
+        String template = new String(templateStream.readAllBytes(), StandardCharsets.UTF_8);
+
+        boolean aprobado = "Aprobada".equalsIgnoreCase(nuevoEstado);
+        String razon = aprobado
+                ? "¡Felicidades! Ya puede comenzar a usar su dominio."
+                : "Lamentamos los inconvenientes. Por favor contáctenos si necesita ayuda.";
 
         String html = template
                 .replace("{{descripcionSolicitante}}", descripcionSolicitante)
                 .replace("{{dominio}}", dominio)
                 .replace("{{tld}}", tld)
                 .replace("{{nuevoEstado}}", nuevoEstado)
-                .replace("{{#if aprobado}}", "")
-                .replace("{{else}}", "")
-                .replace("{{/if}}", "")
-                .replace("  ¡Felicidades! Ya puede comenzar a usar su dominio.", razon)
-                .replace("  Lamentamos los inconvenientes. Por favor contáctenos si necesita ayuda.", "");
+                .replace("{{razon}}", razon);
 
         helper.setText(html, true);
-        FileSystemResource logo = new FileSystemResource(
-                new File("src/main/resources/image/Logo_ChibchaWeb.png")
-        );
-        helper.addInline("logo", logo, "image/png");
+
+        FileSystemResource image = new FileSystemResource(new File("src/main/resources/image/Logo_ChibchaWeb.png"));
+        helper.addInline("logo", image, "image/png");
 
         javaMailSender.send(message);
     }
