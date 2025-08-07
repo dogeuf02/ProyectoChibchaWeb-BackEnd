@@ -58,12 +58,13 @@ public class SecurityConfig {
                             "/api/tipoDocumentoEmp",
                             "/api/tipoDocumentoEmp/*",
                             "/api/tld",
-                            "/api/tld/*"
+                            "/api/tld/*",
+                            "/swagger-ui/**",
+                            "/v3/api-docs/**"
                     ).permitAll();
 
                     auth.requestMatchers(
-                            "/swagger-ui/**",
-                            "/v3/api-docs/**",
+
                             "/proxy/**"
                     ).hasAuthority("Administrador");
 
