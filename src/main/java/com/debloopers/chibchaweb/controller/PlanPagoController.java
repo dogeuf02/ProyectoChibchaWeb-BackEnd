@@ -31,13 +31,11 @@ public class PlanPagoController {
         this.planPagoService = planPagoService;
     }
 
-    @PreAuthorize("permitAll()")
     @GetMapping
     public ResponseEntity<List<PlanPagoDTO>> getAllPlanPagos() {
         return ResponseEntity.ok(planPagoService.findAll());
     }
 
-    @PreAuthorize("permitAll()")
     @GetMapping("/{idPlanPago}")
     public ResponseEntity<PlanPagoDTO> getPlanPago(
             @PathVariable(name = "idPlanPago") final Integer idPlanPago) {

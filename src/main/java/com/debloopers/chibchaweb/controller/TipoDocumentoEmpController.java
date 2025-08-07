@@ -31,13 +31,11 @@ public class TipoDocumentoEmpController {
         this.tipoDocumentoEmpService = tipoDocumentoEmpService;
     }
 
-    @PreAuthorize("permitAll()")
     @GetMapping
     public ResponseEntity<List<TipoDocumentoEmpDTO>> getAllTipoDocumentoEmps() {
         return ResponseEntity.ok(tipoDocumentoEmpService.findAll());
     }
 
-    @PreAuthorize("permitAll()")
     @GetMapping("/{nombreTipoDoc}")
     public ResponseEntity<TipoDocumentoEmpDTO> getTipoDocumentoEmp(
             @PathVariable(name = "nombreTipoDoc") final String nombreTipoDoc) {

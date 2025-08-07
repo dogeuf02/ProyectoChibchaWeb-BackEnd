@@ -27,20 +27,17 @@ public class DominioController {
         this.dominioService = dominioService;
     }
 
-    @PreAuthorize("permitAll()")
     @GetMapping
     public ResponseEntity<List<DominioDTO>> getAllDominios() {
         return ResponseEntity.ok(dominioService.findAll());
     }
 
-    @PreAuthorize("permitAll()")
     @GetMapping("/{idDominio}")
     public ResponseEntity<DominioDTO> getDominio(
             @PathVariable(name = "idDominio") final Integer idDominio) {
         return ResponseEntity.ok(dominioService.get(idDominio));
     }
 
-    @PreAuthorize("permitAll()")
     @Operation(summary = "Buscar dominio por nombre y tld")
     @PostMapping("/buscar")
     public ResponseEntity<DominioDTO> obtenerDominioPorDTO(@RequestBody DominioConNombreTldDTO dominioInfo) {

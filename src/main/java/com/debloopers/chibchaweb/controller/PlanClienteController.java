@@ -33,20 +33,17 @@ public class PlanClienteController {
         this.planClienteService = planClienteService;
     }
 
-    @PreAuthorize("permitAll()")
     @GetMapping
     public ResponseEntity<List<PlanClienteDTO>> getAllPlanClientes() {
         return ResponseEntity.ok(planClienteService.findAll());
     }
 
-    @PreAuthorize("permitAll()")
     @GetMapping("/{idPlanCliente}")
     public ResponseEntity<PlanClienteDTO> getPlanCliente(
             @PathVariable(name = "idPlanCliente") final Integer idPlanCliente) {
         return ResponseEntity.ok(planClienteService.get(idPlanCliente));
     }
 
-    @PreAuthorize("permitAll()")
     @Operation(summary = "Obtener todos los planes con sus intervalos y precios")
     @GetMapping("/infoPlanes")
     public ResponseEntity<List<PrecioPlanInfoDTO>> getAllPrecioPlansFull() {

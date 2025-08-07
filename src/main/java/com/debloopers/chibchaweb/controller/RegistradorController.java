@@ -42,7 +42,6 @@ public class RegistradorController {
         return ResponseEntity.ok(registradorService.get(idRegistrador));
     }
 
-    @PreAuthorize("permitAll()")
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Integer> createRegistrador(

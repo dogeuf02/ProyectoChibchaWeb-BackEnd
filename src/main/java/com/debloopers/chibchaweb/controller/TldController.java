@@ -29,13 +29,11 @@ public class TldController {
         this.tldService = tldService;
     }
 
-    @PreAuthorize("permitAll()")
     @GetMapping
     public ResponseEntity<List<TldDTO>> getAllTlds() {
         return ResponseEntity.ok(tldService.findAll());
     }
 
-    @PreAuthorize("permitAll()")
     @GetMapping("/{tld}")
     public ResponseEntity<TldDTO> getTld(@PathVariable(name = "tld") final String tld) {
         return ResponseEntity.ok(tldService.get(tld));

@@ -3,10 +3,8 @@ package com.debloopers.chibchaweb.config;
 import com.debloopers.chibchaweb.security.JwtAuthenticationFilter;
 import com.debloopers.chibchaweb.service.UsuarioDetailsService;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -20,18 +18,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.util.Set;
-
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UsuarioDetailsService usuarioDetailsService;
-
-    @Lazy
-    @Autowired
-    private Set<String> permitAllEndpoints;
 
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
                           UsuarioDetailsService usuarioDetailsService) {
@@ -51,12 +43,23 @@ public class SecurityConfig {
                             "/api/auth/recuperarContrasena",
                             "/api/auth/activar",
                             "/api/clienteDirecto/registroCliente",
-                            "/api/distribuidor/registroDistribuidor"
+                            "/api/distribuidor/registroDistribuidor",
+                            "/api/dominio",
+                            "/api/dominio/{idDominio}",
+                            "/api/dominio/buscar",
+                            "/api/planCliente",
+                            "/api/planCliente/{idPlanCliente}",
+                            "/api/planCliente/infoPlanes",
+                            "/api/planPago",
+                            "/api/planPago/{idPlanPago}",
+                            "/api/precioPlan",
+                            "/api/precioPlan/{id}",
+                            "/api/registrador",
+                            "/api/tipoDocumentoEmp",
+                            "/api/tipoDocumentoEmp/*",
+                            "/api/tld",
+                            "/api/tld/*"
                     ).permitAll();
-
-                    for (String path : permitAllEndpoints) {
-                        auth.requestMatchers(path).permitAll();
-                    }
 
                     auth.requestMatchers(
                             "/swagger-ui/**",

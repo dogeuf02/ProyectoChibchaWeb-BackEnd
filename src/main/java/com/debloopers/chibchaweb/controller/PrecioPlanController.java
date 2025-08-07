@@ -29,13 +29,11 @@ public class PrecioPlanController {
         this.precioPlanService = precioPlanService;
     }
 
-    @PreAuthorize("permitAll()")
     @GetMapping
     public ResponseEntity<List<PrecioPlanDTO>> getAllPrecioPlans() {
         return ResponseEntity.ok(precioPlanService.findAll());
     }
 
-    @PreAuthorize("permitAll()")
     @GetMapping("/{id}")
     public ResponseEntity<PrecioPlanDTO> getPrecioPlan(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(precioPlanService.get(id));
