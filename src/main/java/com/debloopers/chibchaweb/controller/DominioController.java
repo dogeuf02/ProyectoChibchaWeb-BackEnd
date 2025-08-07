@@ -2,13 +2,14 @@ package com.debloopers.chibchaweb.controller;
 
 import com.debloopers.chibchaweb.dto.DominioConNombreTldDTO;
 import com.debloopers.chibchaweb.dto.DominioDTO;
-import com.debloopers.chibchaweb.entity.Dominio;
 import com.debloopers.chibchaweb.service.DominioService;
 import com.debloopers.chibchaweb.util.ReferencedException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+
+import java.math.BigDecimal;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -53,11 +54,21 @@ public class DominioController {
         return new ResponseEntity<>(createdIdDominio, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Distribuidor','Cliente')")
     @Operation(summary = "Crear dominio y generar precio a partir del No. de caracteres")
     @PostMapping("/crearConPrecio")
     @ResponseStatus(HttpStatus.CREATED)
     public Integer createDominioConPrecioCalculado(@RequestBody @Valid final DominioDTO dominioDTO) {
         return dominioService.createConPrecioCalculado(dominioDTO);
+    }
+
+    @Operation(summary = "Calcular cuanto vale un dominio con su correspondiente tld")
+    @GetMapping("/calcularPrecio")
+    public BigDecimal calcularPrecio(
+            @RequestParam String dominio,
+            @RequestParam String tld
+    ) {
+        return dominioService.calcularPrecioDominioYTld(dominio, tld);
     }
 
     @PreAuthorize("hasAuthority('Administrador')")

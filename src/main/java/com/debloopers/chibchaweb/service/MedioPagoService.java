@@ -9,7 +9,10 @@ import com.debloopers.chibchaweb.util.ReferencedWarning;
 
 import java.util.List;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 
 @Service
@@ -70,10 +73,41 @@ public class MedioPagoService {
                 .toList();
     }
 
+    @Transactional
     public Integer create(final MedioPagoDTO medioPagoDTO) {
-        final MedioPago medioPago = new MedioPago();
-        mapToEntity(medioPagoDTO, medioPago);
-        return medioPagoRepository.save(medioPago).getIdMedioPago();
+        String tipo = medioPagoDTO.getTipoMedioPago();
+        if (tipo == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Payment type is required");
+        }
+
+        boolean isCard = "Credito".equalsIgnoreCase(tipo) || "Debito".equalsIgnoreCase(tipo);
+        if (isCard) {
+            String raw = medioPagoDTO.getNumeroTarjetaCuenta();
+            if (raw == null || raw.isBlank()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Card number is required");
+            }
+            if (!isValidCardNumber(raw)) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid card number");
+            }
+
+            String clean = raw.replaceAll("\\D", "");
+            medioPagoDTO.setNumeroTarjetaCuenta(clean);
+
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unsupported payment type");
+        }
+
+        MedioPago medioPago = mapToEntity(medioPagoDTO, new MedioPago());
+
+        if (medioPago.getBanco() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bank is required");
+        }
+        if (medioPago.getNombreTitular() == null || medioPago.getNombreTitular().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cardholder name is required");
+        }
+
+        MedioPago saved = medioPagoRepository.save(medioPago);
+        return saved.getIdMedioPago();
     }
 
     public void update(final Integer idMedioPago, final MedioPagoDTO medioPagoDTO) {
@@ -139,6 +173,28 @@ public class MedioPagoService {
         medioPago.setBanco(banco);
 
         return medioPago;
+    }
+
+    private boolean isValidCardNumber(String raw) {
+        if (raw == null) return false;
+        String n = raw.replaceAll("\\D", "");
+
+        if (n.length() < 13 || n.length() > 19) return false;
+
+        int sum = 0;
+        boolean alternate = false;
+        for (int i = n.length() - 1; i >= 0; i--) {
+            int digit = n.charAt(i) - '0';
+            if (digit < 0 || digit > 9) return false;
+
+            if (alternate) {
+                digit *= 2;
+                if (digit > 9) digit -= 9;
+            }
+            sum += digit;
+            alternate = !alternate;
+        }
+        return (sum % 10 == 0);
     }
 
     public ReferencedWarning getReferencedWarning(final Integer idMedioPago) {
