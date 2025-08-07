@@ -12,6 +12,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,23 +33,27 @@ public class PlanClienteController {
         this.planClienteService = planClienteService;
     }
 
+    @PreAuthorize("permitAll()")
     @GetMapping
     public ResponseEntity<List<PlanClienteDTO>> getAllPlanClientes() {
         return ResponseEntity.ok(planClienteService.findAll());
     }
 
+    @PreAuthorize("permitAll()")
     @GetMapping("/{idPlanCliente}")
     public ResponseEntity<PlanClienteDTO> getPlanCliente(
             @PathVariable(name = "idPlanCliente") final Integer idPlanCliente) {
         return ResponseEntity.ok(planClienteService.get(idPlanCliente));
     }
 
+    @PreAuthorize("permitAll()")
     @Operation(summary = "Obtener todos los planes con sus intervalos y precios")
     @GetMapping("/infoPlanes")
     public ResponseEntity<List<PrecioPlanInfoDTO>> getAllPrecioPlansFull() {
         return ResponseEntity.ok(planClienteService.findAllPlanCliente());
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Integer> createPlanCliente(
@@ -57,6 +62,7 @@ public class PlanClienteController {
         return new ResponseEntity<>(createdIdPlanCliente, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PutMapping("/{idPlanCliente}")
     public ResponseEntity<Integer> updatePlanCliente(
             @PathVariable(name = "idPlanCliente") final Integer idPlanCliente,
@@ -65,6 +71,7 @@ public class PlanClienteController {
         return ResponseEntity.ok(idPlanCliente);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @DeleteMapping("/{idPlanCliente}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deletePlanCliente(

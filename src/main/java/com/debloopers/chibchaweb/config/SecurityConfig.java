@@ -10,7 +10,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,28 +20,39 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final UsuarioDetailsService usuarioDetailsService;
 
-    @Autowired
-    private UsuarioDetailsService usuarioDetailsService;
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
+                          UsuarioDetailsService usuarioDetailsService) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.usuarioDetailsService = usuarioDetailsService;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/api/auth/**","/swagger-ui/**","/v3/api-docs/**","/proxy/**","/redis/**").permitAll()
-//                        .requestMatchers("/api/clienteDirecto/**").hasAnyAuthority("Cliente", "Administrador")
-//                        .requestMatchers("/api/empleado/**").hasAuthority("Empleado")
-//                        .requestMatchers("/api/distribuidor/**").hasAuthority("Distribuidor")
-//                        .requestMatchers("/api/**").hasAuthority("Administrador")
-//                        .anyRequest().authenticated()
+                        // Públicos
+                        .requestMatchers(
+                                "/api/auth/login",
+                                "/api/auth/recuperarContrasena",
+                                "/api/auth/activar",
+                                "/api/clienteDirecto/registroCliente",
+                                "/api/distribuidor/registroDistribuidor"
 
-                        .anyRequest().permitAll()
+                        ).permitAll()
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/proxy/**"
+                        ).hasAuthority("Administrador")
+                        .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) -> {
@@ -55,6 +68,7 @@ public class SecurityConfig {
                 )
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 

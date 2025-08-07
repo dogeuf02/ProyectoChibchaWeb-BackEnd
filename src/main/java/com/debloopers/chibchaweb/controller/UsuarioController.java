@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -24,17 +25,20 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> getAllUsuarios() {
         return ResponseEntity.ok(usuarioService.findAll());
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{idUsuario}")
     public ResponseEntity<UsuarioDTO> getUsuario(
             @PathVariable(name = "idUsuario") final Integer idUsuario) {
         return ResponseEntity.ok(usuarioService.get(idUsuario));
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @Operation(summary = "Validar si un correo electronico existe en la base de datos y si corresponde a un cliente o distribuidor, retorna el rol con su ID correspondiente.")
     @GetMapping("/identificarRol")
     public ResponseEntity<ConsultaRolResponseDTO> obtenerRolSolicitante(@RequestParam String correo) {
@@ -45,6 +49,7 @@ public class UsuarioController {
         return ResponseEntity.ok(resultado);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Integer> createUsuario(@RequestBody @Valid final UsuarioDTO usuarioDTO) {
@@ -52,6 +57,7 @@ public class UsuarioController {
         return new ResponseEntity<>(createdIdUsuario, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Actualizar contraseña y estado de un usuario por correo")
     @PutMapping("/correo/{correoUsuario}")
     public ResponseEntity<String> updateUsuarioPorCorreo(
@@ -62,6 +68,7 @@ public class UsuarioController {
         return ResponseEntity.ok(correoUsuario);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Actualizar contraseña y estado de un usuario por ID")
     @PutMapping("/{idUsuario}")
     public ResponseEntity<Integer> updateUsuarioPorId(
@@ -72,6 +79,7 @@ public class UsuarioController {
         return ResponseEntity.ok(idUsuario);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @DeleteMapping("/{idUsuario}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteUsuario(

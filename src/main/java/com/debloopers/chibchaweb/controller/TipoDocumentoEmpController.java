@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,17 +31,20 @@ public class TipoDocumentoEmpController {
         this.tipoDocumentoEmpService = tipoDocumentoEmpService;
     }
 
+    @PreAuthorize("permitAll()")
     @GetMapping
     public ResponseEntity<List<TipoDocumentoEmpDTO>> getAllTipoDocumentoEmps() {
         return ResponseEntity.ok(tipoDocumentoEmpService.findAll());
     }
 
+    @PreAuthorize("permitAll()")
     @GetMapping("/{nombreTipoDoc}")
     public ResponseEntity<TipoDocumentoEmpDTO> getTipoDocumentoEmp(
             @PathVariable(name = "nombreTipoDoc") final String nombreTipoDoc) {
         return ResponseEntity.ok(tipoDocumentoEmpService.get(nombreTipoDoc));
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<String> createTipoDocumentoEmp(
@@ -49,6 +53,7 @@ public class TipoDocumentoEmpController {
         return new ResponseEntity<>('"' + createdNombreTipoDoc + '"', HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PutMapping("/{nombreTipoDoc}")
     public ResponseEntity<String> updateTipoDocumentoEmp(
             @PathVariable(name = "nombreTipoDoc") final String nombreTipoDoc,
@@ -57,6 +62,7 @@ public class TipoDocumentoEmpController {
         return ResponseEntity.ok('"' + nombreTipoDoc + '"');
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @DeleteMapping("/{nombreTipoDoc}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteTipoDocumentoEmp(

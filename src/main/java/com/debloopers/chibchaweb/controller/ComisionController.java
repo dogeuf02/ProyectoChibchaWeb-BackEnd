@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,17 +29,20 @@ public class ComisionController {
         this.comisionService = comisionService;
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Distribuidor','Empleado')")
     @GetMapping
     public ResponseEntity<List<ComisionDTO>> getAllComisions() {
         return ResponseEntity.ok(comisionService.findAll());
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Distribuidor','Empleado')")
     @GetMapping("/{idComision}")
     public ResponseEntity<ComisionDTO> getComision(
             @PathVariable(name = "idComision") final Integer idComision) {
         return ResponseEntity.ok(comisionService.get(idComision));
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Integer> createComision(
@@ -47,6 +51,7 @@ public class ComisionController {
         return new ResponseEntity<>(createdIdComision, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PutMapping("/{idComision}")
     public ResponseEntity<Integer> updateComision(
             @PathVariable(name = "idComision") final Integer idComision,
@@ -55,6 +60,7 @@ public class ComisionController {
         return ResponseEntity.ok(idComision);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @DeleteMapping("/{idComision}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteComision(

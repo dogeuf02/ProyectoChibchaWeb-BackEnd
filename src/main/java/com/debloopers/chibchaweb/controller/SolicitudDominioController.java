@@ -14,11 +14,11 @@ import java.nio.file.Files;
 import java.util.List;
 
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -32,31 +32,36 @@ public class SolicitudDominioController {
         this.solicitudDominioService = solicitudDominioService;
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @GetMapping
     public ResponseEntity<List<SolicitudDominioDTO>> getAllSolicitudDominios() {
         return ResponseEntity.ok(solicitudDominioService.findAll());
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{idSolicitud}")
     public ResponseEntity<SolicitudDominioDTO> getSolicitudDominio(
             @PathVariable(name = "idSolicitud") final Integer idSolicitud) {
         return ResponseEntity.ok(solicitudDominioService.get(idSolicitud));
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Cliente')")
     @Operation(summary = "Obtener todas las solicitudes de dominio realizadas por un cliente")
     @GetMapping("/cliente/{idCliente}")
     public List<SolicitudDominioDTO> getSolicitudesPorCliente(@PathVariable Integer idCliente) {
         return solicitudDominioService.obtenerSolicitudesPorCliente(idCliente);
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Distribuidor')")
     @Operation(summary = "Obtener todas las solicitudes de dominio realizadas por un distribuidor")
     @GetMapping("/distribuidor/{idDistribuidor}")
     public List<SolicitudDominioDTO> getSolicitudesPorDistribuidor(@PathVariable Integer idDistribuidor) {
         return solicitudDominioService.obtenerSolicitudesPorDistribuidor(idDistribuidor);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @Operation(summary = "Generar archivo XML correspondiente a una solicitud de dominio")
-    @GetMapping("/generar-xml/{id}")
+    @GetMapping("/generarXML/{id}")
     public ResponseEntity<ByteArrayResource> descargarXML(@PathVariable Integer id) throws IOException {
         File archivoXML = solicitudDominioService.generarXMLSolicitudDominio(id);
 
@@ -72,6 +77,7 @@ public class SolicitudDominioController {
                 .body(recurso);
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Cliente','Distribuidor')")
     @PostMapping
     @ApiResponse(responseCode = "200")
     public ResponseEntity<ResponseDTO> createSolicitudDominio(
@@ -86,6 +92,7 @@ public class SolicitudDominioController {
         }
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PutMapping("/{idSolicitud}")
     public ResponseEntity<Integer> updateSolicitudDominio(
             @PathVariable(name = "idSolicitud") final Integer idSolicitud,
@@ -94,6 +101,7 @@ public class SolicitudDominioController {
         return ResponseEntity.ok(idSolicitud);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @Operation(summary = "Aprobar o rechazar una solicitud de dominio")
     @PutMapping("/gestionarSolicitud/{idSolicitud}")
     public ResponseEntity<ResponseDTO> cambiarEstadoSolicitud(
@@ -116,6 +124,7 @@ public class SolicitudDominioController {
         }
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @DeleteMapping("/{idSolicitud}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteSolicitudDominio(

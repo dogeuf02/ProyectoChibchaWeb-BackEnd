@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,16 +29,19 @@ public class PrecioPlanController {
         this.precioPlanService = precioPlanService;
     }
 
+    @PreAuthorize("permitAll()")
     @GetMapping
     public ResponseEntity<List<PrecioPlanDTO>> getAllPrecioPlans() {
         return ResponseEntity.ok(precioPlanService.findAll());
     }
 
+    @PreAuthorize("permitAll()")
     @GetMapping("/{id}")
     public ResponseEntity<PrecioPlanDTO> getPrecioPlan(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(precioPlanService.get(id));
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createPrecioPlan(
@@ -46,6 +50,7 @@ public class PrecioPlanController {
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PutMapping("/{id}")
     public ResponseEntity<Long> updatePrecioPlan(@PathVariable(name = "id") final Long id,
             @RequestBody @Valid final PrecioPlanDTO precioPlanDTO) {
@@ -53,6 +58,7 @@ public class PrecioPlanController {
         return ResponseEntity.ok(id);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @DeleteMapping("/{id}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deletePrecioPlan(@PathVariable(name = "id") final Long id) {

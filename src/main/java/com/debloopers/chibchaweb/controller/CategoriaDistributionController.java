@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,17 +30,20 @@ public class CategoriaDistributionController {
         this.categoriaDistribuidorService = categoriaDistribuidorService;
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Distribuidor','Empleado')")
     @GetMapping
     public ResponseEntity<List<CategoriaDistribuidorDTO>> getAllCategoriaDistribuidors() {
         return ResponseEntity.ok(categoriaDistribuidorService.findAll());
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Distribuidor','Empleado')")
     @GetMapping("/{idCategoria}")
     public ResponseEntity<CategoriaDistribuidorDTO> getCategoriaDistribuidor(
             @PathVariable(name = "idCategoria") final Integer idCategoria) {
         return ResponseEntity.ok(categoriaDistribuidorService.get(idCategoria));
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Integer> createCategoriaDistribuidor(
@@ -48,6 +52,7 @@ public class CategoriaDistributionController {
         return new ResponseEntity<>(createdIdCategoria, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PutMapping("/{idCategoria}")
     public ResponseEntity<Integer> updateCategoriaDistribuidor(
             @PathVariable(name = "idCategoria") final Integer idCategoria,
@@ -56,6 +61,7 @@ public class CategoriaDistributionController {
         return ResponseEntity.ok(idCategoria);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @DeleteMapping("/{idCategoria}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteCategoriaDistribuidor(

@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,16 +29,19 @@ public class TldController {
         this.tldService = tldService;
     }
 
+    @PreAuthorize("permitAll()")
     @GetMapping
     public ResponseEntity<List<TldDTO>> getAllTlds() {
         return ResponseEntity.ok(tldService.findAll());
     }
 
+    @PreAuthorize("permitAll()")
     @GetMapping("/{tld}")
     public ResponseEntity<TldDTO> getTld(@PathVariable(name = "tld") final String tld) {
         return ResponseEntity.ok(tldService.get(tld));
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<String> createTld(@RequestBody @Valid final TldDTO tldDTO) {
@@ -45,6 +49,7 @@ public class TldController {
         return new ResponseEntity<>('"' + createdTld + '"', HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PutMapping("/{tld}")
     public ResponseEntity<String> updateTld(@PathVariable(name = "tld") final String tld,
             @RequestBody @Valid final TldDTO tldDTO) {
@@ -52,6 +57,7 @@ public class TldController {
         return ResponseEntity.ok('"' + tld + '"');
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @DeleteMapping("/{tld}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteTld(@PathVariable(name = "tld") final String tld) {

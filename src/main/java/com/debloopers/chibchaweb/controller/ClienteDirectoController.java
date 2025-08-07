@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,16 +32,19 @@ public class ClienteDirectoController {
         this.clienteDirectoService = clienteDirectoService;
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @GetMapping
     public ResponseEntity<List<ClienteDirectoDTO>> getAllClienteDirectos() {
         return ResponseEntity.ok(clienteDirectoService.findAll());
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Cliente','Empleado')")
     @GetMapping("/{idCliente}")
     public ResponseEntity<ClienteDirectoDTO> getClienteDirecto(
             @PathVariable(name = "idCliente") final Integer idCliente) {
         return ResponseEntity.ok(clienteDirectoService.get(idCliente));
     }
+
 
     @Operation(summary = "Registrar un cliente")
     @PostMapping("/registroCliente")
@@ -57,6 +61,7 @@ public class ClienteDirectoController {
         }
     }
 
+    @PreAuthorize("hasAnyAuthority('Administrador','Cliente')")
     @Operation(summary = "Actualizar campos")
     @PutMapping("/{idCliente}")
     public ResponseEntity<Integer> updateClienteDirecto(
@@ -66,12 +71,14 @@ public class ClienteDirectoController {
         return ResponseEntity.ok(idCliente);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @Operation(summary = "Obtener los clientes con su correo y estado")
     @GetMapping("/obtenerClientes")
     public ResponseEntity<List<ClienteDirectoConCorreoDTO>> getAllClientesConCorreo() {
         return ResponseEntity.ok(clienteDirectoService.findAllWithCorreo());
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @DeleteMapping("/{idCliente}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteClienteDirecto(

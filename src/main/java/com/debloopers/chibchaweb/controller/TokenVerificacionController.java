@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,16 +23,19 @@ public class TokenVerificacionController {
         this.tokenVerificacionService = tokenVerificacionService;
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @GetMapping
     public ResponseEntity<List<TokenVerificacionDTO>> getAllTokens() {
         return ResponseEntity.ok(tokenVerificacionService.findAll());
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @GetMapping("/{id}")
     public ResponseEntity<TokenVerificacionDTO> getToken(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(tokenVerificacionService.get(id));
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createToken(@RequestBody @Valid final TokenVerificacionDTO tokenVerificacionDTO) {
@@ -39,6 +43,7 @@ public class TokenVerificacionController {
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateToken(@PathVariable(name = "id") final Long id,
                                             @RequestBody @Valid final TokenVerificacionDTO tokenVerificacionDTO) {
@@ -46,6 +51,7 @@ public class TokenVerificacionController {
         return ResponseEntity.ok(id);
     }
 
+    @PreAuthorize("hasAuthority('Administrador')")
     @DeleteMapping("/{id}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteToken(@PathVariable(name = "id") final Long id) {

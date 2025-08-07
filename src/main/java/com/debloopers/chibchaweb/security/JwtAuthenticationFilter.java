@@ -7,6 +7,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,14 +21,22 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JwtService jwtService;
+    private final JwtService jwtService;
+    private final UsuarioDetailsService userDetailsService;
+    private final TokenListaNegraService tokenListaNegraService;
 
     @Autowired
-    private UsuarioDetailsService userDetailsService;
+    public JwtAuthenticationFilter(
+            JwtService jwtService,
+            UsuarioDetailsService userDetailsService,
+            TokenListaNegraService tokenListaNegraService
+    ) {
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
+        this.tokenListaNegraService = tokenListaNegraService;
+    }
 
-    @Autowired
-    private TokenListaNegraService tokenListaNegraService;
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -41,18 +51,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String jwt = authHeader.substring(7);
 
-//        if (tokenListaNegraService.isTokenBlacklisted(jwt)) {
-//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//            response.setContentType("application/json");
-//            response.setCharacterEncoding("UTF-8");
-//            response.getWriter().write("{\"error\": \"The token has been revoked or is invalid.\"}");
-//            return;
-//        }
+        if (tokenListaNegraService.isTokenBlacklisted(jwt)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("{\"error\": \"The token has been revoked or is invalid.\"}");
+            return;
+        }
 
         final String username;
         try {
             username = jwtService.extractUsername(jwt);
         } catch (Exception e) {
+            logger.warn("Error al extraer username del token: {}", e.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
