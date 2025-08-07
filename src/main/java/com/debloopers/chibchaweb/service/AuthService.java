@@ -104,16 +104,16 @@ public class AuthService {
 
     public ResponseDTO recuperarContrasena(RecuperarContrasenaDTO recuperarContrasenaDTO) throws MessagingException, IOException {
 
-        boolean captchaOk;
-        try {
-            captchaOk = captchaService.verifyCaptcha(recuperarContrasenaDTO.getCaptchaToken());
-        } catch (Exception recaptchaEx) {
-            return new ResponseDTO(false, "The captcha could not be verified. Please try again later.");
-        }
-
-        if (!captchaOk) {
-            return new ResponseDTO(false, "Invalid captcha. Please try again.");
-        }
+//        boolean captchaOk;
+//        try {
+//            captchaOk = captchaService.verifyCaptcha(recuperarContrasenaDTO.getCaptchaToken());
+//        } catch (Exception recaptchaEx) {
+//            return new ResponseDTO(false, "The captcha could not be verified. Please try again later.");
+//        }
+//
+//        if (!captchaOk) {
+//            return new ResponseDTO(false, "Invalid captcha. Please try again.");
+//        }
 
         Usuario user = usuarioRepository.findOptionalByCorreoUsuario(recuperarContrasenaDTO.getEmail())
                 .orElseThrow(() -> new NotFoundException("Unregistered user."));
