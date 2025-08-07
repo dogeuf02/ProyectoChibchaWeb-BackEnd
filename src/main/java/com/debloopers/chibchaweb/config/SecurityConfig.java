@@ -3,9 +3,10 @@ package com.debloopers.chibchaweb.config;
 import com.debloopers.chibchaweb.security.JwtAuthenticationFilter;
 import com.debloopers.chibchaweb.service.UsuarioDetailsService;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -19,12 +20,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.Set;
+
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UsuarioDetailsService usuarioDetailsService;
+
+    @Lazy
+    @Autowired
+    private Set<String> permitAllEndpoints;
 
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
                           UsuarioDetailsService usuarioDetailsService) {
@@ -38,21 +45,27 @@ public class SecurityConfig {
                 .cors(cors -> {})
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/api/auth/login",
-                                "/api/auth/recuperarContrasena",
-                                "/api/auth/activar",
-                                "/api/clienteDirecto/registroCliente",
-                                "/api/distribuidor/registroDistribuidor"
-                        ).permitAll()
-                        .requestMatchers(
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/proxy/**"
-                        ).hasAuthority("Administrador")
-                        .anyRequest().authenticated()
-                )
+                .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers(
+                            "/api/auth/login",
+                            "/api/auth/recuperarContrasena",
+                            "/api/auth/activar",
+                            "/api/clienteDirecto/registroCliente",
+                            "/api/distribuidor/registroDistribuidor"
+                    ).permitAll();
+
+                    for (String path : permitAllEndpoints) {
+                        auth.requestMatchers(path).permitAll();
+                    }
+
+                    auth.requestMatchers(
+                            "/swagger-ui/**",
+                            "/v3/api-docs/**",
+                            "/proxy/**"
+                    ).hasAuthority("Administrador");
+
+                    auth.anyRequest().authenticated();
+                })
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
