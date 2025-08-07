@@ -98,10 +98,11 @@ public class SolicitudDominioController {
     @PutMapping("/gestionarSolicitud/{idSolicitud}")
     public ResponseEntity<ResponseDTO> cambiarEstadoSolicitud(
             @PathVariable Integer idSolicitud,
-            @RequestParam boolean aprobar) {
+            @RequestParam boolean aprobar,
+            @RequestParam Integer idAdministrador) {
         try {
             ResponseDTO resultado = solicitudDominioService
-                    .cambiarEstadoSolicitudDominio(idSolicitud, aprobar);
+                    .cambiarEstadoSolicitudDominio(idSolicitud, aprobar, idAdministrador);
             return ResponseEntity.ok(resultado);
 
         } catch (EntityNotFoundException ex) {
