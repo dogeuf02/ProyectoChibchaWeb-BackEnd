@@ -47,6 +47,7 @@ public class SecurityConfig {
                             "/api/dominio",
                             "/api/dominio/{idDominio}",
                             "/api/dominio/buscar",
+                            "/api/dominio/crearConPrecio",
                             "/api/planCliente",
                             "/api/planCliente/{idPlanCliente}",
                             "/api/planCliente/infoPlanes",
