@@ -58,19 +58,22 @@ public class SolicitudDominioService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    @Transactional
-    public List<SolicitudDominioDTO> obtenerSolicitudesPorCliente(Integer idCliente) {
-        List<SolicitudDominio> solicitudes = solicitudDominioRepository.findByCliente_IdCliente(idCliente);
+    @Transactional(readOnly = true)
+    public List<SolicitudDominioResumenDTO> obtenerSolicitudesPorCliente(Integer idCliente) {
+        List<SolicitudDominio> solicitudes =
+                solicitudDominioRepository.findWithDominioAndTldByClienteId(idCliente);
         return solicitudes.stream()
-                .map(s -> mapToDTO(s, new SolicitudDominioDTO()))
+                .map(this::mapToResumenDTO)
                 .toList();
     }
 
-    @Transactional
-    public List<SolicitudDominioDTO> obtenerSolicitudesPorDistribuidor(Integer idDistribuidor) {
-        List<SolicitudDominio> solicitudes = solicitudDominioRepository.findByDistribuidor_IdDistribuidor(idDistribuidor);
+    @Transactional(readOnly = true)
+    public List<SolicitudDominioResumenDTO> obtenerSolicitudesPorDistribuidor(Integer idDistribuidor) {
+        List<SolicitudDominio> solicitudes =
+                solicitudDominioRepository.findWithDominioAndTldByDistribuidorId(idDistribuidor);
+
         return solicitudes.stream()
-                .map(s -> mapToDTO(s, new SolicitudDominioDTO()))
+                .map(this::mapToResumenDTO)
                 .toList();
     }
 
@@ -281,5 +284,27 @@ public class SolicitudDominioService {
                 .orElseThrow(() -> new NotFoundException("admin not found"));
         solicitudDominio.setAdmin(admin);
         return solicitudDominio;
+    }
+
+    private SolicitudDominioResumenDTO mapToResumenDTO(SolicitudDominio solicitud) {
+        SolicitudDominioResumenDTO dto = new SolicitudDominioResumenDTO();
+
+        dto.setIdSolicitud(solicitud.getIdSolicitud());
+        dto.setEstadoSolicitud(solicitud.getEstadoSolicitud());
+        dto.setFechaSolicitud(solicitud.getFechaSolicitud());
+        dto.setFechaAprobacion(solicitud.getFechaAprobacion());
+
+        if (solicitud.getDominio() != null) {
+            Dominio dominio = solicitud.getDominio();
+            dto.setNombreDominio(dominio.getNombreDominio());
+            dto.setPrecioDominio(dominio.getPrecioDominio());
+
+            if (dominio.getTld() != null) {
+                dto.setTld(dominio.getTld().getTld());
+                dto.setPrecioTld(dominio.getTld().getPrecioTld());
+            }
+        }
+
+        return dto;
     }
 }

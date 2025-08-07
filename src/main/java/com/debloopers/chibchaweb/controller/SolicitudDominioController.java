@@ -2,6 +2,7 @@ package com.debloopers.chibchaweb.controller;
 
 import com.debloopers.chibchaweb.dto.ResponseDTO;
 import com.debloopers.chibchaweb.dto.SolicitudDominioDTO;
+import com.debloopers.chibchaweb.dto.SolicitudDominioResumenDTO;
 import com.debloopers.chibchaweb.service.SolicitudDominioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -48,14 +49,14 @@ public class SolicitudDominioController {
     @PreAuthorize("hasAnyAuthority('Administrador','Cliente')")
     @Operation(summary = "Obtener todas las solicitudes de dominio realizadas por un cliente")
     @GetMapping("/cliente/{idCliente}")
-    public List<SolicitudDominioDTO> getSolicitudesPorCliente(@PathVariable Integer idCliente) {
+    public List<SolicitudDominioResumenDTO> getSolicitudesPorCliente(@PathVariable Integer idCliente) {
         return solicitudDominioService.obtenerSolicitudesPorCliente(idCliente);
     }
 
     @PreAuthorize("hasAnyAuthority('Administrador','Distribuidor')")
     @Operation(summary = "Obtener todas las solicitudes de dominio realizadas por un distribuidor")
     @GetMapping("/distribuidor/{idDistribuidor}")
-    public List<SolicitudDominioDTO> getSolicitudesPorDistribuidor(@PathVariable Integer idDistribuidor) {
+    public List<SolicitudDominioResumenDTO> getSolicitudesPorDistribuidor(@PathVariable Integer idDistribuidor) {
         return solicitudDominioService.obtenerSolicitudesPorDistribuidor(idDistribuidor);
     }
 
