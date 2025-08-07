@@ -72,6 +72,18 @@ public class DominioService {
         return dominioRepository.save(dominio).getIdDominio();
     }
 
+    public BigDecimal calcularPrecioDominioYTld(String dominio, String tld) {
+        BigDecimal precioPorCaracter = new BigDecimal("0.35");
+        BigDecimal precioDominio = precioPorCaracter.multiply(BigDecimal.valueOf(dominio.length()));
+
+        Tld tldEntity = tldRepository.findById(tld)
+                .orElseThrow(() -> new NotFoundException("TLD not found: " + tld));
+        BigDecimal precioTld = tldEntity.getPrecioTld();
+
+        return precioDominio.add(precioTld);
+    }
+
+
     public DominioDTO obtenerDominioPorDTO(DominioConNombreTldDTO dominioInfo) {
         Dominio dominio = dominioRepository
                 .findByNombreDominioAndTld_Tld(
