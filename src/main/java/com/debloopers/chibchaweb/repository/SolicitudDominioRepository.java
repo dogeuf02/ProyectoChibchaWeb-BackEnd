@@ -19,10 +19,6 @@ public interface SolicitudDominioRepository extends JpaRepository<SolicitudDomin
 
     SolicitudDominio findFirstByAdmin(Administrador administrador);
 
-    List<SolicitudDominio> findByCliente_IdCliente(Integer idCliente);
-
-    List<SolicitudDominio> findByDistribuidor_IdDistribuidor(Integer idDistribuidor);
-
     boolean existsByCliente_IdClienteAndDominio_IdDominio(Integer clienteId, Integer dominioId);
 
     boolean existsByDistribuidor_IdDistribuidorAndDominio_IdDominio(Integer distribuidorId, Integer dominioId);
@@ -40,5 +36,17 @@ public interface SolicitudDominioRepository extends JpaRepository<SolicitudDomin
             "AND s.estadoSolicitud = 'En Revisión'")
     boolean existsEnRevisionByDistribuidor(@Param("distribuidorId") Integer distribuidorId,
                                            @Param("dominioId") Integer dominioId);
+
+    @Query("SELECT s FROM SolicitudDominio s " +
+            "JOIN FETCH s.dominio d " +
+            "JOIN FETCH d.tld " +
+            "WHERE s.distribuidor.idDistribuidor = :idDistribuidor")
+    List<SolicitudDominio> findWithDominioAndTldByDistribuidorId(@Param("idDistribuidor") Integer idDistribuidor);
+
+    @Query("SELECT s FROM SolicitudDominio s " +
+            "JOIN FETCH s.dominio d " +
+            "JOIN FETCH d.tld " +
+            "WHERE s.cliente.idCliente = :idCliente")
+    List<SolicitudDominio> findWithDominioAndTldByClienteId(@Param("idCliente") Integer idCliente);
 
 }
