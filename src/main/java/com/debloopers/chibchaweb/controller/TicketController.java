@@ -31,7 +31,7 @@ public class TicketController {
         this.ticketService = ticketService;
     }
 
-    @PreAuthorize("hasAnyAuthority('Administrador','Empleado')")
+    @PreAuthorize("hasAnyAuthority('Administrador','Empleado','Cliente')")
     @GetMapping
     public ResponseEntity<List<TicketDTO>> getAllTickets() {
         return ResponseEntity.ok(ticketService.findAll());
