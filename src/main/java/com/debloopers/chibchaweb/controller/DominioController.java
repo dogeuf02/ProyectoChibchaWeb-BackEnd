@@ -45,7 +45,7 @@ public class DominioController {
         return ResponseEntity.ok(dto);
     }
 
-    @PreAuthorize("hasAuthority('Administrador')")
+    @PreAuthorize("hasAnyAuthority('Administrador','Distribuidor','Cliente')")
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Integer> createDominio(@RequestBody @Valid final DominioDTO dominioDTO) {
