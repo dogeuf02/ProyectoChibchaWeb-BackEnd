@@ -12,10 +12,13 @@ import com.debloopers.chibchaweb.repository.SolicitudDominioRepository;
 import com.debloopers.chibchaweb.repository.TldRepository;
 import com.debloopers.chibchaweb.util.NotFoundException;
 import com.debloopers.chibchaweb.util.ReferencedWarning;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -51,6 +54,20 @@ public class DominioService {
 
     public Integer create(final DominioDTO dominioDTO) {
         final Dominio dominio = new Dominio();
+        mapToEntity(dominioDTO, dominio);
+        return dominioRepository.save(dominio).getIdDominio();
+    }
+
+    @Transactional
+    public Integer createConPrecioCalculado(final DominioDTO dominioDTO) {
+        final Dominio dominio = new Dominio();
+
+        int longitud = dominioDTO.getNombreDominio().length();
+        BigDecimal precioPorCaracter = new BigDecimal("0.35");
+        BigDecimal precioTotal = precioPorCaracter.multiply(BigDecimal.valueOf(longitud));
+
+        dominioDTO.setPrecioDominio(precioTotal);
+
         mapToEntity(dominioDTO, dominio);
         return dominioRepository.save(dominio).getIdDominio();
     }

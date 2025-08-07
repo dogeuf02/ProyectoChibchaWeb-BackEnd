@@ -53,6 +53,13 @@ public class DominioController {
         return new ResponseEntity<>(createdIdDominio, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Crear dominio y generar precio a partir del No. de caracteres")
+    @PostMapping("/crearConPrecio")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Integer createDominioConPrecioCalculado(@RequestBody @Valid final DominioDTO dominioDTO) {
+        return dominioService.createConPrecioCalculado(dominioDTO);
+    }
+
     @PreAuthorize("hasAuthority('Administrador')")
     @PutMapping("/{idDominio}")
     public ResponseEntity<Integer> updateDominio(
