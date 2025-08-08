@@ -8,85 +8,73 @@ Su diseño sigue principios de arquitectura limpia y patrones de diseño que gar
 📂 Estructura del proyecto
 La organización del código sigue una arquitectura en capas, separando claramente responsabilidades:
 
-config → Configuraciones globales.
-
-controller → Controladores REST que gestionan las peticiones HTTP.
-
-dto → Objetos de transferencia de datos para comunicación entre capas.
-
-entity → Entidades JPA que representan las tablas en la base de datos.
-
-repository → Interfaces de acceso a datos usando Spring Data JPA.
-
-security → Configuración de seguridad y lógica de autenticación/autorización.
-
-service → Implementación de la lógica de negocio.
-
-util → Funciones y utilidades reutilizables.
+<ul style="margin-left: 20px;">
+  <li><strong>config</strong> → Configuraciones globales.</li>
+  <li><strong>controller</strong> → Controladores REST que gestionan las peticiones HTTP.</li>
+  <li><strong>dto</strong> → Objetos de transferencia de datos para comunicación entre capas.</li>
+  <li><strong>entity</strong> → Entidades JPA que representan las tablas en la base de datos.</li>
+  <li><strong>repository</strong> → Interfaces de acceso a datos usando Spring Data JPA.</li>
+</ul>
 
 🛠️ Arquitectura y patrones de diseño
 El proyecto sigue una arquitectura en capas e implementa los siguientes patrones:
 
-DAO y Repository → Acceso a datos desacoplado con Spring Data JPA.
-
-DTO → Transferencia segura y optimizada de datos.
-
-Singleton → Beans gestionados por Spring con scope único por contexto.
-
-Builder → Creación de objetos complejos con Lombok (@Builder).
-
-Inyección de Dependencias → A través de anotaciones de Spring como @Autowired, @Service, @Component.
-
-Strategy → Elección dinámica de implementaciones según la lógica requerida.
-
-Factory Method → Creación encapsulada de objetos usando métodos @Bean en clases de configuración.
+<ul style="margin-left: 20px;">
+  <li><strong>DAO y Repository</strong> → Acceso a datos desacoplado con Spring Data JPA.</li>
+  <li><strong>DTO</strong> → Transferencia segura y optimizada de datos.</li>
+  <li><strong>Singleton</strong> → Beans gestionados por Spring con scope único por contexto.</li>
+  <li><strong>Builder</strong> → Creación de objetos complejos con Lombok (<code>@Builder</code>).</li>
+  <li><strong>Inyección de Dependencias</strong> → A través de anotaciones de Spring como <code>@Autowired</code>, <code>@Service</code>, <code>@Component</code>.</li>
+  <li><strong>Strategy</strong> → Elección dinámica de implementaciones según la lógica requerida.</li>
+  <li><strong>Factory Method</strong> → Creación encapsulada de objetos usando métodos <code>@Bean</code> en clases de configuración.</li>
+</ul>
 
 🚀 Servicios implementados
 Autenticación y autorización JWT con gestión de sesiones en Redis (Upstash).
 
-Envío de correos electrónicos vía SMTP de Gmail.
-
-Validación de usuarios con Google reCAPTCHA.
-
-Lógica de negocio personalizada para la aplicación.
+<ul style="margin-left: 20px;">
+  <li><strong>Envío de correos electrónicos</strong> vía SMTP de Gmail.</li>
+  <li><strong>Validación de usuarios</strong> con Google reCAPTCHA.</li>
+  <li><strong>Lógica de negocio personalizada</strong> para la aplicación.</li>
+</ul>
 
 📋 Requisitos
-Java 17+
-
-Maven 3.8+
-
-PostgreSQL
-
-Redis (Upstash o local)
-
-Cuenta de Gmail con credenciales SMTP
-
-Clave de Google reCAPTCHA
+<ul style="margin-left: 20px;">
+  <li><strong>Java</strong> 17+</li>
+  <li><strong>Maven</strong> 3.8+</li>
+  <li><strong>PostgreSQL</strong></li>
+  <li><strong>Redis</strong> (Upstash o local)</li>
+  <li><strong>Cuenta de Gmail</strong> con credenciales SMTP</li>
+  <li><strong>Clave</strong> de Google reCAPTCHA</li>
+</ul>
 
 ⚙️ Configuración
 Configurar variables en application.properties o application.yml:
 
-spring.datasource.url=jdbc:postgresql://localhost:5432/mi_bd
-spring.datasource.username=usuario
-spring.datasource.password=contraseña
+<ul style="margin-left: 20px;">
+  <li>spring.datasource.url=jdbc:postgresql://localhost:5432/mi_bd</li>
+  <li>spring.datasource.username=usuario</li>
+  <li>spring.datasource.password=contraseña</li>
 
-spring.redis.host=...
-spring.redis.port=...
-spring.redis.password=...
+  <li>spring.redis.host=...</li>
+  <li>spring.redis.port=...</li>
+  <li>spring.redis.password=...</li>
 
-jwt.secret=clave_secreta
-gmail.username=tu_correo@gmail.com
-gmail.password=tu_contraseña
-recaptcha.secret=clave_recaptcha
+  <li>jwt.secret=clave_secreta</li>
+  <li>gmail.username=tu_correo@gmail.com</li>
+  <li>gmail.password=tu_contraseña</li>
+  <li>recaptcha.secret=clave_recaptcha</li>
+</ul>
 
 Compilar y ejecutar:
 
-mvn spring-boot:run
+**mvn spring-boot:run*
 
 📡 Endpoints principales
+
 La documentación de la API está disponible con Springdoc OpenAPI (Swagger) en:
 
-http://localhost:8080/swagger-ui.html
+*http://localhost:8080/swagger-ui.html*
 
 👥 Autores
 Debloopers Team
