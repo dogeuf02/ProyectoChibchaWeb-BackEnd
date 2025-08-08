@@ -115,7 +115,7 @@ public class AuthService {
             return new ResponseDTO(false, "Invalid captcha. Please try again.");
         }
 
-        Usuario user = usuarioRepository.findOptionalByCorreoUsuario(recuperarContrasenaDTO.getEmail())
+        Usuario user = usuarioRepository.findOptionalByCorreoUsuario(recuperarContrasenaDTO.getCorreo())
                 .orElseThrow(() -> new NotFoundException("Unregistered user."));
 
         String estado = user.getEstado();
