@@ -73,7 +73,7 @@ Compilar y ejecutar:
 📡 Endpoints principales
 La documentación de la API está disponible con Springdoc OpenAPI (Swagger) en:
 
-**http://localhost:8080/swagger-ui.html**
+*http://localhost:8080/swagger-ui.html*
 
 👥 Autores
 Debloopers Team
