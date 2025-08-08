@@ -53,6 +53,18 @@ public class DistribuidorController {
         }
     }
 
+    @Operation(summary = "Registrar un distribuidor sin captcha")
+    @PreAuthorize("hasAuthority('Administrador')")
+    @PostMapping
+    public ResponseEntity<ResponseDTO> registrarDistribuidor(@RequestBody DistribuidorRegistroSinCaptchaDTO dto) {
+        ResponseDTO response = distribuidorService.createSinCaptcha(dto);
+        if (response.isExito()) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
     @PreAuthorize("hasAnyAuthority('Administrador','Distribuidor')")
     @Operation(summary = "Actualizar campos distribuidor")
     @PutMapping("/{idDistribuidor}")

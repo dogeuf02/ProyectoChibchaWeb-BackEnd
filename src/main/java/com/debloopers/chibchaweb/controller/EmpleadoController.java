@@ -45,7 +45,7 @@ public class EmpleadoController {
         return ResponseEntity.ok(empleadoService.get(idEmpleado));
     }
 
-    @PreAuthorize("hasAuthority('Administrador')")
+    @PreAuthorize("hasAnyAuthority('Administrador','Empleado')")
     @GetMapping("/obtenerEmpleados")
     @Operation(summary = "Obtener empleados junto con su correo eletronico")
     public ResponseEntity<List<EmpleadoConCorreoDTO>> getEmpleadosConCorreo() {
