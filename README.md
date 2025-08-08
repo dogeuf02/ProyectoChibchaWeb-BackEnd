@@ -1,3 +1,4 @@
+<p align="justify">
 ChibchaWeb - Backend
 
 ChibchaWeb es un backend desarrollado en Spring Boot que implementa múltiples servicios como autenticación JWT con Redis, envío de correos electrónicos mediante SMTP, verificación de reCAPTCHA y lógica de negocio personalizada para una empresa que ofrece servicios de hosting.
@@ -89,3 +90,4 @@ http://localhost:8080/swagger-ui.html
 
 👥 Autores
 Debloopers Team
+</p>
