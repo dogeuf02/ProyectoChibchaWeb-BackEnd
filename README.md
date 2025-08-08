@@ -71,6 +71,7 @@ Compilar y ejecutar:
 **mvn spring-boot:run*
 
 📡 Endpoints principales
+
 La documentación de la API está disponible con Springdoc OpenAPI (Swagger) en:
 
 *http://localhost:8080/swagger-ui.html*
