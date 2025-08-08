@@ -8,7 +8,7 @@ Su diseño sigue principios de arquitectura limpia y patrones de diseño que gar
 📂 Estructura del proyecto
 La organización del código sigue una arquitectura en capas, separando claramente responsabilidades:
 
-<ul>
+<ul style="margin-left: 20px;">
   <li><strong>config</strong> → Configuraciones globales.</li>
   <li><strong>controller</strong> → Controladores REST que gestionan las peticiones HTTP.</li>
   <li><strong>dto</strong> → Objetos de transferencia de datos para comunicación entre capas.</li>
@@ -19,7 +19,7 @@ La organización del código sigue una arquitectura en capas, separando claramen
 🛠️ Arquitectura y patrones de diseño
 El proyecto sigue una arquitectura en capas e implementa los siguientes patrones:
 
-<ul>
+<ul style="margin-left: 20px;">
   <li><strong>DAO y Repository</strong> → Acceso a datos desacoplado con Spring Data JPA.</li>
   <li><strong>DTO</strong> → Transferencia segura y optimizada de datos.</li>
   <li><strong>Singleton</strong> → Beans gestionados por Spring con scope único por contexto.</li>
@@ -32,14 +32,14 @@ El proyecto sigue una arquitectura en capas e implementa los siguientes patrones
 🚀 Servicios implementados
 Autenticación y autorización JWT con gestión de sesiones en Redis (Upstash).
 
-<ul>
+<ul style="margin-left: 20px;">
   <li><strong>Envío de correos electrónicos</strong> vía SMTP de Gmail.</li>
   <li><strong>Validación de usuarios</strong> con Google reCAPTCHA.</li>
   <li><strong>Lógica de negocio personalizada</strong> para la aplicación.</li>
 </ul>
 
 📋 Requisitos
-<ul>
+<ul style="margin-left: 20px;">
   <li><strong>Java</strong> 17+</li>
   <li><strong>Maven</strong> 3.8+</li>
   <li><strong>PostgreSQL</strong></li>
