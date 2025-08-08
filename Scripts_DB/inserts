@@ -1,4 +1,3 @@
--- inserts basicos --
 /*insertar tipo de documentos para distribuidores*/
 INSERT INTO TIPO_DOCUMENTO_EMP (NOMBRE_TIPO_DOC) VALUES
 ('NIT'),('RUC'),('CUIT'),('RIF'),('CPF_CNPJ'),('TIN'),('PASSPORT'),('BUSINESS_ID'),('OTHER');
@@ -41,9 +40,9 @@ INSERT INTO ADMINISTRADOR (NOMBRE_ADMIN, APELLIDO_ADMIN) VALUES
 
 INSERT INTO USUARIO (ADMIN_ID, CORREO_USUARIO, CONTRASENA, ROL, ESTADO)
 VALUES 
-(1, 'william.forero@admin.com', 'admin123', 'Administrador', 'ACTIVO'),
-(2, 'vivian.gonzales@admin.com', 'admin123', 'Administrador', 'ACTIVO'),
-(3, 'david.munoz@admin.com', 'admin123', 'Administrador', 'ACTIVO');
+(1, 'william.forero@admin.com', '$2a$10$XPHGUhSQMoPYLguMTFrsReMc7EIkrq7gEY25hBJN5Pm5ERg7f77US', 'Administrador', 'ACTIVO'),
+(2, 'vivian.gonzales@admin.com', '$2a$10$XPHGUhSQMoPYLguMTFrsReMc7EIkrq7gEY25hBJN5Pm5ERg7f77US', 'Administrador', 'ACTIVO'),
+(3, 'david.munoz@admin.com', '$2a$10$XPHGUhSQMoPYLguMTFrsReMc7EIkrq7gEY25hBJN5Pm5ERg7f77US', 'Administrador', 'ACTIVO');
 
 /*inserts usuarios-empleado*/
 INSERT INTO EMPLEADO (NOMBRE_EMPLEADO, APELLIDO_EMPLEADO, CARGO_EMPLEADO) VALUES
@@ -57,19 +56,19 @@ INSERT INTO EMPLEADO (NOMBRE_EMPLEADO, APELLIDO_EMPLEADO, CARGO_EMPLEADO) VALUES
 
 INSERT INTO USUARIO (EMPLEADO_ID, CORREO_USUARIO, CONTRASENA, ROL, ESTADO)
 VALUES 
-(1, 'carlos.diaz@empresa.com', 'empleado123', 'Empleado', 'ACTIVO'),        
-(2, 'luisa.martinez@empresa.com', 'empleado123', 'Empleado', 'ACTIVO'),     
-(3, 'marta.reyes@empresa.com', 'empleado123', 'Empleado', 'ACTIVO'),        
-(4, 'sergio.valencia@empresa.com', 'empleado123', 'Empleado', 'ACTIVO'),    
-(5, 'andrea.perez@empresa.com', 'empleado123', 'Empleado', 'ACTIVO'),       
-(6, 'jorge.romero@empresa.com', 'empleado123', 'Empleado', 'ACTIVO'),       
-(7, 'juan.ortega@empresa.com', 'empleado123', 'Empleado', 'ACTIVO'),        
-(8, 'laura.mejia@empresa.com', 'empleado123', 'Empleado', 'ACTIVO'),        
-(9, 'esteban.salazar@empresa.com', 'empleado123', 'Empleado', 'ACTIVO');
+(1, 'carlos.diaz@empresa.com', '$2a$10$XPHGUhSQMoPYLguMTFrsReMc7EIkrq7gEY25hBJN5Pm5ERg7f77US', 'Empleado', 'ACTIVO'),        
+(2, 'luisa.martinez@empresa.com', '$2a$10$XPHGUhSQMoPYLguMTFrsReMc7EIkrq7gEY25hBJN5Pm5ERg7f77US', 'Empleado', 'ACTIVO'),     
+(3, 'marta.reyes@empresa.com', '$2a$10$XPHGUhSQMoPYLguMTFrsReMc7EIkrq7gEY25hBJN5Pm5ERg7f77US', 'Empleado', 'ACTIVO'),        
+(4, 'sergio.valencia@empresa.com', '$2a$10$XPHGUhSQMoPYLguMTFrsReMc7EIkrq7gEY25hBJN5Pm5ERg7f77US', 'Empleado', 'ACTIVO'),    
+(5, 'andrea.perez@empresa.com', '$2a$10$XPHGUhSQMoPYLguMTFrsReMc7EIkrq7gEY25hBJN5Pm5ERg7f77US', 'Empleado', 'ACTIVO'),       
+(6, 'jorge.romero@empresa.com', '$2a$10$XPHGUhSQMoPYLguMTFrsReMc7EIkrq7gEY25hBJN5Pm5ERg7f77US', 'Empleado', 'ACTIVO'),       
+(7, 'juan.ortega@empresa.com', '$2a$10$XPHGUhSQMoPYLguMTFrsReMc7EIkrq7gEY25hBJN5Pm5ERg7f77US', 'Empleado', 'ACTIVO'),        
+(8, 'laura.mejia@empresa.com', '$2a$10$XPHGUhSQMoPYLguMTFrsReMc7EIkrq7gEY25hBJN5Pm5ERg7f77US', 'Empleado', 'ACTIVO'),        
+(9, 'esteban.salazar@empresa.com', '$2a$10$XPHGUhSQMoPYLguMTFrsReMc7EIkrq7gEY25hBJN5Pm5ERg7f77US', 'Empleado', 'ACTIVO');
 
 /*insertar bancos*/
 INSERT INTO BANCO (NOMBRE_BANCO)
-VALUES ('Bancolombia')
+VALUES ('Bancolombia');
 
 
 /*insertar plan pago*/
@@ -78,7 +77,23 @@ VALUES
 ('Mensual'),
 ('Semestral'),
 ('Anual');
---- insert cliente directo ---
+
+/*insertar precio_plan*/
+INSERT INTO PRECIO_PLAN (PLAN_CLIENTE_ID, PLAN_PAGO_ID, ID, PRECIO)
+VALUES 
+
+(1, 1, 101, 8.00),   
+(1, 2, 102, 40.00),  
+(1, 3, 103, 72.00),  
+
+(2, 1, 201, 5.00),   
+(2, 2, 202, 25.00),  
+(2, 3, 203, 45.00),  
+
+(3, 1, 301, 11.00),  
+(3, 2, 302, 55.00),  
+(3, 3, 303, 99.00);  
+
 /*insertar cliente*/
 INSERT INTO CLIENTE_DIRECTO (NOMBRE_CLIENTE,APELLIDO_CLIENTE,TELEFONO,FECHA_NACIMIENTO_CLIENTE) 
 VALUES ('Carlos','Ramírez','3001234567','1995-08-15');
@@ -112,8 +127,10 @@ VALUES (1,1,1,'2025-08-03');
 INSERT INTO PERTENECE_DOMINIO (CLIENTE_ID,DOMINIO_ID)
 VALUES (1,1);
 
-
---- inserts distribuidor ---
+/*update consistencia*/
+UPDATE DOMINIO
+SET ESTADO = 'En Uso'
+WHERE ID_DOMINIO = 1;
 
 /*insert distribuidor*/
 INSERT INTO DISTRIBUIDOR (NOMBRE_TIPO_DOC_ID,NUMERO_DOC_EMPRESA,NOMBRE_EMPRESA,DIRECCION_EMPRESA,CATEGORIA_ID)
@@ -144,3 +161,7 @@ VALUES (1,2);
 UPDATE DOMINIO
 SET ESTADO = 'En Uso'
 WHERE ID_DOMINIO = 2;
+
+
+
+
