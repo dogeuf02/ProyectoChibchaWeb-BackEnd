@@ -51,27 +51,29 @@ Autenticación y autorización JWT con gestión de sesiones en Redis (Upstash).
 ⚙️ Configuración
 Configurar variables en application.properties o application.yml:
 
-spring.datasource.url=jdbc:postgresql://localhost:5432/mi_bd
-spring.datasource.username=usuario
-spring.datasource.password=contraseña
+<ul style="margin-left: 20px;">
+  <li>spring.datasource.url=jdbc:postgresql://localhost:5432/mi_bd</li>
+  <li>spring.datasource.username=usuario</li>
+  <li>spring.datasource.password=contraseña</li>
 
-spring.redis.host=...
-spring.redis.port=...
-spring.redis.password=...
+  <li>spring.redis.host=...</li>
+  <li>spring.redis.port=...</li>
+  <li>spring.redis.password=...</li>
 
-jwt.secret=clave_secreta
-gmail.username=tu_correo@gmail.com
-gmail.password=tu_contraseña
-recaptcha.secret=clave_recaptcha
+  <li>jwt.secret=clave_secreta</li>
+  <li>gmail.username=tu_correo@gmail.com</li>
+  <li>gmail.password=tu_contraseña</li>
+  <li>recaptcha.secret=clave_recaptcha</li>
+</ul>
 
 Compilar y ejecutar:
 
-mvn spring-boot:run
+**mvn spring-boot:run*
 
 📡 Endpoints principales
 La documentación de la API está disponible con Springdoc OpenAPI (Swagger) en:
 
-http://localhost:8080/swagger-ui.html
+**http://localhost:8080/swagger-ui.html**
 
 👥 Autores
 Debloopers Team
