@@ -126,6 +126,35 @@ public class ClienteDirectoService {
         }
     }
 
+    @Transactional
+    public ResponseDTO createSinCaptcha(ClienteDirectoRegistroSinCaptchaDTO dto) {
+
+        try {
+            if (usuarioRepository.findByCorreoUsuario(dto.getCorreoCliente()) != null) {
+                return new ResponseDTO(false, "The email is already registered.");
+            }
+
+            ClienteDirecto cliente = new ClienteDirecto();
+            cliente.setNombreCliente(dto.getNombreCliente());
+            cliente.setApellidoCliente(dto.getApellidoCliente());
+            cliente.setTelefono(dto.getTelefono());
+            cliente.setFechaNacimientoCliente(dto.getFechaNacimientoCliente());
+            clienteDirectoRepository.save(cliente);
+
+            Usuario usuario = new Usuario();
+            usuario.setCorreoUsuario(dto.getCorreoCliente());
+            usuario.setContrasena(passwordEncoder.encode(dto.getContrasenaCliente()));
+            usuario.setRol("Cliente");
+            usuario.setEstado("ACTIVO");
+            usuario.setCliente(cliente);
+            usuarioRepository.save(usuario);
+
+            return new ResponseDTO(true, "Customer registered.");
+        } catch (Exception e) {
+            return new ResponseDTO(false, "Internal error when creating the client.");
+        }
+    }
+
     public void update(final Integer idCliente, final ClienteDirectoDTO clienteDirectoDTO) {
         final ClienteDirecto clienteDirecto = clienteDirectoRepository.findById(idCliente)
                 .orElseThrow(NotFoundException::new);

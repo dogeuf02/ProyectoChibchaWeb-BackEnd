@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RecuperarContrasenaDTO {
-    private String email;
+    private String correo;
     private String captchaToken;
 }

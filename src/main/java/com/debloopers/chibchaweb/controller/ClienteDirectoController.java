@@ -45,7 +45,6 @@ public class ClienteDirectoController {
         return ResponseEntity.ok(clienteDirectoService.get(idCliente));
     }
 
-
     @Operation(summary = "Registrar un cliente")
     @PostMapping("/registroCliente")
     @ApiResponse(responseCode = "201")
@@ -53,6 +52,22 @@ public class ClienteDirectoController {
             @RequestBody @Valid ClienteDirectoRegistroRequestDTO clienteDirectoDTO) {
 
         ResponseDTO response = clienteDirectoService.create(clienteDirectoDTO);
+
+        if (response.isExito()) {
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PreAuthorize("hasAuthority('Administrador')")
+    @Operation(summary = "Registrar un cliente sin captcha")
+    @PostMapping
+    @ApiResponse(responseCode = "201")
+    public ResponseEntity<ResponseDTO> createSinCaptcha(
+            @RequestBody @Valid ClienteDirectoRegistroSinCaptchaDTO clienteDirectoDTO) {
+
+        ResponseDTO response = clienteDirectoService.createSinCaptcha(clienteDirectoDTO);
 
         if (response.isExito()) {
             return new ResponseEntity<>(response, HttpStatus.CREATED);

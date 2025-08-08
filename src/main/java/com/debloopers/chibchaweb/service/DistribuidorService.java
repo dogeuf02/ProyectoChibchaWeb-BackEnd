@@ -127,6 +127,40 @@ public class DistribuidorService {
     }
 
     @Transactional
+    public ResponseDTO createSinCaptcha(DistribuidorRegistroSinCaptchaDTO dto) {
+
+        try {
+            if (usuarioRepository.findByCorreoUsuario(dto.getCorreoDistrbuidor()) != null) {
+                return new ResponseDTO(false, "The email is already registered.");
+            }
+
+            TipoDocumentoEmp tipoDoc = tipoDocumentoEmpRepository.findByNombreTipoDoc(dto.getNombreTipoDoc());
+            if (tipoDoc == null) {
+                return new ResponseDTO(false, "The document type does not exist.");
+            }
+
+            Distribuidor distribuidor = new Distribuidor();
+            distribuidor.setNumeroDocEmpresa(dto.getNumeroDocEmpresa());
+            distribuidor.setNombreEmpresa(dto.getNombreEmpresa());
+            distribuidor.setDireccionEmpresa(dto.getDireccionEmpresa());
+            distribuidor.setNombreTipoDoc(tipoDoc);
+            distribuidorRepository.save(distribuidor);
+
+            Usuario usuario = new Usuario();
+            usuario.setCorreoUsuario(dto.getCorreoDistrbuidor());
+            usuario.setContrasena(passwordEncoder.encode(dto.getContrasenaDistribuidor()));
+            usuario.setRol("Distribuidor");
+            usuario.setEstado("ACTIVO");
+            usuario.setDistribuidor(distribuidor);
+            usuarioRepository.save(usuario);
+
+            return new ResponseDTO(true, "Distributor successfully created.");
+        } catch (Exception e) {
+            return new ResponseDTO(false, "Internal error creating the distributor.");
+        }
+    }
+
+    @Transactional
     public void update(final Integer idDistribuidor, final DistribuidorDTO distribuidorDTO) {
         final Distribuidor distribuidor = distribuidorRepository.findById(idDistribuidor)
                 .orElseThrow(NotFoundException::new);
