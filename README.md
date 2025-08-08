@@ -1,5 +1,8 @@
 ChibchaWeb - Backend
-ChibchaWeb es un backend desarrollado en Spring Boot que implementa múltiples servicios como autenticación JWT con Redis, envío de correos electrónicos mediante SMTP, verificación de reCAPTCHA y lógica de negocio personalizada para una empresa que ofrece servicios de hosting. Su diseño sigue principios de arquitectura limpia y patrones de diseño para garantizar escalabilidad, mantenibilidad y seguridad.
+
+ChibchaWeb es un backend desarrollado en Spring Boot que implementa múltiples servicios como autenticación JWT con Redis, envío de correos electrónicos mediante SMTP, verificación de reCAPTCHA y lógica de negocio personalizada para una empresa que ofrece servicios de hosting.
+
+Su diseño sigue principios de arquitectura limpia y patrones de diseño que garantizan escalabilidad, mantenibilidad y seguridad.
 
 📂 Estructura del proyecto
 La organización del código sigue una arquitectura en capas, separando claramente responsabilidades:
@@ -23,19 +26,19 @@ util → Funciones y utilidades reutilizables.
 🛠️ Arquitectura y patrones de diseño
 El proyecto sigue una arquitectura en capas e implementa los siguientes patrones:
 
-DAO y Repository: Acceso a datos desacoplado con Spring Data JPA.
+DAO y Repository → Acceso a datos desacoplado con Spring Data JPA.
 
-DTO: Transferencia segura y optimizada de datos.
+DTO → Transferencia segura y optimizada de datos.
 
-Singleton: Beans gestionados por Spring con scope único por contexto.
+Singleton → Beans gestionados por Spring con scope único por contexto.
 
-Builder: Creación de objetos complejos con Lombok (@Builder).
+Builder → Creación de objetos complejos con Lombok (@Builder).
 
-Inyección de Dependencias: A través de anotaciones de Spring como @Autowired, @Service, @Component.
+Inyección de Dependencias → A través de anotaciones de Spring como @Autowired, @Service, @Component.
 
-Strategy: Elección dinámica de implementaciones según la lógica requerida.
+Strategy → Elección dinámica de implementaciones según la lógica requerida.
 
-Factory Method: Creación encapsulada de objetos usando métodos @Bean en clases de configuración.
+Factory Method → Creación encapsulada de objetos usando métodos @Bean en clases de configuración.
 
 🚀 Servicios implementados
 Autenticación y autorización JWT con gestión de sesiones en Redis (Upstash).
@@ -60,11 +63,8 @@ Cuenta de Gmail con credenciales SMTP
 Clave de Google reCAPTCHA
 
 ⚙️ Configuración
-Configurar variables en application.properties o application.yml
+Configurar variables en application.properties o application.yml:
 
-properties
-Copy
-Edit
 spring.datasource.url=jdbc:postgresql://localhost:5432/mi_bd
 spring.datasource.username=usuario
 spring.datasource.password=contraseña
@@ -78,7 +78,7 @@ gmail.username=tu_correo@gmail.com
 gmail.password=tu_contraseña
 recaptcha.secret=clave_recaptcha
 
-Compilar y ejecutar
+Compilar y ejecutar:
 
 mvn spring-boot:run
 
